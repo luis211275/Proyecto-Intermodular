@@ -1,0 +1,41 @@
+body {
+    text-align: center;
+    margin: 0px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    color: black;
+}
+
+h1 {
+    font-size: 50px;
+    color: #3e2723;
+}
+
+.contenedor {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    column-gap: 150px;
+    row-gap: 20px;
+    padding: 20px;
+}
+
+#ventaCoche, #login {
+    display: inline-block;
+    margin-right: 30px;
+    color: #db9c37;
+}
+
+#ventaCoche {
+    margin-right: 400px;
+}
+
+button {
+    color: #6d4c41;
+}
+
+footer {
+    color: #3e2723;
+}

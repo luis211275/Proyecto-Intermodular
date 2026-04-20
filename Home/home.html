@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.css">
+    <script src="home.js" defer></script>
+    <title>Nombre</title>
+</head>
+<body>
+
+    <h1>Nombre</h1>
+
+    <h3 id="ventaCoche">Vende tu Coche</h3>
+    <h3 id="login">Iniciar Sesión</h3>
+
+    <hr>
+
+    <input type="text" id="buscar" placeholder="Busca tu Coche ideal..."/>
+
+    <button id="resetear" type="reset">Borrar</button>
+
+    <button id="favoritos">Favoritos</button>
+
+     <select id="select">
+            <option value="">Marca</option>
+            <option value="">Rango de Precio</option>
+            <option value="">Color</option>
+            <option value="">Antigüedad</option>
+            <option value="">Modelo</option>
+            <option value="">Kilometraje</option>
+            <option value="">Ciudad</option>
+            <option value="">Tipo de Carburante(diesel, gasolina, electrico, híbrido)</option>
+            <option value="">Transmisión(manual, automático, semi-automático)</option>
+        </select>
+
+    <div class="contenedor">
+        <div class="tarjeta">
+            <img src="">
+            <h3>Coche 1</h3>
+            <p>Descripción</p>
+        </div>
+        <div class="tarjeta">
+            <img src="">
+            <h3>Coche 2</h3>
+            <p>Descripción</p>
+        </div>
+        <div class="tarjeta">
+            <img src="">
+            <h3>Coche 3</h3>
+            <p>Descripción</p>
+        </div>
+        <div class="tarjeta">
+            <img src="">
+            <h3>Coche 4</h3>
+            <p>Descripción</p>
+        </div>
+        <div class="tarjeta">
+            <img src="">
+            <h3>Coche 5</h3>
+            <p>Descripción</p>
+        </div>
+        <div class="tarjeta">
+            <img src="">
+            <h3>Coche 6</h3>
+            <p>Descripción</p>
+        </div>
+    </div>
+
+    <dialog id="modalCoche">
+        <h2 id="modalTitulo"></h2>
+        <img id="modalImagen" src="">
+        <p><strong>Año:</strong> <span id="modalAnio"></span></p>
+        <p><strong>Precio:</strong> <span id="modalPrecio"></span></p>
+        <p><strong>Color:</strong> <span id="modalColor"></span></p>
+        <p><strong>Carburante:</strong> <span id="modalCarburante"></span></p>
+        <p><strong>Transmisión:</strong> <span id="modalTransmision"></span></p>
+        <p><strong>Kilometraje:</strong> <span id="modalKM"></span></p>
+        <p><strong>Ciudad:</strong> <span id="modalCiudad"></span></p>
+        
+        <p id="modalDescripcion"></p>
+
+    <button id="cerrarModal">Cerrar</button>
+    </dialog>
+
+    <hr>
+
+    <footer>© 2026 Proyecto Intermodular. Todos los derechos reservados.</footer>    
+</body>
+
+</html>
