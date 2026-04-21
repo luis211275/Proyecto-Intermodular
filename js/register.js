@@ -7,6 +7,7 @@ const requestOptions = {
 
 
 const btnIniciarR = document.getElementById("btnRegister");
+const form = document.getElementById("form-register");
 
 btnIniciarR.addEventListener("click", (e) => {
     e.preventDefault();
@@ -35,7 +36,8 @@ btnIniciarR.addEventListener("click", (e) => {
 
     .then(response => response.json())
     .then(data => {
-        console.log("Resultado en el backend", data)
+        console.log("Resultado en el backend", data);
+        form.reset();
     })
     .catch(error => console.error(error));
 });
