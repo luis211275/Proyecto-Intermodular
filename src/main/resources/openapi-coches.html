@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Coches - Documentación</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; padding: 20px; background-color: #f0f2f5; color: #1c1e21; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        h1 { color: #1a73e8; border-bottom: 2px solid #e8f0fe; padding-bottom: 10px; }
+        h2 { color: #202124; margin-top: 30px; border-left: 4px solid #1a73e8; padding-left: 15px; background: #f8f9fa; padding: 10px 15px; }
+        h3 { color: #1a73e8; margin-top: 25px; }
+        .endpoint { background: #fafafa; border: 1px solid #dadce0; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .method { font-weight: bold; padding: 4px 8px; border-radius: 4px; color: white; margin-right: 10px; display: inline-block; min-width: 60px; text-align: center; font-size: 0.8em; }
+        .post { background-color: #188038; } .get { background-color: #1a73e8; } .patch { background-color: #f9ab00; } .delete { background-color: #d93025; }
+        pre { background: #202124; color: #e8eaed; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 0.9em; }
+        code { background: #f1f3f4; padding: 2px 4px; border-radius: 4px; font-family: monospace; font-weight: bold; }
+        .flow { background: #e8f0fe; border: 1px solid #1a73e8; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .footer { margin-top:40px; font-size: 0.9em; color: #70757a; border-top: 1px solid #e8f0fe; padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>API Coches - Documentación</h1>
+        <p>Documentación técnica del módulo de coches para el proyecto intermodular.</p>
+        
+        <div class="flow">
+            <strong>Flujo de Compra en el Frontend:</strong>
+            <ol>
+                <li>El usuario hace clic en una tarjeta: Llamar a <code>GET /detalle?idCoche=X</code>.</li>
+                <li>Abrir Modal de Detalle con todos los datos y botón "Comprar".</li>
+                <li>Clic en "Comprar": Llamar a <code>GET /presupuesto?idCoche=X</code> para mostrar el desglose (IVA, Comisión).</li>
+                <li>Confirmar compra en el Modal de Contrato: Llamar a <code>POST /comprar</code>.</li>
+            </ol>
+        </div>
+
+        <h2>1. Consulta de Coches</h2>
+        
+        <div class="endpoint">
+            <p><span class="method get">GET</span> <code>/apis/coches/listarcoches</code></p>
+            <p>Lista todos los coches activos. Respuesta plana lista para pintar en tarjetas.</p>
+            <pre>[
+  {
+    "id": 1,
+    "anioFabricacion": 2022,
+    "kilometraje": 15000,
+    "precioVenta": 24500.0,
+    "esPremium": true,
+    "estado": "Disponible",
+    "fechaPublicacion": "2024-04-20 18:30:00",
+    "marca": "Toyota",
+    "modelo": "Corolla",
+    "version": "1.8 Hybrid Active",
+    "combustible": "Híbrido",
+    "transmision": "CVT",
+    "ciudad": "Madrid",
+    "color": "Blanco",
+    "etiquetaAmbiental": "ECO",
+    "categoria": "Compacto",
+    "vendedorId": 2,
+    "vendedorNombre": "Juan Pérez",
+    "vendedorEmail": "juan@example.com",
+    "esFavorito": false
+  }
+]</pre>
+        </div>
+
+        <div class="endpoint">
+            <p><span class="method get">GET</span> <code>/apis/coches/detalle?idCoche=1</code></p>
+            <p>Obtiene el objeto completo de un solo coche. Úsalo para el modal de detalles.</p>
+            <p><strong>Response:</strong></p>
+            <pre>{
+  "id": 1,
+  "anioFabricacion": 2022,
+  "kilometraje": 15000,
+  "precioVenta": 24500.0,
+  "esPremium": true,
+  "estado": "Disponible",
+  "fechaPublicacion": "2024-04-20 18:30:00",
+  "marca": "Toyota",
+  "modelo": "Corolla",
+  "version": "1.8 Hybrid Active",
+  "combustible": "Híbrido",
+  "transmision": "CVT",
+  "ciudad": "Madrid",
+  "color": "Blanco",
+  "etiquetaAmbiental": "ECO",
+  "categoria": "Compacto",
+  "vendedorId": 2,
+  "vendedorNombre": "Juan Pérez",
+  "vendedorEmail": "juan@example.com",
+  "esFavorito": false
+}</pre>
+        </div>
+
+        <h2>2. Flujo de Venta y Facturación</h2>
+
+        <div class="endpoint">
+            <p><span class="method get">GET</span> <code>/apis/facturas/listar?compradorId=5</code></p>
+            <p>Lista todas las facturas de un comprador.</p>
+            <pre>[
+  {
+    "id": 100,
+    "compradorId": 5,
+    "totalBase": 24500.0,
+    "ivaImporte": 5145.0,
+    "comisionPlataforma": 735.0,
+    "totalPagado": 30380.0,
+    "fechaEmision": "2024-04-21T18:30:00Z"
+  }
+]</pre>
+        </div>
+
+        <div class="endpoint">
+            <p><span class="method get">GET</span> <code>/apis/facturas/detalle?idFactura=100</code></p>
+            <p>Obtiene el detalle de una factura específica.</p>
+            <p><strong>Response:</strong></p>
+            <pre>{
+  "id": 100,
+  "compradorId": 5,
+  "totalBase": 24500.0,
+  "ivaImporte": 5145.0,
+  "comisionPlataforma": 735.0,
+  "totalPagado": 30380.0,
+  "fechaEmision": "2024-04-21T18:30:00Z"
+}</pre>
+        </div>
+
+        <div class="endpoint">
+            <p><span class="method get">GET</span> <code>/apis/coches/presupuesto?idCoche=1</code></p>
+            <p>Calcula los importes del contrato de compraventa (IVA 21% y Comisión 3%).</p>
+            <pre>{
+  "idCoche": 1,
+  "precioBase": 24500.0,
+  "iva": 5145.0,
+  "comisionPlataforma": 735.0,
+  "totalPagado": 30380.0
+}</pre>
+        </div>
+
+        <div class="endpoint">
+            <p><span class="method post">POST</span> <code>/apis/coches/comprar</code></p>
+            <p>Finaliza la compra. Registra la factura en BD y cambia el estado a <strong>Vendido</strong>.</p>
+            <p><strong>Request Body:</strong></p>
+            <pre>{
+  "idCoche": 1,
+  "idComprador": 5
+}</pre>
+        </div>
+
+        <h2>3. Publicación y Edición</h2>
+
+        <div class="endpoint">
+            <p><span class="method post">POST</span> <code>/apis/coches/publicarcoche</code></p>
+            <p>Crea un anuncio. Envía IDs numéricos para las relaciones.</p>
+            <pre>{
+  "anioFabricacion": 2022,
+  "kilometraje": 45000,
+  "precioVenta": 18000.0,
+  "versionId": 3,
+  "combustibleId": 1,
+  "transmisionId": 2,
+  "ciudadId": 5,
+  "colorId": 2,
+  "etiquetaId": 2,
+  "categoriaId": 1,
+  "vendedorId": 2
+}</pre>
+        </div>
+
+        <div class="endpoint">
+            <p><span class="method delete">DELETE</span> <code>/apis/coches/borrarcoche?idCoche=1</code></p>
+            <p><strong>Borrado Funcional (Lógico)</strong>: No elimina el registro de la base de datos, sino que cambia su estado a <code>Desactivado</code>. El coche dejará de aparecer en las búsquedas públicas.</p>
+            <p><strong>Response:</strong></p>
+            <pre>{
+  "id": 1,
+  "estado": "Desactivado",
+  "mensaje": "Coche desactivado correctamente"
+}</pre>
+        </div>
+
+        <h2>4. Gestión de Errores</h2>
+        <div class="endpoint">
+            <p>Los errores siempre devuelven un JSON con este formato:</p>
+            <pre>{
+  "error": "COCHE_NO_ENCONTRADO",
+  "message": "No existe un coche con id 999"
+}</pre>
+        </div>
+
+        <div class="footer">
+            <em>Backend simplificado - Intermodular DAW. Todas las respuestas son planas para facilitar el manejo en el Frontend.</em>
+        </div>
+    </div>
+</body>
+</html>
