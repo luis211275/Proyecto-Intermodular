@@ -79,6 +79,13 @@ body{
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+#mensajeRegistro{
+    color:rgb(212, 32, 0);
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
 #btnRegister{
     background-color: rgb(29, 78, 216);
     color: white;

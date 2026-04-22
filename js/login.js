@@ -1,12 +1,8 @@
-const myHeaders = new Headers();
-const requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow"
-};
 
 const btnIniciarL = document.getElementById("btnLogin");
-const form = document.getElementById("form-login")
+const form = document.getElementById("form-login");
+    const mensajeHtml = document.getElementById("mensajeError");
+
 
 btnIniciarL.addEventListener("click", (e) => {
     e.preventDefault();
@@ -18,20 +14,28 @@ btnIniciarL.addEventListener("click", (e) => {
 
     console.log(login);
 
-    const jsonR = JSON.stringify(login);
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "aplication/json")
+ 
 
-     fetch("http://localhost:8080/user/logger",{
-        method : "POST",
-        headers:myHeaders,
-        body: jsonR
+    fetch("http://localhost:8080/user/logger", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(login)
     })
-
-    .then(response => response.json())
+    .then(response => {
+        return response.json().then(data => {
+            if (!response.ok) {
+                throw new Error(data.message || "Error en el servidor");
+            }
+            return data;
+        });
+    })
     .then(data => {
-        console.log("Resultado en el backend", data);
-        form.reset();
+        console.log("Éxito:", data.message);
+        window.location.href = "home.html"; 
     })
-    .catch(error => console.error(error));
+    .catch(error => {
+        console.error("Error detectado:", error.message);
+        mensajeHtml.innerText = error.message;
+        mensajeHtml.style.color = "red";
+    });
 });

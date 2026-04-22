@@ -125,6 +125,13 @@ body{
     text-decoration: underline;
 }
 
+#mensajeError{
+    color:rgb(212, 32, 0);
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
 #login-footer{
     background-color: rgb(15, 23, 42);
     color: rgb(148, 163, 184);
