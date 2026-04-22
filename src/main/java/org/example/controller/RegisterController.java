@@ -42,6 +42,22 @@ public class RegisterController {
 
                     RegisterService usuario = new RegisterService();
 
+                    int resultado = usuario.verificarYregistro(body);
+
+                    if (resultado == 0) {
+                        responseJson.addProperty("status", "ok");
+
+                        responseJson.addProperty("message", "Usuario registrado exitosamente");
+                        sendResponse(exchange, 200, responseJson.toString());
+                    }else {
+                        responseJson.addProperty("status", "error");
+
+                        String msg = (resultado == 1) ? "El email ya esta registrado" : "El DNI ya esta registrado";
+
+                        responseJson.addProperty("message", msg);
+                        sendResponse(exchange, 400, responseJson.toString());
+                    }
+
                     usuario.insertarUsuario(body);
 
 
@@ -49,43 +65,36 @@ public class RegisterController {
                     responseJson.addProperty("message", "Guardado correctamente");
 
                     sendResponse(exchange, 200, body);
-                }else{
-                    sendResponse(exchange, 400, "Endpoint no valido");
                 }
 
-                if (path.equals("/user/logger")) {
-                    String body = new String(
-                            exchange.getRequestBody().readAllBytes(),
-                            StandardCharsets.UTF_8
-                    );
-                    System.out.println(body);
+                else if (path.equals("/user/logger")) {
+                        String body = new String(
+                                exchange.getRequestBody().readAllBytes(),
+                                StandardCharsets.UTF_8
+                        );
 
-                    JsonObject responseJson = new JsonObject();
+                        System.out.println(body);
 
-                    RegisterService usuario = new RegisterService();
+                        JsonObject responseJson = new JsonObject();
+                        RegisterService servicio = new RegisterService();
 
-                    //0=OK, 1=  Eamil no existe, 2= Contraseña incorrecta
+                        // Llamamos a la lógica del service
+                        int resultado = servicio.validarLogin(body);
 
-                    int resultado = RegisterService.validarLogin(body);
+                        if (resultado == 0) {
+                            responseJson.addProperty("status", "ok");
+                            responseJson.addProperty("message", "Login correcto");
+                            sendResponse(exchange, 200, responseJson.toString());
+                        } else {
+                            responseJson.addProperty("status", "error");
 
-                    if (resultado == 0) {
-                        responseJson.addProperty("status", "ok");
+                            String msg = (resultado == 1) ? "Correo no registrado" : "Error al iniciar sesion";
+                            int code = (resultado == 1) ? 404 : 401;
 
-                        responseJson.addProperty("message", "Login correcto");
-
-                        sendResponse(exchange, 200, responseJson.toString());
-                    } else if (resultado == 1) {
-                        responseJson.addProperty("status", "error");
-                        responseJson.addProperty("message", "Este correo no esta registrado");
-                        sendResponse(exchange, 404, responseJson.toString());
-                    }else {
-                        responseJson.addProperty("status", "error");
-                        responseJson.addProperty("message", "Contraseña incorrecta");
-                        sendResponse(exchange, 401, responseJson.toString());
+                            responseJson.addProperty("message", msg);
+                            sendResponse(exchange, code, responseJson.toString());
+                        }
                     }
-
-
-                }
             }else{
                 sendResponse(exchange, 405, "Metodo no valido");
             }
@@ -95,14 +104,20 @@ public class RegisterController {
     }
 
 
-    private void sendResponse(HttpExchange exchange, int status, String body) throws IOException {
+    public void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
+        // IMPORTANTE: Asegúrate de que estas líneas NO estén repetidas en otro lado
+        exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+        exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type");
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
 
-        exchange.getResponseHeaders().add("Content-Type", "application/json");
+        if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+            exchange.sendResponseHeaders(204, -1);
+            return;
+        }
 
-        byte[] bytes = body.getBytes();
-
-        exchange.sendResponseHeaders(status, bytes.length);
-
+        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+        exchange.sendResponseHeaders(statusCode, bytes.length);
         OutputStream os = exchange.getResponseBody();
         os.write(bytes);
         os.close();

@@ -42,6 +42,66 @@ public class RegisterService {
     }
 
 
+
+    public boolean findByDni(String dniBuscado) {
+        boolean found = true;
+        String sql = "SELECT id_usuario, nombres FROM usuarios WHERE dni = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Sustituye el ? por el nombre que queremos buscar.
+            stmt.setString(1, dniBuscado);
+
+            // Ejecuta la consulta SELECT.
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // Si existe al menos un usuario con ese nombre...
+                System.out.println("Ya existe este DNI en la Base de datos pon otro");
+            } else {
+                System.out.println("No existe ningún usuario con el DNI: " + dniBuscado);
+                found = false;
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return found;
+    }
+
+
+
+    public boolean findByTelefono(String telefonoBuscado) {
+        boolean found = true;
+        String sql = "SELECT id_usuario, nombres FROM usuarios WHERE email = ?";
+
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Sustituye el ? por el nombre que queremos buscar.
+            stmt.setString(1, telefonoBuscado);
+
+            // Ejecuta la consulta SELECT.
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // Si existe al menos un usuario con ese nombre...
+                System.out.println("Ya existe este telefono en la Base de datos pon otro");
+            } else {
+                System.out.println("No existe ningún usuario con el telefono: " + telefonoBuscado);
+                found = false;
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return found;
+    }
+
+
     public static int validarLogin(String body){
 
         JsonObject json = JsonParser.parseString(body).getAsJsonObject();
@@ -73,10 +133,26 @@ public class RegisterService {
 
     }
 
+    public int verificarYregistro(String body){
+        JsonObject json = JsonParser.parseString(body).getAsJsonObject();
+        String email = json.get("email").getAsString();
+        String dni = json.get("dni").getAsString();
+
+        if (findByEmail(email)) {
+            return 1; //Email duplicado
+        }
+
+        if (findByDni(dni)){
+            return 2;
+        }
+
+
+        insertarUsuario(body);
+        return 0;
+    }
+
 
     public void insertarUsuario(String body) {
-
-
 
         JsonObject json = JsonParser.parseString(body).getAsJsonObject();
 

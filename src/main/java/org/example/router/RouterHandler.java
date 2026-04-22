@@ -29,10 +29,13 @@ public class RouterHandler implements HttpHandler {
             return;
         }
 
-        String response = "404 - Ruta no encontrada";
-        exchange.sendResponseHeaders(404, response.length());
+        String responseJson = "{\"status\":\"error\",\"message\":\"Ruta no encontrada en el servidor: " + path + "\"}";
+        addCorsHeaders(exchange);
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
+
+        exchange.sendResponseHeaders(404, responseJson.length());
         OutputStream os = exchange.getResponseBody();
-        os.write(response.getBytes());
+        os.write(responseJson.getBytes());
         os.close();
     }
 
