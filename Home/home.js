@@ -1,38 +1,3 @@
-// const buscarCoches = document.getElementById("buscar");
-// const btnReset = document.getElementById("resetear");
-// const btnFav = document.getElementById("favoritos");
-
-// const modal = document.getElementById("modalCoche");
-// const modalTitulo = document.getElementById("modalTitulo");
-// const btnCerrarModal = document.getElementById("cerrarModal");
-// const modalImg = document.getElementById("modalImagen");
-// const modalAnio = document.getElementById("modalAnio");
-// const modalPrecio = document.getElementById("modalPrecio");
-// const modalColor = document.getElementById("modalColor");
-// const modalCarburante = document.getElementById("modalCarburante");
-// const modalTransmision = document.getElementById("modalTransmision");
-// const modalKM = document.getElementById("modalKM");
-// const modalCiudad = document.getElementById("modalCiudad");
-// const modalDescripcion = document.getElementById("modalDescripcion");
-
-// function abrirModal(coche) {
-//     modalTitulo.innerText = `${coche}`;
-//     modalAnio
-//     modalPrecio
-//     modalColor
-//     modalCarburante
-//     modalTransmision
-//     modalKM
-//     modalCiudad
-//     modalDescripcion
-
-//     modal.showModal();
-// }
-
-// btnCerrarModal.addEventListener("click", () => {
-//     modal.close();
-// });
-
 const contenedor = document.querySelector(".contenedor");
 const modal = document.getElementById("modalCoche");
 
@@ -50,7 +15,7 @@ async function cargarCoches() {
 
 // 2. Función para crear las tarjetas dinámicamente
 function listarCoches(lista) {
-    contenedor.innerHTML = ""; // Limpiamos las tarjetas estáticas del HTML
+    contenedor.innerHTML = "";
 
     lista.forEach(coche => {
         const tarjeta = document.createElement("div");
@@ -58,7 +23,7 @@ function listarCoches(lista) {
         tarjeta.innerHTML = `
             <h3>${coche.marca} ${coche.modelo}</h3>
             <p>${coche.precio} € - ${coche.ciudad}</p>
-            <img src="${coche.img}" alt="${coche.marca}" style="width:100%; border-radius:5px;">
+            <img src="${coche.img}" alt="${coche.marca}">
         `;
         
         tarjeta.addEventListener("click", () => abrirModal(coche));
@@ -84,3 +49,21 @@ function abrirModal(coche) {
 cargarCoches();
 
 document.getElementById("cerrarModal").addEventListener("click", () => modal.close());
+
+
+    fetch('http://localhost:8080/apis/coches/listarcoches')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('contenedor-coches');
+            data.forEach(coche => {
+                container.innerHTML += `
+                    <div class="card">
+                        <img src="${coche.img || 'placeholder.jpg'}" width="200">
+                        <h3>${coche.marca} ${coche.modelo}</h3>
+                        <p>Precio: ${coche.precioVenta}€</p>
+                        <p>Año: ${coche.anioFabricacion}</p>
+                    </div>
+                `;
+            });
+        })
+        .catch(error => console.error('Error:', error));
