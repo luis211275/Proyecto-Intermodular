@@ -1,19 +1,15 @@
 package org.example.controller;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
-import org.example.service.RegisterService;
+import org.example.dao.UsuarioDao;
+import org.example.service.UsuarioService;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
-public class RegisterController {
+public class UsuarioController {
     public void handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
         String method = exchange.getRequestMethod();
@@ -40,9 +36,12 @@ public class RegisterController {
 
                     JsonObject responseJson = new JsonObject();
 
-                    RegisterService usuario = new RegisterService();
+                    UsuarioService usuario = new UsuarioService();
+                    UsuarioDao dao = new UsuarioDao();
 
-                    int resultado = usuario.verificarYregistro(body);
+
+
+                    int resultado = usuario.procesarRegistro(body);
 
                     if (resultado == 0) {
                         responseJson.addProperty("status", "ok");
@@ -57,8 +56,6 @@ public class RegisterController {
                         responseJson.addProperty("message", msg);
                         sendResponse(exchange, 400, responseJson.toString());
                     }
-
-                    usuario.insertarUsuario(body);
 
 
                     responseJson.addProperty("status", "ok");
@@ -76,10 +73,11 @@ public class RegisterController {
                         System.out.println(body);
 
                         JsonObject responseJson = new JsonObject();
-                        RegisterService servicio = new RegisterService();
+                        UsuarioService servicio = new UsuarioService();
+                        UsuarioDao dao = new UsuarioDao();
 
                         // Llamamos a la lógica del service
-                        int resultado = servicio.validarLogin(body);
+                        int resultado = dao.validarLogin(body);
 
                         if (resultado == 0) {
                             responseJson.addProperty("status", "ok");

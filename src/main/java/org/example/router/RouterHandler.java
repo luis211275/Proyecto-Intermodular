@@ -2,14 +2,14 @@ package org.example.router;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.example.controller.RegisterController;
+import org.example.controller.UsuarioController;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 public class RouterHandler implements HttpHandler {
 
-    private final RegisterController registerController = new RegisterController();
+    private final UsuarioController registerController = new UsuarioController();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {

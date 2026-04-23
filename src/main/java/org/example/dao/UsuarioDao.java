@@ -1,17 +1,16 @@
-package org.example.service;
+package org.example.dao;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.example.config.DatabaseConfig;
 
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class RegisterService {
-
-
+public class UsuarioDao {
 
     public boolean findByEmail(String emailBuscado) {
         boolean found = true;
@@ -102,7 +101,7 @@ public class RegisterService {
     }
 
 
-    public static int validarLogin(String body){
+    public int validarLogin(String body){
 
         JsonObject json = JsonParser.parseString(body).getAsJsonObject();
         String email = json.get("email").getAsString();
@@ -133,61 +132,27 @@ public class RegisterService {
 
     }
 
-    public int verificarYregistro(String body){
-        JsonObject json = JsonParser.parseString(body).getAsJsonObject();
-        String email = json.get("email").getAsString();
-        String dni = json.get("dni").getAsString();
-
-        if (findByEmail(email)) {
-            return 1; //Email duplicado
-        }
-
-        if (findByDni(dni)){
-            return 2;
-        }
 
 
-        insertarUsuario(body);
-        return 0;
-    }
 
-
-    public void insertarUsuario(String body) {
-
-        JsonObject json = JsonParser.parseString(body).getAsJsonObject();
-
-        String nombres = json.get("nombres").getAsString();
-        String apellidos = json.get("apellidos").getAsString();
-        String email = json.get("email").getAsString();
-        String dni = json.get("dni").getAsString();
-        String password = json.get("password").getAsString();
-        String telefono = json.get("telefono").getAsString();
-
-//        String sql = "INSERT INTO usuarios (id, nombre, apellidos, contraseña, edad, dni, email, telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public void insertarUsuario(String nombre, String apellido, String email, String dni, String telefono, String password) {
         String sql = "INSERT INTO usuarios (nombres, apellidos, email, dni, telefono, password) VALUES (?, ?, ?, ?, ?, ?)";
-        boolean found = findByEmail(email);
-        if (!found){
-            System.out.println("insertar");
-            try (Connection conn = DatabaseConfig.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-//                stmt.setInt(1, id);
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-                stmt.setString(1, nombres);
-                stmt.setString(2, apellidos);
-                stmt.setString(3, email);
-                stmt.setString(4, dni);
-                stmt.setString(5, telefono);
-                stmt.setString(6, password);
+            stmt.setString(1, nombre);
+            stmt.setString(2, apellido);
+            stmt.setString(3, email);
+            stmt.setString(4, dni);
+            stmt.setString(5, telefono);
+            stmt.setString(6, password);
 
-                stmt.executeUpdate();
+            stmt.executeUpdate();
+            System.out.println("Usuario insertado en DB: " + nombre);
 
-                System.out.println("Usuario insertado: " + nombres);
-                listarUsuarios();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

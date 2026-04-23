@@ -3,7 +3,7 @@ package org.example.main;
 import com.sun.net.httpserver.HttpServer;
 import org.example.config.DatabaseConfig;
 import org.example.router.RouterHandler;
-import org.example.service.RegisterService;
+import org.example.service.UsuarioService;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -23,7 +23,7 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
-        RegisterService usuario = new RegisterService();
+        UsuarioService usuario = new UsuarioService();
 
 
 
