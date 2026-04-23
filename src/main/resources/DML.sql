@@ -53,7 +53,7 @@ INSERT INTO COCHES (ANIO_FABRICACION, KILOMETRAJE, PRECIO_VENTA, ESTADO, URL_IMA
 
 
 INSERT INTO FACTURAS (COMPRADOR_ID, VENDEDOR_ID, TOTAL_BASE, TOTAL_PAGADO, ID_TRANSACCION_BANCARIA) VALUES
-                                                                                                        (3, 1, 31000.00, 38440.00, 'TX-99901'), -- Coche 3
+                                                             (3, 1, 31000.00, 38440.00, 'TX-99901'), -- Coche 3
                                                                                                         (2, 1, 22500.00, 27900.00, 'TX-99902'); -- Coche 6
 
 INSERT INTO LINEAS_FACTURA (FACTURA_ID, COCHE_ID, PRECIO_VENTA_MOMENTO) VALUES
