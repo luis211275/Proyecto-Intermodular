@@ -69,7 +69,7 @@ function filtrar(){
             console.log(opciones);
             console.log(correctAns);
 
-            for (let i = 0; i < results)
+            
             innerText = `Marcas: ${modalFMarca}`;
             apiOptions.innerText = opciones;
 
