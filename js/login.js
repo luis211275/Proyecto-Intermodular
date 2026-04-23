@@ -1,8 +1,7 @@
 
 const btnIniciarL = document.getElementById("btnLogin");
 const form = document.getElementById("form-login");
-    const mensajeHtml = document.getElementById("mensajeError");
-
+const mensajeHtml = document.getElementById("mensajeError");
 
 btnIniciarL.addEventListener("click", (e) => {
     e.preventDefault();
