@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,25 +17,50 @@
     
     <main id="resultados" class="main-content">
 
-    <input type="text" id="buscar" placeholder="Busca tu Coche ideal..."/>
+    <div class="barra-superior">
 
-    <button id="resetear" type="reset">Borrar</button>
+        <div class="centro">
 
-    <button id="favoritos">Favoritos</button>
+            <input type="text" id="buscar" placeholder="Busca tu Coche ideal..."/>
 
-     <select id="select">
-            <option value="">Marca</option>
-            <option value="">Rango de Precio</option>
-            <option value="">Color</option>
-            <option value="">Antigüedad</option>
-            <option value="">Modelo</option>
-            <option value="">Kilometraje</option>
-            <option value="">Ciudad</option>
-            <option value="">Tipo de Carburante(diesel, gasolina, electrico, híbrido)</option>
-            <option value="">Transmisión(manual, automático, semi-automático)</option>
-        </select>
+            <button id="resetear" type="reset">Borrar</button>
 
-        <div class="contenedor"></div>
+            <button id="filtros">Busqueda Avanzada</button>
+
+            <div class="contenedor-filtro">
+                <dialog id="modalFiltro">
+                    <h2 id="modalBusqAvan"></h2>
+                    <p><strong>Año:</strong> <span id="modalFAnio"></span></p>
+                    <p><strong>Precio:</strong> <span id="modalFPrecio"></span></p>
+                    <p><strong>Marca:</strong> <span id="modalFMarca"></span></p>
+                    <p><strong>Modelo:</strong> <span id="modalFModelo"></span></p>
+                    <p><strong>Color:</strong> <span id="modalFColor"></span></p>
+                    <p><strong>Combustible:</strong> <span id="modalFCombustible"></span></p>
+                    <p><strong>Transmisión:</strong> <span id="modalFTransmision"></span></p>
+                    <p><strong>Kilometraje:</strong> <span id="modalFKM"></span></p>
+                    <p><strong>Ciudad:</strong> <span id="modalFCiudad"></span></p>
+                    <p><strong>Etiqueta Ambiental:</strong> <span id="modalFEtiqAmb"></span></p>
+                    <p><strong>Version:</strong> <span id="modalFVersion"></span></p>
+                    <p><strong>Categoría:</strong> <span id="modalFCategoria"></span></p>
+                </dialog>
+            </div>
+                <!-- <option value="">Marca</option>
+                <option value="">Rango de Precio</option>
+                <option value="">Color</option>
+                <option value="">Antigüedad</option>
+                <option value="">Modelo</option>
+                <option value="">Kilometraje</option>
+                <option value="">Ciudad</option>
+                <option value="">Tipo de Carburante(diesel, gasolina, electrico, híbrido)</option>
+                <option value="">Transmisión(manual, automático, semi-automático)</option> -->
+
+        </div>
+
+        <button id="favoritos">Favoritos</button>
+
+    </div>
+
+    <div class="contenedor"></div>
 
         <dialog id="modalCoche">
             <h2 id="modalTitulo"></h2>
@@ -53,6 +78,9 @@
             <button id="cerrarModal">Cerrar</button>
         </dialog>
 
+
+    
+    
         </main>
 
         <footer>© 2026 Proyecto Intermodular. Todos los derechos reservados.</footer>    

@@ -80,14 +80,39 @@ button {
     background-color: rgb(29, 78, 216);
     color: white;
     border: none;
-    padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
+    height: 25px;
 }
 
 button:hover {
     background-color: rgb(37, 99, 235);
-    transform: scale(1.2);
+    transform: scale(1.05);
+}
+
+.barra-superior {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.centro {
+    display: flex;
+    gap: 10px;
+    margin: 0 auto;
+    margin-left: 700px;
+}
+
+#favoritos {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+#buscar {
+    height: 25px;
+    width: 200px;
+    border-radius: 5px;
+    border: none;
 }
 
 /* Footer */
