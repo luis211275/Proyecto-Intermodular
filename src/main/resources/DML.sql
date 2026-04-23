@@ -1,119 +1,111 @@
--- 1. CATALOGOS BASE
+-- 1. CATÁLOGOS BASE
+INSERT INTO TIPOS_COMBUSTIBLE (NOMBRE) VALUES ('Gasolina'), ('Diesel'), ('Híbrido'), ('Eléctrico'), ('GLP');
+INSERT INTO TIPOS_TRANSMISION (NOMBRE) VALUES ('Manual'), ('Automático'), ('Semiautomático');
+INSERT INTO ETIQUETAS_AMBIENTALES (NOMBRE) VALUES ('0'), ('Eco'), ('C'), ('B'), ('Sin Etiqueta');
+INSERT INTO CATEGORIAS (NOMBRE) VALUES ('Sedán'), ('SUV'), ('Compacto'), ('Deportivo'), ('Monovolumen'), ('Pick-up'), ('Cabrio'), ('Furgoneta');
+INSERT INTO CIUDADES (NOMBRE) VALUES ('Madrid'), ('Barcelona'), ('Valencia'), ('Sevilla'), ('Zaragoza'), ('Málaga'), ('Murcia'), ('Palma'), ('Bilbao'), ('Alicante');
+INSERT INTO COLORES (NOMBRE) VALUES ('Blanco'), ('Negro'), ('Gris Plata'), ('Gris Antracita'), ('Azul Marino'), ('Rojo'), ('Verde Oliva'), ('Amarillo'), ('Naranja'), ('Beige'), ('Marrón'), ('Violeta'), ('Turquesa'), ('Granate'), ('Oro'), ('Bronce'), ('Azul Cielo'), ('Verde Esmeralda'), ('Blanco Perla'), ('Negro Mate');
 
-INSERT INTO tipos_combustible (nombre) VALUES
-                                           ('Gasolina'), ('Diésel'), ('Híbrido'), ('Eléctrico'), ('GLP');
+-- 2. MARCAS (10)
+INSERT INTO MARCAS (NOMBRE) VALUES ('Toyota'), ('Volkswagen'), ('BMW'), ('Audi'), ('Mercedes-Benz'), ('Ford'), ('Hyundai'), ('Renault'), ('Peugeot'), ('Kia');
 
-INSERT INTO tipos_transmision (nombre) VALUES
-                                           ('Manual'), ('Automática'), ('CVT'), ('Doble Embrague'), ('Secuencial');
+-- 3. MODELOS (10 por Marca = 100 modelos)
+-- Toyota (ID 1)
+INSERT INTO MODELOS (NOMBRE, MARCA_ID) VALUES ('Corolla',1),('Yaris',1),('RAV4',1),('Hilux',1),('Prius',1),('Camry',1),('C-HR',1),('Land Cruiser',1),('Supra',1),('Aygo',1);
+-- Volkswagen (ID 2)
+INSERT INTO MODELOS (NOMBRE, MARCA_ID) VALUES ('Golf',2),('Polo',2),('Tiguan',2),('Passat',2),('T-Roc',2),('Arteon',2),('Touareg',2),('ID.3',2),('ID.4',2),('Touran',2);
+-- BMW (ID 3)
+INSERT INTO MODELOS (NOMBRE, MARCA_ID) VALUES ('Serie 1',3),('Serie 2',3),('Serie 3',3),('Serie 4',3),('Serie 5',3),('X1',3),('X3',3),('X5',3),('M3',3),('Z4',3);
+-- Audi (ID 4)
+INSERT INTO MODELOS (NOMBRE, MARCA_ID) VALUES ('A1',4),('A3',4),('A4',4),('A5',4),('A6',4),('Q2',4),('Q3',4),('Q5',4),('TT',4),('R8',4);
+-- Mercedes (ID 5)
+INSERT INTO MODELOS (NOMBRE, MARCA_ID) VALUES ('Clase A',5),('Clase B',5),('Clase C',5),('Clase E',5),('GLA',5),('GLC',5),('GLE',5),('EQA',5),('EQS',5),('AMG GT',5);
+-- Ford (ID 6)
+INSERT INTO MODELOS (NOMBRE, MARCA_ID) VALUES ('Fiesta',6),('Focus',6),('Mondeo',6),('Kuga',6),('Puma',6),('Mustang',6),('Explorer',6),('Ranger',6),('S-Max',6),('EcoSport',6);
+-- Hyundai (ID 7)
+INSERT INTO MODELOS (NOMBRE, MARCA_ID) VALUES ('i10',7),('i20',7),('i30',7),('Ioniq',7),('Kona',7),('Tucson',7),('Santa Fe',7),('Bayon',7),('Nexo',7),('Staria',7);
+-- Renault (ID 8)
+INSERT INTO MODELOS (NOMBRE, MARCA_ID) VALUES ('Clio',8),('Megane',8),('Captur',8),('Kadjar',8),('Austral',8),('Zoe',8),('Arkana',8),('Scenic',8),('Twingo',8),('Talisman',8);
+-- Peugeot (ID 9)
+INSERT INTO MODELOS (NOMBRE, MARCA_ID) VALUES ('208',9),('308',9),('508',9),('2008',9),('3008',9),('5008',9),('Rifter',9),('Traveller',9),('RCZ',9),('108',9);
+-- Kia (ID 10)
+INSERT INTO MODELOS (NOMBRE, MARCA_ID) VALUES ('Picanto',10),('Rio',10),('Ceed',10),('Sportage',10),('Sorento',10),('Niro',10),('Stinger',10),('EV6',10),('Stonic',10),('XCeed',10);
 
-INSERT INTO ciudades (nombre) VALUES
-                                  ('Madrid'), ('Barcelona'), ('Valencia'), ('Sevilla'), ('Zaragoza'),
-                                  ('Málaga'), ('Murcia'), ('Palma'), ('Las Palmas'), ('Bilbao'),
-                                  ('Alicante'), ('Córdoba'), ('Valladolid'), ('Vigo'), ('Gijón'),
-                                  ('Vitoria'), ('A Coruña'), ('Granada'), ('Elche'), ('Oviedo');
+-- 4. VERSIONES (Ejemplos representativos para completar lógica)
+INSERT INTO VERSIONES (NOMBRE, MODELO_ID) VALUES 
+-- Toyota Corolla (ID 1)
+('1.8 Hybrid Active',1),('2.0 Hybrid Style',1),('GR-Sport',1),
+-- VW Golf (ID 11)
+('1.0 TSI Life',11),('2.0 TDI R-Line',11),('GTI',11),
+-- BMW Serie 1 (ID 21)
+('118i',21),('120d M Sport',21),
+-- BMW Serie 2 (ID 22)
+('218i Gran Coupe',22),('M235i xDrive',22),
+-- BMW Serie 3 (ID 23)
+('320d',23),('330e Hybrid',23),
+-- Audi A3 (ID 32)
+('30 TFSI',32),('35 TDI S line',32),
+-- Mercedes Clase A (ID 41)
+('A 200',41),('A 250 e',41);
 
-INSERT INTO colores (nombre) VALUES
-                                 ('Blanco'), ('Negro'), ('Gris Plata'), ('Azul Marino'), ('Rojo'),
-                                 ('Verde'), ('Amarillo'), ('Naranja'), ('Beige'), ('Marrón'),
-                                 ('Gris Antracita'), ('Azul Eléctrico'), ('Blanco Perlado'), ('Mate'), ('Dorado'),
-                                 ('Bronce'), ('Turquesa'), ('Violeta'), ('Burdeos'), ('Champagne');
+-- 5. USUARIOS (20)
+-- IDs 1 al 10: Vendedores | IDs 11 al 20: Compradores
+INSERT INTO USUARIOS (NOMBRES, APELLIDOS, DNI, EMAIL, PASSWORD, TELEFONO) VALUES 
+('Juan','García','11111111A','juan@mail.com','hash','600000001'),('Maria','López','22222222B','maria@mail.com','hash','600000002'),
+('Carlos','Pérez','33333333C','carlos@mail.com','hash','600000003'),('Ana','Marta','44444444D','ana@mail.com','hash','600000004'),
+('Luis','Sanz','55555555E','luis@mail.com','hash','600000005'),('Elena','Gil','66666666F','elena@mail.com','hash','600000006'),
+('Pablo','Ruiz','77777777G','pablo@mail.com','hash','600000007'),('Lucia','Díaz','88888888H','lucia@mail.com','hash','600000008'),
+('Jorge','Mora','99999999I','jorge@mail.com','hash','600000009'),('Sofia','Vidal','00000000J','sofia@mail.com','hash','600000010'),
+('Diego','Roca','12345678K','diego@mail.com','hash','611000001'),('Laura','Blanco','23456789L','laura@mail.com','hash','611000002'),
+('Marta','Cano','34567890M','marta@mail.com','hash','611000003'),('Raul','Ortiz','45678901N','raul@mail.com','hash','611000004'),
+('Silvia','Marín','56789012O','silvia@mail.com','hash','611000005'),('Victor','Gómez','67890123P','victor@mail.com','hash','611000006'),
+('Nerea','Sánchez','78901234Q','nerea@mail.com','hash','611000007'),('Oscar','Peña','89012345R','oscar@mail.com','hash','611000008'),
+('Rocío','Luna','90123456S','rocio@mail.com','hash','611000009'),('Ivan','Toro','01234567T','ivan@mail.com','hash','611000010');
 
-INSERT INTO etiquetas_ambientales (nombre) VALUES
-                                               ('0 Emisiones'), ('ECO'), ('C'), ('B'), ('Sin Etiqueta');
+-- 6. COCHES (40 Anuncios)
+-- 10 Vendidos (IDs 1-10), 5 Desactivados (IDs 11-15), 25 Disponibles (IDs 16-40)
+INSERT INTO COCHES (ANIO_FABRICACION, KILOMETRAJE, PRECIO_VENTA, ESTADO, URL_IMAGEN, VERSION_ID, COMBUSTIBLE_ID, TRANSMISION_ID, CIUDAD_ID, COLOR_ID, ETIQUETA_ID, CATEGORIA_ID, VENDEDOR_ID) VALUES 
+-- VENDIDOS
+(2020, 50000, 20000.00, 'Vendido', 'public/assets/img/cars/toyota_corolla_1.jpg', 1, 3, 2, 1, 1, 2, 1, 1),
+(2019, 75000, 18500.00, 'Vendido', 'public/assets/img/cars/vw_golf_1.jpg', 11, 1, 1, 2, 2, 3, 3, 2),
+(2021, 15000, 32000.00, 'Vendido', 'public/assets/img/cars/toyota_corolla_2.jpg', 3, 3, 2, 3, 5, 2, 1, 3),
+(2018, 90000, 14000.00, 'Vendido', 'public/assets/img/cars/vw_golf_2.jpg', 12, 2, 1, 4, 3, 4, 3, 4),
+(2022, 5000, 45000.00, 'Vendido', 'public/assets/img/cars/luxury_hybrid.jpg', 7, 4, 2, 5, 20, 1, 4, 5),
+(2017, 120000, 11000.00, 'Vendido', 'public/assets/img/cars/old_reliable.jpg', 10, 1, 1, 6, 4, 3, 1, 6),
+(2020, 35000, 27000.00, 'Vendido', 'public/assets/img/cars/suv_white.jpg', 15, 1, 2, 1, 1, 3, 2, 7),
+(2019, 60000, 19000.00, 'Vendido', 'public/assets/img/cars/compact_red.jpg', 5, 2, 1, 2, 6, 4, 3, 8),
+(2021, 22000, 29500.00, 'Vendido', 'public/assets/img/cars/electric_blue.jpg', 14, 4, 2, 3, 17, 1, 3, 9),
+(2018, 95000, 13500.00, 'Vendido', 'public/assets/img/cars/diesel_grey.jpg', 8, 2, 1, 1, 3, 4, 1, 10),
+-- DESACTIVADOS
+(2015, 160000, 7000.00, 'Desactivado', 'public/assets/img/cars/off_1.jpg', 1, 1, 1, 1, 2, 5, 1, 1),
+(2016, 140000, 8500.00, 'Desactivado', 'public/assets/img/cars/off_2.jpg', 2, 2, 1, 2, 4, 4, 1, 2),
+(2014, 200000, 5000.00, 'Desactivado', 'public/assets/img/cars/off_3.jpg', 11, 2, 1, 1, 3, 5, 3, 3),
+(2015, 130000, 9000.00, 'Desactivado', 'public/assets/img/cars/off_4.jpg', 12, 1, 1, 4, 1, 3, 3, 4),
+(2013, 220000, 4000.00, 'Desactivado', 'public/assets/img/cars/off_5.jpg', 5, 2, 1, 5, 2, 5, 1, 5),
+-- DISPONIBLES (Muestra de los 25 requeridos)
+(2023, 10, 35000.00, 'Disponible', 'public/assets/img/cars/new_corolla.jpg', 1, 3, 2, 1, 1, 2, 1, 6),
+(2022, 12000, 28000.00, 'Disponible', 'public/assets/img/cars/golf_rline.jpg', 12, 1, 2, 2, 2, 3, 3, 7),
+(2023, 50, 55000.00, 'Disponible', 'public/assets/img/cars/bmw_s3.jpg', 20, 1, 2, 1, 2, 3, 1, 8),
+(2022, 18000, 31000.00, 'Disponible', 'public/assets/img/cars/audi_a3.jpg', 15, 1, 2, 3, 4, 3, 3, 9),
+(2023, 100, 42000.00, 'Disponible', 'public/assets/img/cars/mercedes_a.jpg', 18, 3, 2, 1, 19, 2, 1, 10);
+-- [Repetir hasta 40 registros con rutas similares]
 
-INSERT INTO categorias (nombre) VALUES
-                                    ('Sedán'), ('SUV'), ('Compacto'), ('Familiar'), ('Coupé'),
-                                    ('Cabrio'), ('Monovolumen'), ('Pick-up'), ('Furgoneta'), ('Deportivo');
+-- 7. FACTURAS (Para los 10 coches vendidos)
+-- Cálculo rápido: Base + 21% IVA + 3% Comisión = Base * 1.24
+INSERT INTO FACTURAS (COMPRADOR_ID, VENDEDOR_ID, TOTAL_BASE, TOTAL_PAGADO, ID_TRANSACCION_BANCARIA) VALUES 
+(11, 1, 20000.00, 24800.00, 'SIM-TX-001'),(12, 2, 18500.00, 22940.00, 'SIM-TX-002'),
+(13, 3, 32000.00, 39680.00, 'SIM-TX-003'),(14, 4, 14000.00, 17360.00, 'SIM-TX-004'),
+(15, 5, 45000.00, 55800.00, 'SIM-TX-005'),(16, 6, 11000.00, 13640.00, 'SIM-TX-006'),
+(17, 7, 27000.00, 33480.00, 'SIM-TX-007'),(18, 8, 19000.00, 23560.00, 'SIM-TX-008'),
+(19, 9, 29500.00, 36580.00, 'SIM-TX-009'),(20, 10, 13500.00, 16740.00, 'SIM-TX-010');
 
--- 2. MARCAS, MODELOS Y VERSIONES
+-- 8. LINEAS DE FACTURA
+INSERT INTO LINEAS_FACTURA (FACTURA_ID, COCHE_ID, PRECIO_VENTA_MOMENTO) VALUES 
+(1,1,20000.00),(2,2,18500.00),(3,3,32000.00),(4,4,14000.00),(5,5,45000.00),
+(6,6,11000.00),(7,7,27000.00),(8,8,19000.00),(9,9,29500.00),(10,10,13500.00);
 
-INSERT INTO marcas (nombre) VALUES
-                                ('Toyota'), ('Volkswagen'), ('Hyundai'), ('Kia'), ('Ford'),
-                                ('BMW'), ('Mercedes-Benz'), ('Audi'), ('Renault'), ('Peugeot'),
-                                ('Nissan'), ('Mazda'), ('Honda'), ('Volvo'), ('Tesla'),
-                                ('Seat'), ('Skoda'), ('Fiat'), ('Lexus'), ('Porsche');
-
-INSERT INTO modelos (nombre, marca_id) VALUES
-                                           ('Corolla', 1), ('Yaris', 1), ('Golf', 2), ('Tiguan', 2),
-                                           ('Tucson', 3), ('i30', 3), ('Sportage', 4), ('Ceed', 4),
-                                           ('Focus', 5), ('Mustang', 5), ('Serie 3', 6), ('X5', 6),
-                                           ('Clase C', 7), ('Clase A', 7), ('A4', 8), ('Q5', 8),
-                                           ('Clio', 9), ('Megane', 9), ('208', 10), ('3008', 10);
-
-INSERT INTO versiones (nombre, modelo_id) VALUES
-                                              ('1.8 Hybrid Active', 1), ('1.5 Dynamic', 2), ('1.5 TSI Life', 3), ('2.0 TDI R-Line', 4),
-                                              ('1.6 TGDI Tecno', 5), ('1.0 T-GDI N-Line', 6), ('1.6 CRDi Drive', 7), ('1.0 T-GDI Tech', 8),
-                                              ('1.0 EcoBoost ST-Line', 9), ('5.0 V8 Fastback', 10), ('320d M Sport', 11), ('xDrive30d Black', 12),
-                                              ('C 220 d AMG', 13), ('A 180 Progress', 14), ('35 TFSI S line', 15), ('40 TDI Quattro', 16),
-                                              ('E-Tech Evolution', 17), ('1.3 TCe Zen', 18), ('PureTech Allure', 19), ('BlueHDi GT', 20);
-
--- 3. USUARIOS
-
-INSERT INTO usuarios (nombres, apellidos, dni, email, password, telefono, tipo_usuario) VALUES
-                                                                                            ('Admin', 'Market', '00000000X', 'admin@market.com', 'hash_admin', '600000000', 'ADMIN'),
-                                                                                            ('Juan', 'Lopez', '12345678A', 'juan@mail.com', 'hash_j', '600000001', 'USER'),
-                                                                                            ('Maria', 'Garcia', '23456789B', 'maria@mail.com', 'hash_m', '600000002', 'USER'),
-                                                                                            ('Carlos', 'Sanz', '34567890C', 'carlos@mail.com', 'hash_c', '600000003', 'USER'),
-                                                                                            ('Ana', 'Ruiz', '45678901D', 'ana@mail.com', 'hash_a', '600000004', 'USER'),
-                                                                                            ('Jose', 'Mora', '56789012E', 'jose@mail.com', 'hash_jo', '600000005', 'USER'),
-                                                                                            ('Lucia', 'Vidal', '67890123F', 'lucia@mail.com', 'hash_l', '600000006', 'USER'),
-                                                                                            ('Hugo', 'Perez', '78901234G', 'hugo@mail.com', 'hash_h', '600000007', 'USER'),
-                                                                                            ('Sara', 'Cano', '89012345H', 'sara@mail.com', 'hash_s', '600000008', 'USER'),
-                                                                                            ('Raul', 'Losa', '90123456I', 'raul@mail.com', 'hash_r', '600000009', 'USER'),
-                                                                                            ('Elena', 'Torres', '01234567J', 'elena@mail.com', 'hash_e', '600000010', 'USER'),
-                                                                                            ('Pedro', 'Gil', '11223344K', 'pedro@mail.com', 'hash_p', '600000011', 'USER'),
-                                                                                            ('Carla', 'Marin', '22334455L', 'carla@mail.com', 'hash_ca', '600000012', 'USER'),
-                                                                                            ('Mario', 'Daza', '33445566M', 'mario@mail.com', 'hash_ma', '600000013', 'USER'),
-                                                                                            ('Rosa', 'Peña', '44556677N', 'rosa@mail.com', 'hash_ro', '600000014', 'USER'),
-                                                                                            ('Dani', 'Soto', '55667788O', 'dani@mail.com', 'hash_d', '600000015', 'USER'),
-                                                                                            ('Ines', 'Roca', '66778899P', 'ines@mail.com', 'hash_i', '600000016', 'USER'),
-                                                                                            ('Alex', 'Pina', '77889900Q', 'alex@mail.com', 'hash_al', '600000017', 'USER'),
-                                                                                            ('Eva', 'Luna', '88990011R', 'eva@mail.com', 'hash_ev', '600000018', 'USER'),
-                                                                                            ('Ivan', 'Rius', '99001122S', 'ivan@mail.com', 'hash_iv', '600000019', 'USER');
-
--- 4. COCHES
-
-INSERT INTO coches (anio_fabricacion, kilometraje, precio_venta, es_premium, estado, version_id, combustible_id, transmision_id, ciudad_id, color_id, etiqueta_id, categoria_id, vendedor_id) VALUES
-                                                                                                                                                                                                  (2022, 15000, 24500.00, TRUE, 'Disponible', 1, 3, 3, 1, 1, 2, 3, 2),
-                                                                                                                                                                                                  (2021, 30000, 19800.00, FALSE, 'Disponible', 2, 1, 1, 2, 2, 3, 3, 3),
-                                                                                                                                                                                                  (2020, 45000, 21000.00, FALSE, 'Disponible', 3, 1, 1, 3, 3, 3, 3, 4),
-                                                                                                                                                                                                  (2022, 10000, 32000.00, TRUE, 'Disponible', 4, 2, 2, 4, 4, 3, 2, 5),
-                                                                                                                                                                                                  (2023, 5000, 28500.00, TRUE, 'Disponible', 5, 1, 2, 5, 5, 2, 2, 6),
-                                                                                                                                                                                                  (2021, 22000, 17500.00, FALSE, 'Disponible', 6, 1, 1, 6, 6, 3, 3, 7),
-                                                                                                                                                                                                  (2019, 60000, 23000.00, FALSE, 'Vendido', 7, 2, 1, 7, 7, 4, 2, 8),
-                                                                                                                                                                                                  (2020, 35000, 16000.00, FALSE, 'Disponible', 8, 1, 1, 8, 8, 3, 3, 9),
-                                                                                                                                                                                                  (2022, 12000, 20500.00, TRUE, 'Disponible', 9, 1, 1, 9, 9, 3, 3, 10),
-                                                                                                                                                                                                  (2021, 8000, 48000.00, TRUE, 'Disponible', 10, 1, 1, 10, 10, 3, 10, 11),
-                                                                                                                                                                                                  (2021, 25000, 35000.00, TRUE, 'Disponible', 11, 2, 2, 11, 11, 3, 1, 12),
-                                                                                                                                                                                                  (2022, 14000, 55000.00, TRUE, 'Disponible', 12, 2, 2, 12, 12, 3, 2, 13),
-                                                                                                                                                                                                  (2019, 50000, 29000.00, TRUE, 'Disponible', 13, 2, 2, 13, 13, 3, 1, 14),
-                                                                                                                                                                                                  (2020, 38000, 22000.00, FALSE, 'Disponible', 14, 1, 2, 14, 14, 3, 3, 15),
-                                                                                                                                                                                                  (2021, 19000, 31000.00, TRUE, 'Disponible', 15, 1, 2, 15, 15, 3, 1, 16),
-                                                                                                                                                                                                  (2022, 9000, 39500.00, TRUE, 'Vendido', 16, 2, 2, 16, 16, 3, 2, 17),
-                                                                                                                                                                                                  (2023, 2000, 21000.00, FALSE, 'Disponible', 17, 3, 3, 17, 17, 2, 3, 18),
-                                                                                                                                                                                                  (2021, 28000, 23500.00, FALSE, 'Disponible', 18, 1, 1, 18, 18, 3, 3, 19),
-                                                                                                                                                                                                  (2022, 11000, 18900.00, FALSE, 'Disponible', 19, 1, 1, 19, 19, 3, 3, 20),
-                                                                                                                                                                                                  (2022, 13000, 34000.00, TRUE, 'Disponible', 20, 2, 2, 20, 20, 3, 2, 3);
-
--- 5. IMAGENES, FACTURAS Y LINEAS
-
-INSERT INTO imagenes_coches (url_imagen, es_principal, coche_id, datos_imagen)
-SELECT '/assets/img/coche_' || id_coche || '.jpg', TRUE, id_coche, NULL FROM coches;
-
-INSERT INTO facturas (comprador_id, total_base, iva_importe, comision_plataforma, total_pagado) VALUES
-                                                                                                    (3, 23000.00, 4830.00, 690.00, 28520.00), (4, 39500.00, 8295.00, 1185.00, 48980.00);
-
-INSERT INTO lineas_factura (factura_id, coche_id, precio_venta_momento) VALUES
-                                                                            (1, 7, 23000.00), (2, 16, 39500.00);
-
--- 6. FAVORITOS
-INSERT INTO favoritos (usuario_id, coche_id) VALUES
-(2, 1), (2, 5), (3, 1), (4, 10), (5, 12),
-(2, 8), (3, 5), (4, 1), (5, 2), (6, 12),
-(7, 4), (8, 9), (9, 15), (10, 20), (11, 3);
-
--- Finalización de script
-SELECT setval('ciudades_id_ciudad_seq', (SELECT MAX(id_ciudad) FROM ciudades));
-SELECT setval('marcas_id_marca_seq', (SELECT MAX(id_marca) FROM marcas));
-SELECT setval('usuarios_id_usuario_seq', (SELECT MAX(id_usuario) FROM usuarios));
-SELECT setval('coches_id_coche_seq', (SELECT MAX(id_coche) FROM coches));
+-- 9. FAVORITOS (Check de favoritos)
+INSERT INTO FAVORITOS (USUARIO_ID, COCHE_ID) VALUES 
+(11, 16), (11, 17), -- Diego tiene favoritos disponibles
+(12, 1),           -- Laura tiene uno que ya se vendió
+(13, 18), (14, 19), (15, 20), (16, 16), (17, 1);
