@@ -1,0 +1,105 @@
+/* Estilos específicos para Publicar */
+.contenedor-formulario {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.titulo-formulario {
+    font-size: 2rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #1e293b;
+    letter-spacing: -0.025em;
+}
+
+.cuadricula-formulario {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.grupo-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.grupo-formulario.ancho-completo {
+    grid-column: span 2;
+}
+
+.grupo-formulario label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+.grupo-formulario input,
+.grupo-formulario select {
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background-color: #f8fafc;
+}
+
+.grupo-formulario input:focus,
+.grupo-formulario select:focus {
+    outline: none;
+    border-color: #2563eb;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.boton-enviar {
+    grid-column: span 2;
+    background: #2563eb;
+    color: #ffffff;
+    padding: 1rem;
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+}
+
+.boton-enviar:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.boton-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+}
+
+.boton-volver:hover {
+    color: #1e293b;
+}
+
+@media (max-width: 640px) {
+    .cuadricula-formulario {
+        grid-template-columns: 1fr;
+    }
+    .grupo-formulario.ancho-completo {
+        grid-column: span 1;
+    }
+    .boton-enviar {
+        grid-column: span 1;
+    }
+}

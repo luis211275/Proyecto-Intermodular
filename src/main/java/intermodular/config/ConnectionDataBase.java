@@ -11,12 +11,7 @@ public class ConnectionDataBase {
 
 
   // Método donde se realiza la conexión a la Base de Datos
-  public static Connection getConnection() {
-    try {
-      return DriverManager.getConnection(URL, USERNAME, PASSWORD);
-    } catch (Exception e) {
-      throw new RuntimeException("Error conectando a PostgreSQL", e);
-    }
+  public static Connection obtenerConexion() throws Exception {
+    return DriverManager.getConnection(URL, USERNAME, PASSWORD);
   }
 }
-
