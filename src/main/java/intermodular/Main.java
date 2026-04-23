@@ -15,7 +15,7 @@ public class Main {
       server.start();
 
       System.out.println("Servidor iniciado en: http://localhost:8080/");
-      System.out.println("Documentación: http://localhost:8080/docs");
+      System.out.println("Documentación: http://localhost:8080/api/docs");
     } catch (java.net.BindException e) {
       System.err.println("Error: El puerto 8080 ya está en uso.");
       System.exit(1);

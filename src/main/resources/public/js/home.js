@@ -307,7 +307,7 @@ async function abrirModalDetalle(id) {
 async function manejarEliminacion(id, boton) {
     boton.disabled = true;
     try {
-        const respuesta = await fetch(`/eliminarAnuncioVehiculo?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+        const respuesta = await fetch(`/api/eliminarAnuncioVehiculo?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
         const datos = await obtenerJsonSeguro(respuesta);
         if (!respuesta.ok) throw new Error(datos?.message || 'Error al eliminar');
         mostrarNotificacion('Anuncio eliminado.', 'success');
