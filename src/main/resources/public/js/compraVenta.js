@@ -156,7 +156,7 @@ function configurarEscuchadoresEventos(coche) {
             }
 
             try {
-                const respuesta = await fetch('/marcarVehiculoComoVendido', {
+                const respuesta = await fetch('/api/marcarVehiculoComoVendido', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id: coche.idCoche })

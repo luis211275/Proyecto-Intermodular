@@ -44,9 +44,7 @@ public class RouterHandler implements HttpHandler {
         }
 
         // Rutas que NO son SPA (API, publicarCoche, etc.)
-        boolean esApi = path.startsWith("/api/") || path.equals("/publicarVehiculo") || 
-                        path.equals("/marcarVehiculoComoVendido") || path.equals("/cambiarEstadoAnuncioVehiculo") || 
-                        path.equals("/eliminarAnuncioVehiculo") || path.equals("/docs");
+        boolean esApi = path.startsWith("/api/");
 
         if (!esApi) {
           // SPA Fallback: Si no es API ni estático (ej: /publicar, /compraVenta, o la raíz /), sirve index.html
@@ -126,17 +124,17 @@ public class RouterHandler implements HttpHandler {
           modeloId = Integer.parseInt(query.split("modeloId=")[1].split("&")[0]);
         }
         sendResponse(exchange, 200, catalogoController.obtenerVersiones(modeloId));
-      } else if (path.equals("/publicarVehiculo") && method.equals("POST")) {
+      } else if (path.equals("/api/publicarVehiculo") && method.equals("POST")) {
         exchange.getResponseHeaders().add("Content-Type", "application/json; charset=UTF-8");
         sendResponse(exchange, 201, cocheController.publicarVehiculo(exchange));
-      } else if (path.equals("/marcarVehiculoComoVendido") && method.equals("PATCH")) {
+      } else if (path.equals("/api/marcarVehiculoComoVendido") && method.equals("PATCH")) {
         exchange.getResponseHeaders().add("Content-Type", "application/json; charset=UTF-8");
         java.util.Scanner s = new java.util.Scanner(exchange.getRequestBody()).useDelimiter("\\A");
         String body = s.hasNext() ? s.next() : "";
         // JSON: {"id": int}
         int id = Integer.parseInt(body.split("\"id\"\\s*:\\s*")[1].split("[^0-9]")[0]);
         sendResponse(exchange, 200, cocheController.marcarVehiculoComoVendido(id));
-      } else if (path.equals("/cambiarEstadoAnuncioVehiculo") && method.equals("PATCH")) {
+      } else if (path.equals("/api/cambiarEstadoAnuncioVehiculo") && method.equals("PATCH")) {
         exchange.getResponseHeaders().add("Content-Type", "application/json; charset=UTF-8");
         java.util.Scanner s = new java.util.Scanner(exchange.getRequestBody()).useDelimiter("\\A");
         String body = s.hasNext() ? s.next() : "";
@@ -144,7 +142,7 @@ public class RouterHandler implements HttpHandler {
         int id = Integer.parseInt(body.split("\"id\"\\s*:\\s*")[1].split("[^0-9]")[0]);
         String estado = body.split("\"estado\"\\s*:\\s*\"")[1].split("\"")[0];
         sendResponse(exchange, 200, cocheController.cambiarEstadoAnuncioVehiculo(id, estado));
-      } else if (path.equals("/eliminarAnuncioVehiculo") && method.equals("DELETE")) {
+      } else if (path.equals("/api/eliminarAnuncioVehiculo") && method.equals("DELETE")) {
         exchange.getResponseHeaders().add("Content-Type", "application/json; charset=UTF-8");
         int id = 0;
         if (query != null && query.contains("id=")) {
@@ -164,7 +162,7 @@ public class RouterHandler implements HttpHandler {
           pass = body.split("password=")[1].split("&")[0];
         }
         sendResponse(exchange, 200, usuarioController.iniciarSesion(email, pass));
-      } else if (path.equals("/docs") && method.equals("GET")) {
+      } else if (path.equals("/api/docs") && method.equals("GET")) {
         servirArchivo(exchange, "src/main/resources/openapi-coches.html", "text/html");
       } else if (method.equals("GET") && (path.equals("/") || path.equals("/index.html") || esRutaSpa(path))) {
         servirArchivo(exchange, "src/main/resources/public/index.html", "text/html");
@@ -226,11 +224,6 @@ public class RouterHandler implements HttpHandler {
     // Rutas del frontend (sin extensión) deben devolver index.html para que el router SPA funcione
     if (path == null || path.isEmpty()) return false;
     if (path.startsWith("/api/")) return false;
-    if (path.equals("/docs")) return false;
-    if (path.equals("/publicarVehiculo")) return false;
-    if (path.equals("/marcarVehiculoComoVendido")) return false;
-    if (path.equals("/eliminarAnuncioVehiculo")) return false;
-    if (path.equals("/cambiarEstadoAnuncioVehiculo")) return false;
     return !path.contains(".");
   }
 

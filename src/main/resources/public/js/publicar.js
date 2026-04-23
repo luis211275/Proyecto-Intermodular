@@ -105,7 +105,7 @@ export const inicializarPublicar = async () => {
             datosFormulario.set('id_vendedor', String(idVendedor));
 
             try {
-                const respuesta = await fetch('/publicarVehiculo', {
+                const respuesta = await fetch('/api/publicarVehiculo', {
                     method: 'POST',
                     body: datosFormulario
                 });

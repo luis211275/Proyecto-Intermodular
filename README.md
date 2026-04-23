@@ -32,7 +32,7 @@ Este proyecto es una plataforma de compraventa de coches, desarrollada como proy
 
 3. **Acceso:**
    - Aplicación: [http://localhost:8080/](http://localhost:8080/)
-   - Documentación API: [http://localhost:8080/docs](http://localhost:8080/docs)
+   - Documentación API: [http://localhost:8080/api/docs](http://localhost:8080/api/docs)
 
 ## Estructura del Proyecto
 
