@@ -27,7 +27,7 @@ Este proyecto es una plataforma de compraventa de coches, desarrollada como proy
 2. **Compilar y Ejecutar:**
    ```bash
    mvn clean compile
-   mvn exec:java -Dexec.mainClass="intermodular.Main"
+   mvn exec:java -Dexec.mainClass="org.example.Main"
    ```
 
 3. **Acceso:**
@@ -36,11 +36,11 @@ Este proyecto es una plataforma de compraventa de coches, desarrollada como proy
 
 ## Estructura del Proyecto
 
-- `src/main/java/intermodular/model`: POJOs de las entidades.
-- `src/main/java/intermodular/dao`: Capa de acceso a datos (SQL puro).
-- `src/main/java/intermodular/service`: Lógica de negocio.
-- `src/main/java/intermodular/router`: Servidor y manejo de rutas.
-- `src/main/resources/public`: Frontend (HTML/JS).
+- `src/main/java/org.example/model`: POJOs de las entidades.
+- `src/main/java/org.example/dao`: Capa de acceso a datos (SQL puro).
+- `src/main/java/org.example/service`: Lógica de negocio.
+- `src/main/java/org.example/router`: Servidor y manejo de rutas.
+- `frontend`: Frontend (HTML/JS).
 
 ## Autores
 - Luis Lopez-Nuño Sánchez

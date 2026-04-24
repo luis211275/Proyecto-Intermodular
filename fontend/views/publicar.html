@@ -1,0 +1,69 @@
+<div class="contenedor-formulario">
+    <div style="margin-bottom: 1.5rem;">
+        <a href="/fontend" data-route="/" class="boton-volver" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--text-muted); font-weight: 500;">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            Volver al catálogo
+        </a>
+    </div>
+    <h2 class="titulo-formulario">Vende tu coche</h2>
+    <form id="formVenta" class="cuadricula-formulario">
+        <div class="grupo-formulario">
+            <label for="marcaId">Marca</label>
+            <select id="marcaId" name="marcaId" required></select>
+        </div>
+        <div class="grupo-formulario">
+            <label for="modeloId">Modelo</label>
+            <select id="modeloId" name="modeloId" required>
+                <option value="">Seleccione marca primero</option>
+            </select>
+        </div>
+        <div class="grupo-formulario">
+            <label for="id_version">Versión</label>
+            <select id="id_version" name="id_version" required>
+                <option value="">Seleccione modelo primero</option>
+            </select>
+        </div>
+        <div class="grupo-formulario">
+            <label for="anio">Año</label>
+            <input type="number" id="anio" name="anio" placeholder="2010" required min="1900">
+        </div>
+        <div class="grupo-formulario">
+            <label for="km">Kilometraje</label>
+            <input type="number" id="km" name="km" placeholder="10000" required>
+        </div>
+        <div class="grupo-formulario">
+            <label for="precio">Precio</label>
+            <input type="number" id="precio" name="precio" placeholder="50000" required>
+        </div>
+        <div class="grupo-formulario">
+            <label for="id_ciudad">Ciudad</label>
+            <select id="id_ciudad" name="id_ciudad" required></select>
+        </div>
+        <div class="grupo-formulario">
+            <label for="id_combustible">Combustible</label>
+            <select id="id_combustible" name="id_combustible" required></select>
+        </div>
+        <div class="grupo-formulario">
+            <label for="id_transmision">Transmisión</label>
+            <select id="id_transmision" name="id_transmision" required></select>
+        </div>
+        <div class="grupo-formulario">
+            <label for="id_categoria">Categoría</label>
+            <select id="id_categoria" name="id_categoria" required></select>
+        </div>
+        <div class="grupo-formulario">
+            <label for="id_color">Color</label>
+            <select id="id_color" name="id_color" required></select>
+        </div>
+        <div class="grupo-formulario">
+            <label for="id_etiqueta">Etiqueta Ambiental</label>
+            <select id="id_etiqueta" name="id_etiqueta" required></select>
+        </div>
+        <div class="grupo-formulario ancho-completo">
+            <label for="imagen">Imagen (Archivo)</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*" required>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Obligatorio: Sube una del vehículo.</p>
+        </div>
+        <button type="submit" class="boton-enviar">Publicar Coche</button>
+    </form>
+</div>
