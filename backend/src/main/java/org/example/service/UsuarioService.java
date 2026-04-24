@@ -1,24 +1,29 @@
 package org.example.service;
 
-import org.example.dao.UsuarioDAO;
-import org.example.dao.impl.UsuarioDAOImpl;
-import org.example.exception.ErrorDeAccesoADatosException;
-import org.example.exception.ErrorDeNegocioException;
-import org.example.exception.CredencialesInvalidasException;
-import org.example.exception.DatosIncompletosException;
-import org.example.model.Usuario;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.example.dao.UsuarioDao;
 
 public class UsuarioService {
-    private UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
+  private UsuarioDao usuarioDao = new UsuarioDao();
 
-    public Usuario login(String email, String password) throws ErrorDeAccesoADatosException, ErrorDeNegocioException {
-        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-            throw new DatosIncompletosException("Email y contraseña son obligatorios");
-        }
-        Usuario usuario = usuarioDAO.login(email, password);
-        if (usuario == null) {
-            throw new CredencialesInvalidasException("Email o contraseña incorrectos");
-        }
-        return usuario;
+  public int procesarRegistro(String body) {
+    JsonObject json = new JsonParser().parse(body).getAsJsonObject();
+
+    String nombre = json.get("nombres").getAsString();
+    String apellido = json.get("apellidos").getAsString();
+    String email = json.get("email").getAsString();
+    String dni = json.get("dni").getAsString();
+    String telefono = json.get("telefono").getAsString();
+    String password = json.get("password").getAsString();
+
+    if (usuarioDao.findByEmail(email)) {
+      return 1;
     }
+    if (usuarioDao.findByDni(dni)) {
+      return 2;
+    }
+    usuarioDao.insertarUsuario(nombre, apellido, email, dni, telefono, password);
+    return 0;
+  }
 }

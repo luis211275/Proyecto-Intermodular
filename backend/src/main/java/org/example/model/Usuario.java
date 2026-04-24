@@ -1,64 +1,36 @@
 package org.example.model;
 
 public class Usuario {
-  private int idUsuario;
-  private String nombres;
-  private String apellidos;
-  private String dni;
+  private String nombre;
+  private String apellido;
   private String email;
   private String password;
-  private String telefono;
-  private String tipoUsuario;
-  private boolean activo;
+  private int telefono;
+  private String dni;
 
-  public Usuario() {
-  }
-
-
-  public Usuario(int idUsuario, String nombres, String apellidos, String dni, String email,
-                 String password, String telefono, String tipoUsuario, boolean activo) {
-
-    this.idUsuario = idUsuario;
-    this.nombres = nombres;
-    this.apellidos = apellidos;
-    this.dni = dni;
+  public Usuario(String nombre, String apellido, String email, String password, int telefono, String dni) {
+    this.nombre = nombre;
+    this.apellido = apellido;
     this.email = email;
     this.password = password;
     this.telefono = telefono;
-    this.tipoUsuario = tipoUsuario;
-    this.activo = activo;
-  }
-
-  public int getIdUsuario() {
-    return idUsuario;
-  }
-
-  public void setIdUsuario(int idUsuario) {
-    this.idUsuario = idUsuario;
-  }
-
-  public String getNombres() {
-    return nombres;
-  }
-
-  public void setNombres(String nombres) {
-    this.nombres = nombres;
-  }
-
-  public String getApellidos() {
-    return apellidos;
-  }
-
-  public void setApellidos(String apellidos) {
-    this.apellidos = apellidos;
-  }
-
-  public String getDni() {
-    return dni;
-  }
-
-  public void setDni(String dni) {
     this.dni = dni;
+  }
+
+  public String getNombre() {
+    return nombre;
+  }
+
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
+
+  public String getApellido() {
+    return apellido;
+  }
+
+  public void setApellido(String apellido) {
+    this.apellido = apellido;
   }
 
   public String getEmail() {
@@ -77,27 +49,19 @@ public class Usuario {
     this.password = password;
   }
 
-  public String getTelefono() {
+  public int getTelefono() {
     return telefono;
   }
 
-  public void setTelefono(String telefono) {
+  public void setTelefono(int telefono) {
     this.telefono = telefono;
   }
 
-  public String getTipoUsuario() {
-    return tipoUsuario;
+  public String getDni() {
+    return dni;
   }
 
-  public void setTipoUsuario(String tipoUsuario) {
-    this.tipoUsuario = tipoUsuario;
-  }
-
-  public boolean isActivo() {
-    return activo;
-  }
-
-  public void setActivo(boolean activo) {
-    this.activo = activo;
+  public void setDni(String dni) {
+    this.dni = dni;
   }
 }
