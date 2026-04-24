@@ -1,6 +1,6 @@
 package org.example.dao.impl;
 
-import org.example.config.ConnectionDataBase;
+import org.example.config.DatabaseConfig;
 import org.example.dao.CatalogoDAO;
 import org.example.exception.ErrorDeAccesoADatosException;
 import org.example.model.*;
@@ -13,7 +13,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
 
     private Connection obtenerConexion() throws ErrorDeAccesoADatosException {
         try {
-            return ConnectionDataBase.obtenerConexion();
+            return DatabaseConfig.getConnection();
         } catch (Exception e) {
             throw new ErrorDeAccesoADatosException("Error al conectar con la base de datos", e);
         }

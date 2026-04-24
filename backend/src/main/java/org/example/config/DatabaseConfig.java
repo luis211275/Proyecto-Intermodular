@@ -2,16 +2,14 @@ package org.example.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
-public class ConnectionDataBase {
-
+public class DatabaseConfig {
   private static final String URL = "jdbc:postgresql://localhost:5432/intermodular";
   private static final String USERNAME = "postgres";
   private static final String PASSWORD = "postgres";
 
-
-  // Método donde se realiza la conexión a la Base de Datos
-  public static Connection obtenerConexion() throws Exception {
+  public static Connection getConnection() throws SQLException {
     return DriverManager.getConnection(URL, USERNAME, PASSWORD);
   }
 }

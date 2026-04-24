@@ -1,6 +1,6 @@
 package org.example.dao.impl;
 
-import org.example.config.ConnectionDataBase;
+import org.example.config.DatabaseConfig;
 import org.example.dao.CocheDAO;
 import org.example.exception.ErrorDeAccesoADatosException;
 import org.example.model.*;
@@ -14,7 +14,7 @@ public class CocheDAOImpl implements CocheDAO {
 
   private Connection obtenerConexion() throws ErrorDeAccesoADatosException {
     try {
-      return ConnectionDataBase.obtenerConexion();
+      return DatabaseConfig.getConnection();
     } catch (Exception e) {
       throw new ErrorDeAccesoADatosException("Error al conectar con la base de datos", e);
     }
@@ -166,6 +166,7 @@ public class CocheDAOImpl implements CocheDAO {
     c.setCategoria(cat);
 
     Usuario vend = new Usuario();
+    vend.setIdUsuario(rs.getInt("vendedor_id"));
     vend.setNombres(rs.getString("vendedor_nombre"));
     vend.setApellidos(rs.getString("vendedor_apellidos"));
     vend.setEmail(rs.getString("vendedor_email"));

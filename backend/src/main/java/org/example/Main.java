@@ -1,9 +1,11 @@
 package org.example;
 
 import com.sun.net.httpserver.HttpServer;
-import org.example.config.ConnectionDataBase;
+import org.example.config.DatabaseConfig;
 import org.example.router.RouterHandler;
+import org.example.service.UsuarioService;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class Main {
@@ -14,21 +16,15 @@ public class Main {
       server.setExecutor(null);
       server.start();
 
-      System.out.println("Servidor iniciado en: http://localhost:8080/");
-      System.out.println("Documentación: http://localhost:8080/api/docs");
-    } catch (java.net.BindException e) {
-      System.err.println("Error: El puerto 8080 ya está en uso.");
-      System.exit(1);
-    } catch (Exception e) {
-      System.err.println("Error al iniciar el servidor: " + e.getMessage());
-      System.exit(1);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    System.out.println("Servidor iniciado en: http://localhost:8080/");
+    System.out.println("Documentación: http://localhost:8080/api/docs");
+        UsuarioService usuario = new UsuarioService();
+
+
+
+    }
     }
 
-    try {
-      ConnectionDataBase.obtenerConexion();
-      System.out.println("Conexion correcta a PostgreSQL.");
-    } catch (Exception e) {
-      System.out.println("Error de conexion: " + e.getMessage());
-    }
-  }
-}
