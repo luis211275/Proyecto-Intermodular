@@ -1,0 +1,82 @@
+<div class="contenedor-compra">
+    <div style="max-width: 900px; margin: 0 auto 1rem;">
+        <a href="/fontend" data-route="/" class="boton-volver" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--text-muted); font-weight: 500;">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            Volver al catálogo
+        </a>
+    </div>
+    <div class="tarjeta-compra">
+        <header class="encabezado-compra">
+            <p class="etiqueta-proceso">Proceso de compra</p>
+        </header>
+
+        <div class="cuerpo-compra">
+            <section id="seccion-contrato" class="seccion-compra">
+                <div id="contrato-content" class="papel-contrato">
+                    <!-- Dinámico -->
+                </div>
+
+                <div class="area-verificacion-contrato">
+                    <label class="contenedor-casilla">
+                        <input type="checkbox" id="acepto-terminos">
+                        <span class="marca-casilla"></span>
+                        Acepto los términos y condiciones de compraventa y declaro que la plataforma no tiene responsabilidad civil o penal en la transacción.
+                    </label>
+                </div>
+
+                <div class="cuadricula-resumen-precios" id="precio-summary">
+                    <!-- Dinámico: Subtotal, IVA, Comisión, Total -->
+                </div>
+
+                <div class="acciones-compra">
+                    <button id="continuar-pago" class="boton-principal" disabled>Continuar al Pago</button>
+                    <button id="cancelar-compra" class="boton-enlace-cancelar" type="button">Cancelar y volver</button>
+                </div>
+            </section>
+
+            <section id="seccion-pago" class="seccion-compra hidden">
+                <div class="encabezado-pago">
+                    <p class="etiqueta-proceso">Pago seguro</p>
+                    <h2>Datos de la tarjeta</h2>
+                    <p>Complete el pago para finalizar la compra.</p>
+                </div>
+
+                <div id="pago-content" class="caja-pago">
+                    <!-- Formulario de pago, incluye la imagen de la tarjeta. Se muestra al dar clic en continuar -->
+                    <div id="pago-form-container" class="hidden">
+                        <div class="contenedor-previsualizacion-tarjeta" style="text-align: center; margin-bottom: 2rem;">
+                            <img src="/assets/img/card-mockup.png" alt="Tarjeta" style="max-width: 300px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12);">
+                        </div>
+                        <form id="form-pago" class="cuadricula-formulario">
+                            <div class="grupo-formulario ancho-completo">
+                                <label for="tarjeta">Número de tarjeta</label>
+                                <input type="text" id="tarjeta" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="exp">Vencimiento</label>
+                                <input type="text" id="exp" placeholder="MM/AA" maxlength="5" required>
+                            </div>
+
+                            <div class="grupo-formulario">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" placeholder="123" maxlength="3" required>
+                            </div>
+
+                            <div class="acciones-compra ancho-completo">
+                                <button type="submit" id="btn-pagar" class="boton-principal">Pagar ahora y finalizar compra</button>
+                                <button type="button" id="volver-contrato" class="boton-enlace-cancelar">Volver al contrato
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Spinner de procesando. Se muestra al dar clic en pagar -->
+                    <div id="pago-spinner" class="hidden" style="text-align: center; padding: 3rem 0;">
+                        <!-- Se llena dinámicamente por JS para evitar visibilidad prematura -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
