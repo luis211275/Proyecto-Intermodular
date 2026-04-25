@@ -3,6 +3,7 @@ package org.example.controller;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 import org.example.dao.UsuarioDao;
+import org.example.dao.impl.UsuarioDaoImpl;
 import org.example.service.UsuarioService;
 
 import java.io.IOException;
@@ -14,67 +15,55 @@ public class UsuarioController {
         String path = exchange.getRequestURI().getPath();
         String method = exchange.getRequestMethod();
 
-        //  CORS
+        // CORS
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
-
 
         if (method.equalsIgnoreCase("OPTIONS")) {
             exchange.sendResponseHeaders(204, -1);
             return;
         }
 
-        try{
+        try {
             if (method.equalsIgnoreCase("POST")) {
                 if (path.equals("/user/register")) {
                     String body = new String(
-                        exchange.getRequestBody().readAllBytes(),
-                        StandardCharsets.UTF_8
-                    );
+                            exchange.getRequestBody().readAllBytes(),
+                            StandardCharsets.UTF_8);
                     System.out.println(body);
 
                     JsonObject responseJson = new JsonObject();
 
                     UsuarioService usuario = new UsuarioService();
-                    UsuarioDao dao = new UsuarioDao();
-
-
+                    UsuarioDao dao = new UsuarioDaoImpl();
 
                     int resultado = usuario.procesarRegistro(body);
 
                     if (resultado == 0) {
                         responseJson.addProperty("status", "ok");
-
                         responseJson.addProperty("message", "Usuario registrado exitosamente");
                         sendResponse(exchange, 200, responseJson.toString());
-                    }else {
+                        return;
+                    } else {
                         responseJson.addProperty("status", "error");
-
                         String msg = (resultado == 1) ? "El email ya esta registrado" : "El DNI ya esta registrado";
-
                         responseJson.addProperty("message", msg);
                         sendResponse(exchange, 400, responseJson.toString());
+                        return;
                     }
-
-
-                    responseJson.addProperty("status", "ok");
-                    responseJson.addProperty("message", "Guardado correctamente");
-
-                    sendResponse(exchange, 200, body);
                 }
 
                 else if (path.equals("/user/logger")) {
                     String body = new String(
-                        exchange.getRequestBody().readAllBytes(),
-                        StandardCharsets.UTF_8
-                    );
+                            exchange.getRequestBody().readAllBytes(),
+                            StandardCharsets.UTF_8);
 
                     System.out.println(body);
 
                     JsonObject responseJson = new JsonObject();
                     UsuarioService servicio = new UsuarioService();
-                    UsuarioDao dao = new UsuarioDao();
+                    UsuarioDao dao = new UsuarioDaoImpl();
 
                     // Llamamos a la lógica del service
                     int resultado = dao.validarLogin(body);
@@ -83,6 +72,7 @@ public class UsuarioController {
                         responseJson.addProperty("status", "ok");
                         responseJson.addProperty("message", "Login correcto");
                         sendResponse(exchange, 200, responseJson.toString());
+                        return;
                     } else {
                         responseJson.addProperty("status", "error");
 
@@ -91,16 +81,18 @@ public class UsuarioController {
 
                         responseJson.addProperty("message", msg);
                         sendResponse(exchange, code, responseJson.toString());
+                        return;
                     }
                 }
-            }else{
+            } else {
                 sendResponse(exchange, 405, "Metodo no valido");
+                return;
             }
-        }catch (Exception e) {
-            sendResponse(exchange, 200, "Error ");
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendResponse(exchange, 500, "{\"status\":\"error\",\"message\":\"Error interno\"}");
         }
     }
-
 
     public void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
         // IMPORTANTE: Asegúrate de que estas líneas NO estén repetidas en otro lado

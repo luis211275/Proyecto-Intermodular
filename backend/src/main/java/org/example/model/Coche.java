@@ -10,9 +10,9 @@ public class Coche {
   private BigDecimal precioVenta;
   private String estado;
   private Timestamp fechaPublicacion;
-  private String urlImagen;
+  private String Imagen;
   private boolean activo;
-  
+
   // Cálculos para la compraventa
   private BigDecimal subtotal;
   private BigDecimal iva;
@@ -33,16 +33,16 @@ public class Coche {
   }
 
   public Coche(int idCoche, int anioFabricacion, int kilometraje, BigDecimal precioVenta,
-               String estado, Timestamp fechaPublicacion, String urlImagen, Version version,
-               TipoCombustible combustible, TipoTransmision transmision, Ciudad ciudad, Color color,
-               EtiquetaAmbiental etiqueta, Categoria categoria, Usuario vendedor, boolean activo) {
+      String estado, Timestamp fechaPublicacion, String Imagen, Version version,
+      TipoCombustible combustible, TipoTransmision transmision, Ciudad ciudad, Color color,
+      EtiquetaAmbiental etiqueta, Categoria categoria, Usuario vendedor, boolean activo) {
     this.idCoche = idCoche;
     this.anioFabricacion = anioFabricacion;
     this.kilometraje = kilometraje;
     this.precioVenta = precioVenta;
     this.estado = estado;
     this.fechaPublicacion = fechaPublicacion;
-    this.urlImagen = urlImagen;
+    this.Imagen = Imagen;
     this.version = version;
     this.combustible = combustible;
     this.transmision = transmision;
@@ -102,12 +102,12 @@ public class Coche {
     this.fechaPublicacion = fechaPublicacion;
   }
 
-  public String getUrlImagen() {
-    return urlImagen;
+  public String getImagen() {
+    return Imagen;
   }
 
-  public void setUrlImagen(String urlImagen) {
-    this.urlImagen = urlImagen;
+  public void setImagen(String Imagen) {
+    this.Imagen = Imagen;
   }
 
   public Version getVersion() {

@@ -3,9 +3,10 @@ package org.example.service;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.example.dao.UsuarioDao;
+import org.example.dao.impl.UsuarioDaoImpl;
 
 public class UsuarioService {
-  private UsuarioDao usuarioDao = new UsuarioDao();
+  private UsuarioDao usuarioDao = new UsuarioDaoImpl();
 
   public int procesarRegistro(String body) {
     JsonObject json = new JsonParser().parse(body).getAsJsonObject();

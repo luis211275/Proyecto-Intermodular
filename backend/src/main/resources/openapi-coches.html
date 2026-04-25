@@ -1,1142 +1,1433 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>API Coches - Documentación</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market API | Documentación</title>
+
     <style>
-        :root {
-            --bg: #f7f9fc;
-            --panel: #ffffff;
-            --line: #dfe6ee;
-            --text: #1f2937;
-            --muted: #5b6575;
-            --title: #3b4151;
-            --get: #61affe;
-            --post: #49cc90;
-            --patch: #fca130;
-            --delete: #f93e3e;
-            --code-bg: #263238;
-            --code-text: #f8f8f2;
-            --tag-bg: #eef3f7;
+      :root {
+        --bg: #f8fafc;
+        --sidebar: #ffffff;
+        --sidebar-soft: #f1f5f9;
+        --panel: #ffffff;
+        --panel-soft: #f8fafc;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --muted: #64748b;
+        --code-bg: #f1f5f9;
+        --code-text: #1e293b;
+
+        --get: #3b82f6;
+        --post: #10b981;
+        --patch: #f59e0b;
+        --delete: #ef4444;
+        --meta: #8b5cf6;
+        --accent: #6366f1;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Arial,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 290px 1fr;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        background: var(--sidebar);
+        color: var(--text);
+        padding: 24px 18px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        border-right: 1px solid var(--border);
+      }
+
+      .brand {
+        margin-bottom: 22px;
+      }
+
+      .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--get);
+        font-size: 11px;
+        font-weight: 800;
+        margin-bottom: 12px;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 24px;
+        line-height: 1.1;
+      }
+
+      .brand p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .sidebar-section-title {
+        margin: 24px 0 10px;
+        color: var(--muted);
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-weight: 800;
+        opacity: 0.7;
+      }
+
+      .side-link {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--muted);
+        text-decoration: none;
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        margin-bottom: 4px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 500;
+      }
+
+      .side-link:hover {
+        background: var(--sidebar-soft);
+        color: var(--text);
+        transform: translateX(4px);
+      }
+
+      .side-method {
+        min-width: 52px;
+        text-align: center;
+        border-radius: 6px;
+        padding: 3px 6px;
+        font-size: 10px;
+        font-weight: 900;
+        color: white;
+      }
+
+      .main {
+        padding: 32px;
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .hero {
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(14, 165, 233, 0.18),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at bottom left,
+            rgba(34, 197, 94, 0.12),
+            transparent 28%
+          ),
+          var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 28px;
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+        margin-bottom: 24px;
+      }
+
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .hero h2 {
+        margin: 0;
+        font-size: 34px;
+        letter-spacing: -0.04em;
+      }
+
+      .hero p {
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.6;
+        max-width: 780px;
+      }
+
+      .server-pill {
+        background: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 10px 18px;
+        font-family: Consolas, Monaco, monospace;
+        font-size: 13px;
+        white-space: nowrap;
+        font-weight: 600;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(150px, 1fr));
+        gap: 14px;
+        margin-top: 24px;
+      }
+
+      .stat {
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+      }
+
+      .stat span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+
+      .stat strong {
+        font-size: 20px;
+      }
+
+      .toolbar {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 16px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.06);
+      }
+
+      .search {
+        flex: 1;
+        min-width: 220px;
+      }
+
+      .search input {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 14px;
+        outline: none;
+        background: var(--panel-soft);
+        color: var(--text);
+      }
+
+      .search input:focus {
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
+      }
+
+      .filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .filter-btn {
+        border: 1px solid var(--border);
+        background: white;
+        color: var(--text);
+        border-radius: 999px;
+        padding: 9px 12px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .filter-btn.active {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      }
+
+      .section-heading {
+        margin: 32px 0 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .section-heading h3 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: -0.02em;
+      }
+
+      .section-heading p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .endpoint-list {
+        display: grid;
+        gap: 16px;
+      }
+
+      .endpoint-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+      }
+
+      .endpoint-head {
+        width: 100%;
+        border: 0;
+        background: white;
+        padding: 16px 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        cursor: pointer;
+        text-align: left;
+      }
+
+      .endpoint-head:hover {
+        background: #fbfdff;
+      }
+
+      .method {
+        color: white;
+        min-width: 76px;
+        text-align: center;
+        padding: 8px 10px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+      }
+
+      .GET {
+        background: var(--get);
+      }
+      .POST {
+        background: var(--post);
+      }
+      .PATCH {
+        background: var(--patch);
+      }
+      .DELETE {
+        background: var(--delete);
+      }
+      .META {
+        background: var(--meta);
+      }
+
+      .endpoint-title {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .endpoint-path {
+        font-family: Consolas, Monaco, monospace;
+        font-weight: 800;
+        color: #0f172a;
+        word-break: break-all;
+      }
+
+      .endpoint-summary {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 5px;
+      }
+
+      .chevron {
+        color: var(--muted);
+        font-size: 22px;
+        transition: transform 0.18s ease;
+      }
+
+      .endpoint-card.open .chevron {
+        transform: rotate(90deg);
+      }
+
+      .endpoint-body {
+        display: none;
+        border-top: 1px solid var(--border);
+        padding: 18px;
+        background: #fcfdff;
+      }
+
+      .endpoint-card.open .endpoint-body {
+        display: block;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .meta-box {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 13px;
+      }
+
+      .meta-box span {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 900;
+        margin-bottom: 5px;
+      }
+
+      .meta-box strong,
+      .meta-box code {
+        font-size: 13px;
+        color: var(--text);
+      }
+
+      .doc-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 14px;
+      }
+
+      .doc-block {
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      .doc-block-header {
+        background: #f1f5f9;
+        border-bottom: 1px solid var(--border);
+        padding: 11px 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .doc-block-header h4 {
+        margin: 0;
+        font-size: 13px;
+        color: #334155;
+      }
+
+      .copy-btn {
+        border: 1px solid var(--border);
+        background: white;
+        color: #334155;
+        border-radius: 8px;
+        padding: 6px 8px;
+        font-size: 11px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .copy-btn:hover {
+        background: #e2e8f0;
+      }
+
+      pre {
+        margin: 0;
+        background: var(--code-bg);
+        color: var(--code-text);
+        padding: 15px;
+        overflow-x: auto;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      code {
+        font-family: Consolas, Monaco, monospace;
+      }
+
+      .params-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      .params-table th,
+      .params-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .params-table th {
+        background: #f1f5f9;
+        color: #334155;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .schemas {
+        display: grid;
+        gap: 14px;
+      }
+
+      .schema-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+      }
+
+      .schema-card h4 {
+        margin: 0 0 12px;
+        font-size: 17px;
+      }
+
+      .empty {
+        display: none;
+        background: white;
+        border: 1px dashed var(--border);
+        border-radius: 18px;
+        padding: 28px;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      .footer {
+        color: var(--muted);
+        text-align: center;
+        padding: 34px 0 10px;
+        font-size: 13px;
+      }
+
+      @media (max-width: 960px) {
+        .layout {
+          grid-template-columns: 1fr;
         }
 
-        * {
-            box-sizing: border-box;
+        .sidebar {
+          position: relative;
+          height: auto;
         }
 
-        html {
-            scroll-behavior: smooth;
+        .main {
+          padding: 18px;
         }
 
-        body {
-            margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+        .toolbar {
+          position: relative;
+          flex-direction: column;
+          align-items: stretch;
         }
 
-        .topbar {
-            background: #1f2937;
-            color: white;
-            padding: 18px 28px;
-            border-bottom: 4px solid #89bf04;
+        .stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 560px) {
+        .stats {
+          grid-template-columns: 1fr;
         }
 
-        .topbar h1 {
-            margin: 0;
-            font-size: 26px;
-            font-weight: 600;
-        }
-
-        .topbar p {
-            margin: 6px 0 0;
-            font-size: 14px;
-            color: #d1d5db;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 28px 20px 48px;
-        }
-
-        .summary {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            padding: 20px;
-            margin-bottom: 26px;
-        }
-
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 14px;
-            margin-top: 16px;
-        }
-
-        .summary-item {
-            background: #fafbfd;
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            padding: 14px;
-        }
-
-        .summary-item h3 {
-            margin: 0 0 8px;
-            font-size: 13px;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .summary-item p {
-            margin: 0;
-            font-size: 15px;
-            color: var(--text);
-            word-break: break-word;
-        }
-
-        .toc {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            padding: 18px 20px;
-            margin-bottom: 26px;
-        }
-
-        .toc h2 {
-            margin: 0 0 14px;
-            font-size: 20px;
-            color: var(--title);
-        }
-
-        .toc ul {
-            margin: 0;
-            padding-left: 18px;
-            line-height: 1.9;
-        }
-
-        .toc a {
-            color: #1d4ed8;
-            text-decoration: none;
-        }
-
-        .toc a:hover {
-            text-decoration: underline;
-        }
-
-        h2.section-title {
-            margin: 34px 0 14px;
-            font-size: 24px;
-            color: var(--title);
-        }
-
-        .endpoint {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            margin-bottom: 16px;
-            overflow: hidden;
-        }
-
-        .endpoint-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--line);
-            flex-wrap: wrap;
+        .endpoint-head {
+          align-items: flex-start;
         }
 
         .method {
-            min-width: 78px;
-            text-align: center;
-            color: white;
-            font-weight: 700;
-            font-size: 12px;
-            letter-spacing: 0.06em;
-            padding: 7px 10px;
-            border-radius: 3px;
-            text-transform: uppercase;
+          min-width: 64px;
         }
-
-        .get {
-            background: var(--get);
-        }
-
-        .post {
-            background: var(--post);
-        }
-
-        .patch {
-            background: var(--patch);
-        }
-
-        .delete {
-            background: var(--delete);
-        }
-
-        .path {
-            font-family: Consolas, Monaco, monospace;
-            font-size: 16px;
-            color: #111827;
-            font-weight: 600;
-        }
-
-        .endpoint-body {
-            padding: 16px;
-        }
-
-        .endpoint-body p {
-            margin: 0 0 14px;
-            line-height: 1.6;
-            color: #374151;
-        }
-
-        .tag-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
-        .tag {
-            background: var(--tag-bg);
-            border: 1px solid var(--line);
-            color: #334155;
-            padding: 6px 10px;
-            border-radius: 999px;
-            font-size: 12px;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 16px;
-            margin-top: 14px;
-        }
-
-        .card {
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            overflow: hidden;
-            background: #fff;
-        }
-
-        .card h4 {
-            margin: 0;
-            padding: 12px 14px;
-            background: #f5f7fa;
-            border-bottom: 1px solid var(--line);
-            font-size: 14px;
-            color: var(--title);
-        }
-
-        .card-content {
-            padding: 14px;
-        }
-
-        pre {
-            margin: 0;
-            background: var(--code-bg);
-            color: var(--code-text);
-            padding: 14px;
-            border-radius: 4px;
-            overflow-x: auto;
-            font-size: 13px;
-            line-height: 1.55;
-        }
-
-        code {
-            font-family: Consolas, Monaco, monospace;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--line);
-            vertical-align: top;
-        }
-
-        th {
-            background: #f8fafc;
-            color: #334155;
-        }
-
-        .schema {
-            background: var(--panel);
-            border: 1px solid var(--line);
-            border-radius: 6px;
-            margin-bottom: 16px;
-            overflow: hidden;
-        }
-
-        .schema h3 {
-            margin: 0;
-            padding: 14px 16px;
-            font-size: 18px;
-            color: var(--title);
-            background: #f8fafc;
-            border-bottom: 1px solid var(--line);
-        }
-
-        .footer {
-            margin-top: 36px;
-            color: var(--muted);
-            font-size: 13px;
-            text-align: center;
-        }
-
-        @media (max-width: 700px) {
-            .topbar {
-                padding: 16px 18px;
-            }
-
-            .container {
-                padding: 20px 14px 40px;
-            }
-
-            .path {
-                font-size: 14px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-<div class="topbar">
-    <h1>API Marketplace de Coches</h1>
-    <p>Documentación del módulo de coches y catálogos</p>
-</div>
+  </head>
 
-<div class="container">
-    <section class="summary">
-        <h2 style="margin:0; color:#3b4151;">Resumen</h2>
-        <div class="summary-grid">
-            <div class="summary-item">
-                <h3>Formato</h3>
-                <p>JSON y multipart/form-data</p>
-            </div>
-            <div class="summary-item">
-                <h3>Estados de coche</h3>
-                <p>Disponible, Vendido, Desactivado</p>
-            </div>
-            <div class="summary-item">
-                <h3>Base de datos</h3>
-                <p>PostgreSQL</p>
-            </div>
-            <div class="summary-item">
-                <h3>Módulo documentado</h3>
-                <p>Catálogos, coches y favoritos</p>
-            </div>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-badge">● API SPEC v1.0</div>
+          <h1 style="color: var(--text); font-weight: 800; letter-spacing: -0.04em;">Market</h1>
+          <p>
+            Documentación técnica premium para el catálogo de vehículos.
+          </p>
         </div>
-    </section>
 
-    <section class="toc">
-        <h2>Contenido</h2>
-        <ul>
-            <li><a href="#schemas">Schemas</a></li>
-            <li><a href="#catalogos">Catálogos</a></li>
-            <li><a href="#coches">Coches</a></li>
-            <li><a href="#errores">Errores</a></li>
-        </ul>
-    </section>
+        <div class="sidebar-section-title">Secciones</div>
+        <a class="side-link" href="#endpoints">Endpoints</a>
+        <a class="side-link" href="#schemas">Schemas</a>
 
-    <section id="schemas">
-        <h2 class="section-title">Schemas</h2>
+        <div class="sidebar-section-title">Endpoints</div>
+        <div id="sidebarEndpoints"></div>
+      </aside>
 
-        <div class="schema">
-            <h3>CocheResponse</h3>
-            <table>
+      <main class="main">
+        <section class="hero">
+          <div class="hero-top">
+            <div>
+              <h2>Documentación REST</h2>
+              <p>
+                API REST del proyecto <strong>Market</strong>, construida
+                con Java puro. Incluye vehículos, favoritos, catálogos, usuarios
+                y documentación.
+              </p>
+            </div>
+            <div class="server-pill">http://localhost:8080</div>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <span>Versión</span>
+              <strong>1.0.0</strong>
+            </div>
+            <div class="stat">
+              <span>Formato</span>
+              <strong>JSON / Multipart</strong>
+            </div>
+            <div class="stat">
+              <span>Servidor</span>
+              <strong>Java puro</strong>
+            </div>
+            <div class="stat">
+              <span>Docs</span>
+              <strong>/api/docs</strong>
+            </div>
+          </div>
+        </section>
+
+        <section id="endpoints">
+          <div class="toolbar">
+            <div class="search">
+              <input
+                id="searchInput"
+                type="search"
+                placeholder="Buscar endpoint, ruta, tag, descripción..."
+              />
+            </div>
+
+            <div class="filters">
+              <button class="filter-btn active" data-filter="ALL">Todos</button>
+              <button class="filter-btn" data-filter="GET">GET</button>
+              <button class="filter-btn" data-filter="POST">POST</button>
+              <button class="filter-btn" data-filter="PATCH">PATCH</button>
+              <button class="filter-btn" data-filter="DELETE">DELETE</button>
+            </div>
+          </div>
+
+          <div class="section-heading">
+            <div>
+              <h3>Endpoints</h3>
+              <p>
+                Rutas disponibles con ejemplos curl, fetch, request y response.
+              </p>
+            </div>
+          </div>
+
+          <div id="endpointList" class="endpoint-list"></div>
+          <div id="emptyState" class="empty">
+            No se encontraron endpoints con ese filtro.
+          </div>
+        </section>
+
+        <section id="schemas">
+          <div class="section-heading">
+            <div>
+              <h3>Schemas principales</h3>
+              <p>Campos más usados en las respuestas y peticiones.</p>
+            </div>
+          </div>
+
+          <div class="schemas">
+            <div class="schema-card">
+              <h4>CocheResponse</h4>
+              <table class="params-table">
                 <thead>
-                <tr>
+                  <tr>
                     <th>Campo</th>
                     <th>Tipo</th>
-                    <th>Descripción</th>
-                </tr>
+                    <th>Ejemplo</th>
+                  </tr>
                 </thead>
                 <tbody>
-                <tr>
+                  <tr>
                     <td>idCoche</td>
-                    <td>number</td>
-                    <td>Identificador del coche.</td>
-                </tr>
-                <tr>
-                    <td>anioFabricacion</td>
-                    <td>number</td>
-                    <td>Año de fabricación.</td>
-                </tr>
-                <tr>
-                    <td>kilometraje</td>
-                    <td>number</td>
-                    <td>Kilómetros del vehículo.</td>
-                </tr>
-                <tr>
-                    <td>precioVenta</td>
-                    <td>number</td>
-                    <td>Precio del anuncio.</td>
-                </tr>
-                <tr>
-                    <td>estado</td>
-                    <td>string</td>
-                    <td>Disponible, Vendido o Desactivado.</td>
-                </tr>
-                <tr>
-                    <td>urlImagen</td>
-                    <td>string</td>
-                    <td>Ruta de la imagen principal.</td>
-                </tr>
-                <tr>
-                    <td>marca</td>
-                    <td>string</td>
-                    <td>Marca del vehículo.</td>
-                </tr>
-                <tr>
-                    <td>modelo</td>
-                    <td>string</td>
-                    <td>Modelo del vehículo.</td>
-                </tr>
-                <tr>
-                    <td>version</td>
-                    <td>string</td>
-                    <td>Versión comercial.</td>
-                </tr>
-                <tr>
-                    <td>combustible</td>
-                    <td>string</td>
-                    <td>Tipo de combustible.</td>
-                </tr>
-                <tr>
-                    <td>transmision</td>
-                    <td>string</td>
-                    <td>Tipo de transmisión.</td>
-                </tr>
-                <tr>
-                    <td>ciudad</td>
-                    <td>string</td>
-                    <td>Ciudad del anuncio.</td>
-                </tr>
-                <tr>
-                    <td>color</td>
-                    <td>string</td>
-                    <td>Color del coche.</td>
-                </tr>
-                <tr>
-                    <td>etiquetaAmbiental</td>
-                    <td>string</td>
-                    <td>Etiqueta ambiental.</td>
-                </tr>
-                <tr>
-                    <td>categoria</td>
-                    <td>string</td>
-                    <td>Categoría del coche.</td>
-                </tr>
-                <tr>
-                    <td>vendedorNombre</td>
-                    <td>string</td>
-                    <td>Nombre completo del vendedor.</td>
-                </tr>
-                <tr>
-                    <td>vendedorEmail</td>
-                    <td>string</td>
-                    <td>Email de contacto.</td>
-                </tr>
-                <tr>
-                    <td>vendedorDni</td>
-                    <td>string</td>
-                    <td>DNI del vendedor (para contrato).</td>
-                </tr>
-                <tr>
-                    <td>vendedorTelefono</td>
-                    <td>string</td>
-                    <td>Teléfono de contacto.</td>
-                </tr>
-                <tr>
-                    <td>subtotal</td>
-                    <td>number</td>
-                    <td>Precio base sin impuestos ni comisiones.</td>
-                </tr>
-                <tr>
-                    <td>iva</td>
-                    <td>number</td>
-                    <td>IVA (21%) calculado.</td>
-                </tr>
-                <tr>
-                    <td>comision</td>
-                    <td>number</td>
-                    <td>Comisión de gestión (2%).</td>
-                </tr>
-                <tr>
-                    <td>total</td>
-                    <td>number</td>
-                    <td>Precio final (precioVenta).</td>
-                </tr>
-                <tr>
-                    <td>fechaPublicacion</td>
-                    <td>string</td>
-                    <td>Fecha de publicación.</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="schema">
-            <h3>PublicarCocheRequest</h3>
-            <table>
-                <thead>
-                <tr>
-                    <th>Campo</th>
-                    <th>Tipo</th>
-                    <th>Obligatorio</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
+                    <td>integer</td>
+                    <td>1</td>
+                  </tr>
+                  <tr>
                     <td>anio</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
+                    <td>integer</td>
+                    <td>2023</td>
+                  </tr>
+                  <tr>
                     <td>km</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
+                    <td>integer</td>
+                    <td>50</td>
+                  </tr>
+                  <tr>
                     <td>precio</td>
                     <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
-                    <td>id_version</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
-                    <td>id_combustible</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
-                    <td>id_transmision</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
-                    <td>id_ciudad</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
-                    <td>id_color</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
-                    <td>id_etiqueta</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
-                    <td>id_categoria</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
-                    <td>id_vendedor</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
-                    <td>imagen</td>
-                    <td>file</td>
-                    <td>Sí</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="schema">
-            <h3>CambiarEstadoRequest</h3>
-            <table>
-                <thead>
-                <tr>
-                    <th>Campo</th>
-                    <th>Tipo</th>
-                    <th>Obligatorio</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>id</td>
-                    <td>number</td>
-                    <td>Sí</td>
-                </tr>
-                <tr>
+                    <td>38000.00</td>
+                  </tr>
+                  <tr>
                     <td>estado</td>
                     <td>string</td>
-                    <td>Sí</td>
-                </tr>
+                    <td>Disponible</td>
+                  </tr>
+                  <tr>
+                    <td>imagen</td>
+                    <td>string</td>
+                    <td>/assets/img/cars/audi_a3_grey.jpg</td>
+                  </tr>
+                  <tr>
+                    <td>marca / modelo / version</td>
+                    <td>string</td>
+                    <td>Audi / A3 / 35 TFSI S line</td>
+                  </tr>
+                  <tr>
+                    <td>vendedorNombre</td>
+                    <td>string</td>
+                    <td>Juan García</td>
+                  </tr>
+                  <tr>
+                    <td>subtotal / iva / comision / total</td>
+                    <td>number</td>
+                    <td>38000.00 / 7980.00 / 1140.00 / 39140.00</td>
+                  </tr>
                 </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section id="catalogos">
-        <h2 class="section-title">Catálogos</h2>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/marcas</span>
+              </table>
             </div>
-            <div class="endpoint-body">
-                <div class="tag-row">
-                    <span class="tag">200 OK</span>
-                    <span class="tag">application/json</span>
-                </div>
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-              <pre><code>[
+
+            <div class="schema-card">
+              <h4>ErrorResponse</h4>
+              <pre><code>{
+  "status": "error",
+  "message": "Ruta no encontrada en el servidor"
+}</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <div class="footer">
+          Market API · Documentación HTML estática · Servidor local
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const endpoints = [
+        {
+          method: "GET",
+          path: "/api/coches",
+          tag: "Vehículos",
+          summary: "Listar vehículos disponibles",
+          description:
+            "Devuelve todos los coches con estado Disponible. Acepta filtros opcionales por query string.",
+          params: [
+            ["marcaId", "query", "integer", "Opcional", "1"],
+            ["modeloId", "query", "integer", "Opcional", "1"],
+            ["combustibleId", "query", "integer", "Opcional", "3"],
+            ["ciudadId", "query", "integer", "Opcional", "1"],
+            ["precioMax", "query", "number", "Opcional", "40000"],
+          ],
+          response: `[
+  {
+    "idCoche": 1,
+    "anio": 2023,
+    "km": 50,
+    "precio": 38000.00,
+    "estado": "Disponible",
+    "imagen": "/assets/img/cars/audi_a3_grey.jpg",
+    "marca": "Audi",
+    "modelo": "A3",
+    "version": "35 TFSI S line",
+    "ciudad": "Madrid",
+    "activo": true,
+    "combustible": "Gasolina",
+    "transmision": "Automático",
+    "etiquetaAmbiental": "C",
+    "categoria": "Compacto",
+    "color": "Gris",
+    "fechaPublicacion": "2024-01-15 10:00:00.0",
+    "vendedorId": 1,
+    "vendedorNombre": "Juan García",
+    "vendedorEmail": "juan@mail.com",
+    "vendedorDni": "11111111A",
+    "vendedorTelefono": "600000001",
+    "subtotal": 38000.00,
+    "iva": 7980.00,
+    "comision": 1140.00,
+    "total": 39140.00
+  }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/coches?marcaId=1&precioMax=40000"`,
+          fetch: `fetch("/api/coches?marcaId=1&precioMax=40000")
+  .then(res => res.json())
+  .then(data => console.log(data));`,
+        },
+        {
+          method: "GET",
+          path: "/api/coches/{id}",
+          tag: "Vehículos",
+          summary: "Obtener vehículo por ID",
+          description: "Devuelve el detalle completo de un coche.",
+          params: [["id", "path", "integer", "Sí", "1"]],
+          response: `{
+  "idCoche": 1,
+  "anio": 2023,
+  "km": 50,
+  "precio": 38000.00,
+  "estado": "Disponible",
+  "imagen": "/assets/img/cars/audi_a3_grey.jpg",
+  "marca": "Audi",
+  "modelo": "A3",
+  "version": "35 TFSI S line",
+  "ciudad": "Madrid"
+}`,
+          error: `{
+  "error": "Coche no encontrado"
+}`,
+          curl: `curl -X GET "http://localhost:8080/api/coches/1"`,
+          fetch: `fetch("/api/coches/1")
+  .then(res => res.json())
+  .then(data => console.log(data));`,
+        },
+        {
+          method: "POST",
+          path: "/api/publicarVehiculo",
+          tag: "Vehículos",
+          summary: "Publicar un nuevo vehículo",
+          description:
+            "Recibe multipart/form-data con imagen y datos del vehículo.",
+          params: [],
+          request: `anio=2022
+km=15000
+precio=29000
+id_version=4
+id_combustible=1
+id_transmision=2
+id_ciudad=1
+id_color=3
+id_etiqueta=3
+id_categoria=3
+id_vendedor=1
+imagen=@coche.jpg`,
+          response: `{
+  "status": "success",
+  "message": "Coche publicado correctamente",
+  "id": 11
+}`,
+          error: `{
+  "status": "error",
+  "message": "Petición debe ser multipart/form-data"
+}`,
+          curl: `curl -X POST "http://localhost:8080/api/publicarVehiculo" \\
+  -F "anio=2022" \\
+  -F "km=15000" \\
+  -F "precio=29000" \\
+  -F "id_version=4" \\
+  -F "id_combustible=1" \\
+  -F "id_transmision=2" \\
+  -F "id_ciudad=1" \\
+  -F "id_color=3" \\
+  -F "id_etiqueta=3" \\
+  -F "id_categoria=3" \\
+  -F "id_vendedor=1" \\
+  -F "imagen=@coche.jpg"`,
+          fetch: `const formData = new FormData();
+formData.append("anio", "2022");
+formData.append("km", "15000");
+formData.append("precio", "29000");
+formData.append("id_version", "4");
+formData.append("id_combustible", "1");
+formData.append("id_transmision", "2");
+formData.append("id_ciudad", "1");
+formData.append("id_color", "3");
+formData.append("id_etiqueta", "3");
+formData.append("id_categoria", "3");
+formData.append("id_vendedor", "1");
+formData.append("imagen", fileInput.files[0]);
+
+fetch("/api/publicarVehiculo", {
+  method: "POST",
+  body: formData
+});`,
+        },
+        {
+          method: "PATCH",
+          path: "/api/marcarVehiculoComoVendido",
+          tag: "Vehículos",
+          summary: "Marcar vehículo como vendido",
+          description: "Actualiza el estado del coche a Vendido.",
+          request: `{
+  "id": 1
+}`,
+          response: `{
+  "status": "success",
+  "message": "Coche marcado como vendido"
+}`,
+          curl: `curl -X PATCH "http://localhost:8080/api/marcarVehiculoComoVendido" \\
+  -H "Content-Type: application/json" \\
+  -d '{"id":1}'`,
+          fetch: `fetch("/api/marcarVehiculoComoVendido", {
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ id: 1 })
+});`,
+        },
+        {
+          method: "PATCH",
+          path: "/api/cambiarEstadoAnuncioVehiculo",
+          tag: "Vehículos",
+          summary: "Cambiar estado de un anuncio",
+          description: "Estados válidos: Disponible, Vendido, Desactivado.",
+          request: `{
+  "id": 1,
+  "estado": "Desactivado"
+}`,
+          response: `{
+  "status": "success",
+  "message": "Estado del anuncio actualizado a Desactivado"
+}`,
+          curl: `curl -X PATCH "http://localhost:8080/api/cambiarEstadoAnuncioVehiculo" \\
+  -H "Content-Type: application/json" \\
+  -d '{"id":1,"estado":"Desactivado"}'`,
+          fetch: `fetch("/api/cambiarEstadoAnuncioVehiculo", {
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ id: 1, estado: "Desactivado" })
+});`,
+        },
+        {
+          method: "DELETE",
+          path: "/api/eliminarAnuncioVehiculo",
+          tag: "Vehículos",
+          summary: "Eliminar anuncio",
+          description:
+            "Borrado funcional. Cambia el estado del coche a Desactivado.",
+          params: [["id", "query", "integer", "Sí", "1"]],
+          response: `{
+  "status": "success",
+  "message": "Anuncio eliminado (borrado funcional)"
+}`,
+          curl: `curl -X DELETE "http://localhost:8080/api/eliminarAnuncioVehiculo?id=1"`,
+          fetch: `fetch("/api/eliminarAnuncioVehiculo?id=1", {
+  method: "DELETE"
+});`,
+        },
+        {
+          method: "GET",
+          path: "/api/favoritos",
+          tag: "Favoritos",
+          summary: "Listar favoritos de un usuario",
+          description: "Devuelve los coches favoritos de un usuario.",
+          params: [["usuarioId", "query", "integer", "Sí", "1"]],
+          response: `[
+  {
+    "idCoche": 3,
+    "marca": "BMW",
+    "modelo": "Serie 3",
+    "precio": 31000.00
+  }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/favoritos?usuarioId=1"`,
+          fetch: `fetch("/api/favoritos?usuarioId=1")
+  .then(res => res.json())
+  .then(data => console.log(data));`,
+        },
+        {
+          method: "POST",
+          path: "/api/favoritos",
+          tag: "Favoritos",
+          summary: "Añadir coche a favoritos",
+          description: "Guarda un coche como favorito del usuario.",
+          request: `{
+  "usuarioId": 1,
+  "cocheId": 3
+}`,
+          response: `{
+  "status": "success",
+  "message": "Coche añadido a favoritos"
+}`,
+          curl: `curl -X POST "http://localhost:8080/api/favoritos" \\
+  -H "Content-Type: application/json" \\
+  -d '{"usuarioId":1,"cocheId":3}'`,
+          fetch: `fetch("/api/favoritos", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ usuarioId: 1, cocheId: 3 })
+});`,
+        },
+        {
+          method: "DELETE",
+          path: "/api/favoritos",
+          tag: "Favoritos",
+          summary: "Quitar coche de favoritos",
+          description: "Elimina un coche de favoritos.",
+          params: [
+            ["usuarioId", "query", "integer", "Sí", "1"],
+            ["cocheId", "query", "integer", "Sí", "3"],
+          ],
+          response: `{
+  "status": "success",
+  "message": "Coche eliminado de favoritos"
+}`,
+          curl: `curl -X DELETE "http://localhost:8080/api/favoritos?usuarioId=1&cocheId=3"`,
+          fetch: `fetch("/api/favoritos?usuarioId=1&cocheId=3", {
+  method: "DELETE"
+});`,
+        },
+        {
+          method: "GET",
+          path: "/api/marcas",
+          tag: "Catálogo",
+          summary: "Listar marcas",
+          response: `[
   { "id": 1, "nombre": "Toyota" },
   { "id": 2, "nombre": "Volkswagen" },
   { "id": 3, "nombre": "BMW" },
-  { "id": 4, "nombre": "Audi" },
-  { "id": 5, "nombre": "Mercedes-Benz" },
-  { "id": 6, "nombre": "Ford" },
-  { "id": 7, "nombre": "Hyundai" },
-  { "id": 8, "nombre": "Renault" },
-  { "id": 9, "nombre": "Peugeot" },
-  { "id": 10, "nombre": "Kia" }
-]</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/ciudades</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="tag-row">
-                    <span class="tag">200 OK</span>
-                    <span class="tag">application/json</span>
-                </div>
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-              <pre><code>[
+  { "id": 4, "nombre": "Audi" }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/marcas"`,
+          fetch: `fetch("/api/marcas").then(res => res.json());`,
+        },
+        {
+          method: "GET",
+          path: "/api/modelos",
+          tag: "Catálogo",
+          summary: "Listar modelos por marca",
+          params: [["marcaId", "query", "integer", "Sí", "1"]],
+          response: `[
+  { "id": 1, "nombre": "Corolla" },
+  { "id": 2, "nombre": "RAV4" }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/modelos?marcaId=1"`,
+          fetch: `fetch("/api/modelos?marcaId=1").then(res => res.json());`,
+        },
+        {
+          method: "GET",
+          path: "/api/versiones",
+          tag: "Catálogo",
+          summary: "Listar versiones por modelo",
+          params: [["modeloId", "query", "integer", "Sí", "1"]],
+          response: `[
+  { "id": 1, "nombre": "1.8 Hybrid Active" },
+  { "id": 2, "nombre": "2.0 Hybrid Style" }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/versiones?modeloId=1"`,
+          fetch: `fetch("/api/versiones?modeloId=1").then(res => res.json());`,
+        },
+        {
+          method: "GET",
+          path: "/api/ciudades",
+          tag: "Catálogo",
+          summary: "Listar ciudades",
+          response: `[
   { "id": 1, "nombre": "Madrid" },
   { "id": 2, "nombre": "Barcelona" },
   { "id": 3, "nombre": "Valencia" },
   { "id": 4, "nombre": "Sevilla" },
-  { "id": 5, "nombre": "Zaragoza" },
-  { "id": 6, "nombre": "Málaga" },
-  { "id": 7, "nombre": "Murcia" },
-  { "id": 8, "nombre": "Palma" },
-  { "id": 9, "nombre": "Bilbao" },
-  { "id": 10, "nombre": "Alicante" }
-]</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/combustibles</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="tag-row"><span class="tag">200 OK</span></div>
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-              <pre><code>[
+  { "id": 5, "nombre": "Zaragoza" }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/ciudades"`,
+          fetch: `fetch("/api/ciudades").then(res => res.json());`,
+        },
+        {
+          method: "GET",
+          path: "/api/combustibles",
+          tag: "Catálogo",
+          summary: "Listar tipos de combustible",
+          response: `[
   { "id": 1, "nombre": "Gasolina" },
   { "id": 2, "nombre": "Diesel" },
-  { "id": 3, "nombre": "Híbrido" }
-]</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/transmisiones</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="tag-row"><span class="tag">200 OK</span></div>
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-              <pre><code>[
+  { "id": 3, "nombre": "Híbrido" },
+  { "id": 4, "nombre": "Eléctrico" },
+  { "id": 5, "nombre": "GLP" }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/combustibles"`,
+          fetch: `fetch("/api/combustibles").then(res => res.json());`,
+        },
+        {
+          method: "GET",
+          path: "/api/transmisiones",
+          tag: "Catálogo",
+          summary: "Listar tipos de transmisión",
+          response: `[
   { "id": 1, "nombre": "Manual" },
-  { "id": 2, "nombre": "Automático" }
-]</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/categorias</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="tag-row"><span class="tag">200 OK</span></div>
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-              <pre><code>[
-  { "id": 1, "nombre": "Turismo" },
+  { "id": 2, "nombre": "Automático" },
+  { "id": 3, "nombre": "Semiautomático" }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/transmisiones"`,
+          fetch: `fetch("/api/transmisiones").then(res => res.json());`,
+        },
+        {
+          method: "GET",
+          path: "/api/categorias",
+          tag: "Catálogo",
+          summary: "Listar categorías",
+          response: `[
+  { "id": 1, "nombre": "Sedán" },
   { "id": 2, "nombre": "SUV" },
-  { "id": 3, "nombre": "Compacto" }
-]</code></pre>
-                    </div>
-                </div>
+  { "id": 3, "nombre": "Compacto" },
+  { "id": 4, "nombre": "Deportivo" },
+  { "id": 5, "nombre": "Monovolumen" },
+  { "id": 6, "nombre": "Pick-up" }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/categorias"`,
+          fetch: `fetch("/api/categorias").then(res => res.json());`,
+        },
+        {
+          method: "GET",
+          path: "/api/colores",
+          tag: "Catálogo",
+          summary: "Listar colores",
+          response: `[
+  { "id": 1, "nombre": "Blanco" },
+  { "id": 2, "nombre": "Negro" },
+  { "id": 3, "nombre": "Gris" },
+  { "id": 4, "nombre": "Rojo" },
+  { "id": 5, "nombre": "Azul" }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/colores"`,
+          fetch: `fetch("/api/colores").then(res => res.json());`,
+        },
+        {
+          method: "GET",
+          path: "/api/etiquetas",
+          tag: "Catálogo",
+          summary: "Listar etiquetas ambientales",
+          response: `[
+  { "id": 1, "nombre": "0" },
+  { "id": 2, "nombre": "Eco" },
+  { "id": 3, "nombre": "C" },
+  { "id": 4, "nombre": "B" },
+  { "id": 5, "nombre": "Sin Etiqueta" }
+]`,
+          curl: `curl -X GET "http://localhost:8080/api/etiquetas"`,
+          fetch: `fetch("/api/etiquetas").then(res => res.json());`,
+        },
+        {
+          method: "POST",
+          path: "/user/register",
+          tag: "Usuarios",
+          summary: "Registrar nuevo usuario",
+          request: `{
+  "nombres": "Juan",
+  "apellidos": "García",
+  "email": "juan@mail.com",
+  "dni": "11111111A",
+  "telefono": "600000001",
+  "password": "Segura1"
+}`,
+          response: `{
+  "status": "ok",
+  "message": "Usuario registrado exitosamente"
+}`,
+          error: `{
+  "status": "error",
+  "message": "El email ya esta registrado"
+}`,
+          curl: `curl -X POST "http://localhost:8080/user/register" \\
+  -H "Content-Type: application/json" \\
+  -d '{"nombres":"Juan","apellidos":"García","email":"juan@mail.com","dni":"11111111A","telefono":"600000001","password":"Segura1"}'`,
+          fetch: `fetch("/user/register", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    nombres: "Juan",
+    apellidos: "García",
+    email: "juan@mail.com",
+    dni: "11111111A",
+    telefono: "600000001",
+    password: "Segura1"
+  })
+});`,
+        },
+        {
+          method: "POST",
+          path: "/user/logger",
+          tag: "Usuarios",
+          summary: "Iniciar sesión",
+          request: `{
+  "email": "juan@mail.com",
+  "password": "Segura1"
+}`,
+          response: `{
+  "status": "ok",
+  "message": "Login correcto"
+}`,
+          error: `{
+  "status": "error",
+  "message": "Correo no registrado"
+}`,
+          curl: `curl -X POST "http://localhost:8080/user/logger" \\
+  -H "Content-Type: application/json" \\
+  -d '{"email":"juan@mail.com","password":"Segura1"}'`,
+          fetch: `fetch("/user/logger", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    email: "juan@mail.com",
+    password: "Segura1"
+  })
+});`,
+        },
+        {
+          method: "GET",
+          path: "/api/docs",
+          tag: "Meta",
+          summary: "Documentación HTML",
+          description: "Sirve esta página de documentación.",
+          response: `text/html`,
+          curl: `curl -X GET "http://localhost:8080/api/docs"`,
+          fetch: `fetch("/api/docs").then(res => res.text());`,
+        },
+      ];
+
+      const endpointList = document.getElementById("endpointList");
+      const sidebarEndpoints = document.getElementById("sidebarEndpoints");
+      const searchInput = document.getElementById("searchInput");
+      const emptyState = document.getElementById("emptyState");
+      const filterButtons = document.querySelectorAll(".filter-btn");
+
+      let currentFilter = "ALL";
+
+      function methodClass(method) {
+        return method === "GET" ||
+          method === "POST" ||
+          method === "PATCH" ||
+          method === "DELETE"
+          ? method
+          : "META";
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "").replace(
+          /[&<>"']/g,
+          (char) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[char],
+        );
+      }
+
+      function endpointId(endpoint, index) {
+        return `endpoint-${index}-${endpoint.method.toLowerCase()}-${endpoint.path.replace(/[^a-z0-9]/gi, "-")}`;
+      }
+
+      function paramsTable(params) {
+        if (!params || params.length === 0) {
+          return `<div class="meta-box"><span>Parámetros</span><strong>Sin parámetros</strong></div>`;
+        }
+
+        const rows = params
+          .map(
+            (param) => `
+      <tr>
+        <td><code>${escapeHtml(param[0])}</code></td>
+        <td>${escapeHtml(param[1])}</td>
+        <td>${escapeHtml(param[2])}</td>
+        <td>${escapeHtml(param[3])}</td>
+        <td><code>${escapeHtml(param[4])}</code></td>
+      </tr>
+    `,
+          )
+          .join("");
+
+        return `
+      <table class="params-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Tipo</th>
+            <th>Req.</th>
+            <th>Ejemplo</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+      }
+
+      function codeBlock(title, content) {
+        if (!content) return "";
+
+        return `
+      <div class="doc-block">
+        <div class="doc-block-header">
+          <h4>${escapeHtml(title)}</h4>
+          <button class="copy-btn" type="button" data-copy="${escapeHtml(content)}">Copiar</button>
+        </div>
+        <pre><code>${escapeHtml(content)}</code></pre>
+      </div>
+    `;
+      }
+
+      function renderEndpoints() {
+        const term = searchInput.value.toLowerCase().trim();
+
+        const filtered = endpoints.filter((endpoint) => {
+          const matchesMethod =
+            currentFilter === "ALL" || endpoint.method === currentFilter;
+          const searchable =
+            `${endpoint.method} ${endpoint.path} ${endpoint.tag} ${endpoint.summary} ${endpoint.description || ""}`.toLowerCase();
+          const matchesSearch = !term || searchable.includes(term);
+          return matchesMethod && matchesSearch;
+        });
+
+        endpointList.innerHTML = filtered
+          .map((endpoint) => {
+            const originalIndex = endpoints.indexOf(endpoint);
+            const id = endpointId(endpoint, originalIndex);
+
+            return `
+        <article id="${id}" class="endpoint-card" data-method="${endpoint.method}">
+          <button class="endpoint-head" type="button">
+            <span class="method ${methodClass(endpoint.method)}">${endpoint.method}</span>
+            <span class="endpoint-title">
+              <span class="endpoint-path">${escapeHtml(endpoint.path)}</span>
+              <span class="endpoint-summary">${escapeHtml(endpoint.summary)}</span>
+            </span>
+            <span class="chevron">›</span>
+          </button>
+
+          <div class="endpoint-body">
+            <div class="meta-grid">
+              <div class="meta-box">
+                <span>Tag</span>
+                <strong>${escapeHtml(endpoint.tag)}</strong>
+              </div>
+              <div class="meta-box">
+                <span>Content-Type</span>
+                <code>${endpoint.path === "/api/publicarVehiculo" ? "multipart/form-data" : "application/json"}</code>
+              </div>
+              <div class="meta-box">
+                <span>Servidor local</span>
+                <code>http://localhost:8080</code>
+              </div>
             </div>
+
+            <p>${escapeHtml(endpoint.description || endpoint.summary)}</p>
+
+            <div style="margin: 16px 0;">
+              ${paramsTable(endpoint.params)}
+            </div>
+
+            <div class="doc-grid">
+              ${codeBlock("Request", endpoint.request)}
+              ${codeBlock("Response 200/201", endpoint.response)}
+              ${codeBlock("Error", endpoint.error)}
+              ${codeBlock("curl", endpoint.curl)}
+              ${codeBlock("fetch JavaScript", endpoint.fetch)}
+            </div>
+          </div>
         </article>
+      `;
+          })
+          .join("");
 
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/modelos?marcaId=1</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="tag-row"><span class="tag">200 OK</span></div>
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-              <pre><code>[
-  { "id": 1, "nombre": "Corolla" },
-  { "id": 2, "nombre": "Golf" }
-]</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
+        emptyState.style.display = filtered.length ? "none" : "block";
 
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/versiones?modeloId=1</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="tag-row"><span class="tag">200 OK</span></div>
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-              <pre><code>[
-  { "id": 1, "nombre": "1.8 Hybrid" }
-]</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
+        document.querySelectorAll(".endpoint-head").forEach((button) => {
+          button.addEventListener("click", () => {
+            button.closest(".endpoint-card").classList.toggle("open");
+          });
+        });
 
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/colores</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-                        <pre><code>[ { "idColor": 1, "nombre": "Blanco" }, ... ]</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
+        document.querySelectorAll(".copy-btn").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const text = button.getAttribute("data-copy");
+            try {
+              await navigator.clipboard.writeText(text);
+              button.textContent = "Copiado";
+              setTimeout(() => (button.textContent = "Copiar"), 1200);
+            } catch {
+              button.textContent = "Error";
+              setTimeout(() => (button.textContent = "Copiar"), 1200);
+            }
+          });
+        });
+      }
 
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/etiquetas</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-                        <pre><code>[ { "idEtiqueta": 1, "nombre": "C" }, ... ]</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
-    </section>
+      function renderSidebar() {
+        sidebarEndpoints.innerHTML = endpoints
+          .map(
+            (endpoint, index) => `
+      <a class="side-link" href="#${endpointId(endpoint, index)}">
+        <span class="side-method ${methodClass(endpoint.method)}">${endpoint.method}</span>
+        <span>${escapeHtml(endpoint.path)}</span>
+      </a>
+    `,
+          )
+          .join("");
+      }
 
-    <section id="coches">
-        <h2 class="section-title">Coches</h2>
+      searchInput.addEventListener("input", renderEndpoints);
 
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/coches?marcaId=X&combustibleId=Y&precioMax=Z</span>
-            </div>
-            <div class="endpoint-body">
-                <p>Lista de coches disponibles con filtros opcionales.</p>
-                <div class="tag-row">
-                    <span class="tag">200 OK</span>
-                    <span class="tag">application/json</span>
-                </div>
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-              <pre><code>[
-  {
-    "idCoche": 16,
-    "anio": 2023,
-    "km": 10,
-    "precio": 35000.00,
-    "estado": "Disponible",
-    "imagen": "/assets/img/cars/123_456.jpg",
-    "marca": "Toyota",
-    "modelo": "Corolla",
-    "version": "1.8 Hybrid Active",
-    "combustible": "Híbrido",
-    "transmision": "Automático",
-    "ciudad": "Madrid",
-    "etiquetaAmbiental": "Eco",
-    "categoria": "Sedán",
-    "vendedorNombre": "Juan Pérez",
-    "vendedorEmail": "juan@example.com",
-    "vendedorDni": "12345678Z",
-    "vendedorTelefono": "600111222",
-    "subtotal": 27650.00,
-    "iva": 5806.50,
-    "comision": 1543.50,
-    "total": 35000.00
-  }
-]</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
+      filterButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          filterButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          currentFilter = button.dataset.filter;
+          renderEndpoints();
+        });
+      });
 
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method post">POST</span>
-                <span class="path">/api/favoritos</span>
-            </div>
-            <div class="endpoint-body">
-                <p>Añade un coche a la lista de favoritos de un usuario.</p>
-                <div class="card">
-                    <h4>Request Body (JSON)</h4>
-                    <div class="card-content">
-                        <pre><code>{ "usuarioId": 1, "cocheId": 16 }</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method delete">DELETE</span>
-                <span class="path">/api/favoritos?usuarioId=1&cocheId=16</span>
-            </div>
-            <div class="endpoint-body">
-                <p>Elimina un coche de la lista de favoritos.</p>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/coches/{id}</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="grid-2">
-                    <div class="card">
-                        <h4>Path parameter</h4>
-                        <div class="card-content">
-                            <pre><code>id = 16</code></pre>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h4>Response 200</h4>
-                        <div class="card-content">
-                <pre><code>{
-  "id": 16,
-  "anioFabricacion": 2023,
-  "kilometraje": 10,
-  "precioVenta": 35000.00,
-  "estado": "Disponible",
-  "urlImagen": "public/assets/img/cars/1776931005614_1.jpg",
-  "marca": "Toyota",
-  "modelo": "Corolla",
-  "version": "1.8 Hybrid Active",
-  "combustible": "Híbrido",
-  "transmision": "Automático",
-  "ciudad": "Madrid",
-  "color": "Blanco",
-  "etiquetaAmbiental": "Eco",
-  "categoria": "Sedán",
-  "vendedorId": 6,
-  "fechaPublicacion": "2026-04-23T10:30:00"
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method post">POST</span>
-                <span class="path">/api/publicarVehiculo</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="tag-row">
-                    <span class="tag">multipart/form-data</span>
-                    <span class="tag">Estado inicial: Disponible</span>
-                </div>
-                <div class="grid-2">
-                    <div class="card">
-                        <h4>Request</h4>
-                        <div class="card-content">
-                <pre><code>anio=2023
-km=10
-precio=35000.00
-id_version=1
-id_combustible=3
-id_transmision=2
-id_ciudad=1
-id_color=1
-id_etiqueta=2
-id_categoria=1
-id_vendedor=6
-imagen=1776931005614_1.jpg</code></pre>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h4>Response 201</h4>
-                        <div class="card-content">
-                <pre><code>{
-  "id": 16,
-  "anioFabricacion": 2023,
-  "kilometraje": 10,
-  "precioVenta": 35000.00,
-  "estado": "Disponible",
-  "urlImagen": "public/assets/img/cars/1776931005614_1.jpg",
-  "marca": "Toyota",
-  "modelo": "Corolla",
-  "version": "1.8 Hybrid Active",
-  "combustible": "Híbrido",
-  "transmision": "Automático",
-  "ciudad": "Madrid",
-  "color": "Blanco",
-  "etiquetaAmbiental": "Eco",
-  "categoria": "Sedán",
-  "vendedorId": 6,
-  "fechaPublicacion": "2026-04-23T10:30:00"
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method patch">PATCH</span>
-                <span class="path">/api/marcarVehiculoComoVendido</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="grid-2">
-                    <div class="card">
-                        <h4>Request</h4>
-                        <div class="card-content">
-                <pre><code>{
-  "id": 16
-}</code></pre>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h4>Response 200</h4>
-                        <div class="card-content">
-                <pre><code>{
-  "id": 16,
-  "anioFabricacion": 2023,
-  "kilometraje": 10,
-  "precioVenta": 35000.00,
-  "estado": "Vendido",
-  "urlImagen": "public/assets/img/cars/1776931005614_1.jpg",
-  "marca": "Toyota",
-  "modelo": "Corolla",
-  "version": "1.8 Hybrid Active",
-  "combustible": "Híbrido",
-  "transmision": "Automático",
-  "ciudad": "Madrid",
-  "color": "Blanco",
-  "etiquetaAmbiental": "Eco",
-  "categoria": "Sedán",
-  "vendedorId": 6,
-  "fechaPublicacion": "2026-04-23T10:30:00"
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method patch">PATCH</span>
-                <span class="path">/api/cambiarEstadoAnuncioVehiculo</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="grid-2">
-                    <div class="card">
-                        <h4>Request</h4>
-                        <div class="card-content">
-                <pre><code>{
-  "id": 17,
-  "estado": "Desactivado"
-}</code></pre>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h4>Response 200</h4>
-                        <div class="card-content">
-                <pre><code>{
-  "id": 17,
-  "anioFabricacion": 2022,
-  "kilometraje": 12000,
-  "precioVenta": 28000.00,
-  "estado": "Desactivado",
-  "urlImagen": "public/assets/img/cars/1776931005614_2.jpg",
-  "marca": "Volkswagen",
-  "modelo": "Golf",
-  "version": "2.0 TDI R-Line",
-  "combustible": "Gasolina",
-  "transmision": "Automático",
-  "ciudad": "Barcelona",
-  "color": "Negro",
-  "etiquetaAmbiental": "C",
-  "categoria": "Compacto",
-  "vendedorId": 7,
-  "fechaPublicacion": "2026-04-22T17:10:00"
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method delete">DELETE</span>
-                <span class="path">/api/eliminarAnuncioVehiculo?id=18</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="grid-2">
-                    <div class="card">
-                        <h4>Query parameter</h4>
-                        <div class="card-content">
-                            <pre><code>id = 18</code></pre>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h4>Response 200</h4>
-                        <div class="card-content">
-                <pre><code>{
-  "id": 18,
-  "anioFabricacion": 2023,
-  "kilometraje": 50,
-  "precioVenta": 55000.00,
-  "estado": "Desactivado",
-  "urlImagen": "public/assets/img/cars/1776931005614_3.jpg",
-  "marca": "Volkswagen",
-  "modelo": "Golf",
-  "version": "Move",
-  "combustible": "Gasolina",
-  "transmision": "Automático",
-  "ciudad": "Madrid",
-  "color": "Negro",
-  "etiquetaAmbiental": "C",
-  "categoria": "Sedán",
-  "vendedorId": 8,
-  "fechaPublicacion": "2026-04-21T09:45:00"
-}</code></pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method get">GET</span>
-                <span class="path">/api/favoritos?usuarioId=1</span>
-            </div>
-            <div class="endpoint-body">
-                <p>Lista de coches favoritos de un usuario.</p>
-                <div class="card">
-                    <h4>Response 200</h4>
-                    <div class="card-content">
-                        <pre><code>[ { "idCoche": 16, "marca": "Toyota", ... } ]</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
-    </section>
-
-    <section id="errores">
-        <h2 class="section-title">Errores</h2>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method patch">400</span>
-                <span class="path">Error de validación</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="card">
-                    <h4>Response 400</h4>
-                    <div class="card-content">
-              <pre><code>{
-  "error": "VALIDACION",
-  "message": "El precio debe ser mayor que 0"
-}</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
-
-        <article class="endpoint">
-            <div class="endpoint-header">
-                <span class="method delete">404</span>
-                <span class="path">Coche no encontrado</span>
-            </div>
-            <div class="endpoint-body">
-                <div class="card">
-                    <h4>Response 404</h4>
-                    <div class="card-content">
-              <pre><code>{
-  "error": "COCHE_NO_ENCONTRADO",
-  "message": "No existe un coche con id 999"
-}</code></pre>
-                    </div>
-                </div>
-            </div>
-        </article>
-    </section>
-
-    <div class="footer">
-        Documentación HTML estática del módulo de coches
-    </div>
-</div>
-</body>
+      renderSidebar();
+      renderEndpoints();
+    </script>
+  </body>
 </html>

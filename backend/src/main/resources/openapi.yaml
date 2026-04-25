@@ -1,0 +1,395 @@
+openapi: 3.0.3
+info:
+  title: Market API
+  version: 1.0.0
+  description: API REST del proyecto Intermodular Market. Servidor Java puro sin framework.
+servers:
+  - url: http://localhost:8080
+    description: Servidor local
+
+paths:
+
+  /api/coches:
+    get:
+      summary: Listar vehículos disponibles
+      description: Devuelve todos los coches con estado Disponible. Acepta filtros opcionales por query string.
+      tags: [Vehículos]
+      parameters:
+        - name: marca
+          in: query
+          schema: { type: string }
+          example: Toyota
+        - name: ciudad
+          in: query
+          schema: { type: string }
+          example: Madrid
+      responses:
+        '200':
+          description: Array de coches
+          content:
+            application/json:
+              example:
+                - idCoche: 1
+                  anio: 2023
+                  km: 50
+                  precio: "38000.00"
+                  estado: Disponible
+                  imagen: /assets/img/cars/audi_a3_grey.jpg
+                  marca: Audi
+                  modelo: A3
+                  version: 35 TFSI S line
+                  ciudad: Madrid
+                  activo: true
+                  combustible: Gasolina
+                  transmision: Automático
+                  etiquetaAmbiental: C
+                  categoria: Compacto
+                  color: Gris
+                  fechaPublicacion: "2024-01-15 10:00:00.0"
+                  vendedorId: 1
+                  vendedorNombre: Juan García
+                  vendedorEmail: juan@mail.com
+                  vendedorDni: 11111111A
+                  vendedorTelefono: "600000001"
+                  subtotal: "38000.00"
+                  iva: "7980.00"
+                  comision: "1140.00"
+                  total: "39140.00"
+
+  /api/coches/{id}:
+    get:
+      summary: Obtener vehículo por ID
+      tags: [Vehículos]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 1
+      responses:
+        '200':
+          description: Coche encontrado
+          content:
+            application/json:
+              example:
+                idCoche: 1
+                anio: 2023
+                km: 50
+                precio: "38000.00"
+                estado: Disponible
+                marca: Audi
+                modelo: A3
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              example: { error: "Coche no encontrado" }
+
+  /api/publicarVehiculo:
+    post:
+      summary: Publicar un nuevo vehículo
+      tags: [Vehículos]
+      description: Recibe multipart/form-data con imagen y datos del vehículo.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [anio, km, precio, id_version, id_combustible, id_transmision, id_ciudad, id_color, id_etiqueta, id_categoria, id_vendedor]
+              properties:
+                anio:        { type: integer, example: 2022 }
+                km:          { type: integer, example: 15000 }
+                precio:      { type: number,  example: 29000 }
+                id_version:  { type: integer, example: 4 }
+                id_combustible:  { type: integer, example: 1 }
+                id_transmision:  { type: integer, example: 2 }
+                id_ciudad:   { type: integer, example: 1 }
+                id_color:    { type: integer, example: 3 }
+                id_etiqueta: { type: integer, example: 3 }
+                id_categoria: { type: integer, example: 3 }
+                id_vendedor: { type: integer, example: 1 }
+                imagen:      { type: string, format: binary }
+      responses:
+        '201':
+          description: Publicado correctamente
+          content:
+            application/json:
+              example: { status: success, message: "Coche publicado correctamente", id: 11 }
+        '400':
+          description: Error de negocio
+          content:
+            application/json:
+              example: { status: error, message: "Petición debe ser multipart/form-data" }
+
+  /api/marcarVehiculoComoVendido:
+    patch:
+      summary: Marcar vehículo como vendido
+      tags: [Vehículos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id: { type: integer, example: 1 }
+      responses:
+        '200':
+          content:
+            application/json:
+              example: { status: success, message: "Coche marcado como vendido" }
+
+  /api/cambiarEstadoAnuncioVehiculo:
+    patch:
+      summary: Cambiar estado de un anuncio
+      tags: [Vehículos]
+      description: "Estados válidos: Disponible, Vendido, Desactivado"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:     { type: integer, example: 1 }
+                estado: { type: string, example: Desactivado }
+      responses:
+        '200':
+          content:
+            application/json:
+              example: { status: success, message: "Estado del anuncio actualizado a Desactivado" }
+
+  /api/eliminarAnuncioVehiculo:
+    delete:
+      summary: Eliminar anuncio (borrado funcional)
+      tags: [Vehículos]
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 1
+      responses:
+        '200':
+          content:
+            application/json:
+              example: { status: success, message: "Anuncio eliminado (borrado funcional)" }
+
+  /api/favoritos:
+    get:
+      summary: Listar favoritos de un usuario
+      tags: [Favoritos]
+      parameters:
+        - name: usuarioId
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 1
+      responses:
+        '200':
+          description: Array de coches favoritos (mismo schema que /api/coches)
+    post:
+      summary: Añadir coche a favoritos
+      tags: [Favoritos]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usuarioId: { type: integer, example: 1 }
+                cocheId:   { type: integer, example: 3 }
+      responses:
+        '200':
+          content:
+            application/json:
+              example: { status: success, message: "Coche añadido a favoritos" }
+    delete:
+      summary: Quitar coche de favoritos
+      tags: [Favoritos]
+      parameters:
+        - name: usuarioId
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 1
+        - name: cocheId
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 3
+      responses:
+        '200':
+          content:
+            application/json:
+              example: { status: success, message: "Coche eliminado de favoritos" }
+
+  /api/marcas:
+    get:
+      summary: Listar marcas
+      tags: [Catálogo]
+      responses:
+        '200':
+          content:
+            application/json:
+              example: [{ id: 1, nombre: Toyota }, { id: 2, nombre: Volkswagen }, { id: 3, nombre: BMW }, { id: 4, nombre: Audi }]
+
+  /api/modelos:
+    get:
+      summary: Listar modelos por marca
+      tags: [Catálogo]
+      parameters:
+        - name: marcaId
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 1
+      responses:
+        '200':
+          content:
+            application/json:
+              example: [{ id: 1, nombre: Corolla }, { id: 2, nombre: RAV4 }]
+
+  /api/versiones:
+    get:
+      summary: Listar versiones por modelo
+      tags: [Catálogo]
+      parameters:
+        - name: modeloId
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 1
+      responses:
+        '200':
+          content:
+            application/json:
+              example: [{ id: 1, nombre: "1.8 Hybrid Active" }, { id: 2, nombre: "2.0 Hybrid Style" }]
+
+  /api/ciudades:
+    get:
+      summary: Listar ciudades
+      tags: [Catálogo]
+      responses:
+        '200':
+          content:
+            application/json:
+              example: [{ id: 1, nombre: Madrid }, { id: 2, nombre: Barcelona }, { id: 3, nombre: Valencia }, { id: 4, nombre: Sevilla }, { id: 5, nombre: Zaragoza }]
+
+  /api/combustibles:
+    get:
+      summary: Listar tipos de combustible
+      tags: [Catálogo]
+      responses:
+        '200':
+          content:
+            application/json:
+              example: [{ id: 1, nombre: Gasolina }, { id: 2, nombre: Diesel }, { id: 3, nombre: Híbrido }, { id: 4, nombre: Eléctrico }, { id: 5, nombre: GLP }]
+
+  /api/transmisiones:
+    get:
+      summary: Listar tipos de transmisión
+      tags: [Catálogo]
+      responses:
+        '200':
+          content:
+            application/json:
+              example: [{ id: 1, nombre: Manual }, { id: 2, nombre: Automático }, { id: 3, nombre: Semiautomático }]
+
+  /api/categorias:
+    get:
+      summary: Listar categorías de vehículo
+      tags: [Catálogo]
+      responses:
+        '200':
+          content:
+            application/json:
+              example: [{ id: 1, nombre: Sedán }, { id: 2, nombre: SUV }, { id: 3, nombre: Compacto }, { id: 4, nombre: Deportivo }, { id: 5, nombre: Monovolumen }, { id: 6, nombre: "Pick-up" }]
+
+  /api/colores:
+    get:
+      summary: Listar colores
+      tags: [Catálogo]
+      responses:
+        '200':
+          content:
+            application/json:
+              example: [{ id: 1, nombre: Blanco }, { id: 2, nombre: Negro }, { id: 3, nombre: Gris }, { id: 4, nombre: Rojo }, { id: 5, nombre: Azul }]
+
+  /api/etiquetas:
+    get:
+      summary: Listar etiquetas ambientales
+      tags: [Catálogo]
+      responses:
+        '200':
+          content:
+            application/json:
+              example: [{ id: 1, nombre: "0" }, { id: 2, nombre: Eco }, { id: 3, nombre: C }, { id: 4, nombre: B }, { id: 5, nombre: "Sin Etiqueta" }]
+
+  /user/register:
+    post:
+      summary: Registrar nuevo usuario
+      tags: [Usuarios]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nombres, apellidos, email, dni, telefono, password]
+              properties:
+                nombres:   { type: string, example: Juan }
+                apellidos: { type: string, example: García }
+                email:     { type: string, example: juan@mail.com }
+                dni:       { type: string, example: 11111111A }
+                telefono:  { type: string, example: "600000001" }
+                password:  { type: string, example: "Segura1" }
+      responses:
+        '200':
+          content:
+            application/json:
+              example: { status: ok, message: "Usuario registrado exitosamente" }
+        '400':
+          content:
+            application/json:
+              example: { status: error, message: "El email ya esta registrado" }
+
+  /user/logger:
+    post:
+      summary: Iniciar sesión
+      tags: [Usuarios]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:    { type: string, example: juan@mail.com }
+                password: { type: string, example: "Segura1" }
+      responses:
+        '200':
+          content:
+            application/json:
+              example: { status: ok, message: "Login correcto" }
+        '404':
+          content:
+            application/json:
+              example: { status: error, message: "Correo no registrado" }
+        '401':
+          content:
+            application/json:
+              example: { status: error, message: "Error al iniciar sesion" }
+
+  /api/docs:
+    get:
+      summary: Documentación HTML (esta página)
+      tags: [Meta]
+      responses:
+        '200':
+          description: Sirve openapi-coches.html
+          content:
+            text/html: {}

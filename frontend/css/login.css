@@ -1,4 +1,4 @@
-/* Estilos unificados con home.css y compactados */
+/* Estilos unificados con home.css */
 
 body {
     text-align: center;
@@ -47,104 +47,88 @@ header h1 {
 
 .main-content {
     grid-area: main;
-    padding: 20px;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #dfe3ea;
 }
 
-.contenedor-formulario {
-    max-width: 850px;
-    margin: 20px auto;
+#form-login {
     background-color: #111827;
     color: whitesmoke;
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     border: 1px solid #333;
 }
 
-.titulo-formulario {
-    font-size: 28px;
-    text-align: center;
-    margin-bottom: 18px;
+#form-login h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: whitesmoke;
 }
 
-.cuadricula-formulario {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-}
-
-.grupo-formulario {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+#data-login label {
+    display: block;
     text-align: left;
-}
-
-.grupo-formulario.ancho-completo {
-    grid-column: span 2;
-}
-
-.grupo-formulario label {
+    margin-bottom: 15px;
     font-weight: bold;
-    font-size: 13px;
-    margin-bottom: 4px;
 }
 
-.grupo-formulario input,
-.grupo-formulario select {
-    padding: 9px 10px;
-    min-height: 38px;
-    border: 1px solid #333;
+#data-login input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
     border-radius: 5px;
-    font-size: 15px;
+    border: 1px solid #333;
     background-color: #1f2937;
     color: white;
     box-sizing: border-box;
 }
 
-.boton-enviar {
-    grid-column: span 2;
+#btnLogin {
     background-color: rgb(29, 78, 216);
     color: white;
-    padding: 12px;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
+    padding: 12px;
+    width: 100%;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s ease;
     margin-top: 10px;
 }
 
-.boton-enviar:hover {
+#btnLogin:hover {
     background-color: rgb(37, 99, 235);
     transform: scale(1.02);
 }
 
-.boton-volver {
-    display: inline-block;
+.texto-registro {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.texto-registro a {
     color: #db9c37;
     text-decoration: none;
     font-weight: bold;
-    font-size: 14px;
+}
+
+.texto-registro a:hover {
+    text-decoration: underline;
+}
+
+#mensajeError {
+    color: #ef4444;
+    margin-bottom: 15px;
 }
 
 footer {
     grid-area: footer;
     background-color: #111827;
     color: whitesmoke;
-    padding: 30px;
-}
-
-@media (max-width: 640px) {
-    .cuadricula-formulario {
-        grid-template-columns: 1fr;
-    }
-    .grupo-formulario.ancho-completo {
-        grid-column: span 1;
-    }
-    .boton-enviar {
-        grid-column: span 1;
-    }
+    padding: 50px;
 }

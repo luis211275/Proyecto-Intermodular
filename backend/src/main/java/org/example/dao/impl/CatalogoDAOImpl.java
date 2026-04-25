@@ -15,7 +15,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
         try {
             return DatabaseConfig.getConnection();
         } catch (Exception e) {
-            throw new ErrorDeAccesoADatosException("Error al conectar con la base de datos", e);
+            throw new ErrorDeAccesoADatosException("Error al conectar con la base de datos" + ": " + e.getMessage());
         }
     }
 
@@ -24,13 +24,13 @@ public class CatalogoDAOImpl implements CatalogoDAO {
         List<Marca> marcas = new ArrayList<>();
         String sql = "SELECT ID_MARCA, NOMBRE FROM MARCAS WHERE ACTIVO = TRUE ORDER BY NOMBRE";
         try (Connection conn = obtenerConexion();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 marcas.add(new Marca(rs.getInt("ID_MARCA"), rs.getString("NOMBRE")));
             }
         } catch (SQLException e) {
-            throw new ErrorDeAccesoADatosException("Error al obtener marcas", e);
+            throw new ErrorDeAccesoADatosException("Error al obtener marcas" + ": " + e.getMessage());
         }
         return marcas;
     }
@@ -40,7 +40,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
         List<Modelo> modelos = new ArrayList<>();
         String sql = "SELECT ID_MODELO, NOMBRE FROM MODELOS WHERE MARCA_ID = ? AND ACTIVO = TRUE ORDER BY NOMBRE";
         try (Connection conn = obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, idMarca);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -51,7 +51,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new ErrorDeAccesoADatosException("Error al obtener modelos", e);
+            throw new ErrorDeAccesoADatosException("Error al obtener modelos" + ": " + e.getMessage());
         }
         return modelos;
     }
@@ -61,7 +61,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
         List<Version> versiones = new ArrayList<>();
         String sql = "SELECT ID_VERSION, NOMBRE FROM VERSIONES WHERE MODELO_ID = ? AND ACTIVO = TRUE ORDER BY NOMBRE";
         try (Connection conn = obtenerConexion();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, idModelo);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -72,7 +72,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new ErrorDeAccesoADatosException("Error al obtener versiones", e);
+            throw new ErrorDeAccesoADatosException("Error al obtener versiones" + ": " + e.getMessage());
         }
         return versiones;
     }
@@ -82,8 +82,8 @@ public class CatalogoDAOImpl implements CatalogoDAO {
         List<Ciudad> ciudades = new ArrayList<>();
         String sql = "SELECT ID_CIUDAD, NOMBRE FROM CIUDADES WHERE ACTIVO = TRUE ORDER BY NOMBRE";
         try (Connection conn = obtenerConexion();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Ciudad c = new Ciudad();
                 c.setIdCiudad(rs.getInt("ID_CIUDAD"));
@@ -91,7 +91,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
                 ciudades.add(c);
             }
         } catch (SQLException e) {
-            throw new ErrorDeAccesoADatosException("Error al obtener ciudades", e);
+            throw new ErrorDeAccesoADatosException("Error al obtener ciudades" + ": " + e.getMessage());
         }
         return ciudades;
     }
@@ -101,8 +101,8 @@ public class CatalogoDAOImpl implements CatalogoDAO {
         List<Color> colores = new ArrayList<>();
         String sql = "SELECT ID_COLOR, NOMBRE FROM COLORES WHERE ACTIVO = TRUE ORDER BY NOMBRE";
         try (Connection conn = obtenerConexion();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Color c = new Color();
                 c.setIdColor(rs.getInt("ID_COLOR"));
@@ -110,7 +110,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
                 colores.add(c);
             }
         } catch (SQLException e) {
-            throw new ErrorDeAccesoADatosException("Error al obtener colores", e);
+            throw new ErrorDeAccesoADatosException("Error al obtener colores" + ": " + e.getMessage());
         }
         return colores;
     }
@@ -120,8 +120,8 @@ public class CatalogoDAOImpl implements CatalogoDAO {
         List<TipoCombustible> lista = new ArrayList<>();
         String sql = "SELECT ID_COMBUSTIBLE, NOMBRE FROM TIPOS_COMBUSTIBLE WHERE ACTIVO = TRUE ORDER BY NOMBRE";
         try (Connection conn = obtenerConexion();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 TipoCombustible tc = new TipoCombustible();
                 tc.setIdCombustible(rs.getInt("ID_COMBUSTIBLE"));
@@ -129,7 +129,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
                 lista.add(tc);
             }
         } catch (SQLException e) {
-            throw new ErrorDeAccesoADatosException("Error al obtener combustibles", e);
+            throw new ErrorDeAccesoADatosException("Error al obtener combustibles" + ": " + e.getMessage());
         }
         return lista;
     }
@@ -139,8 +139,8 @@ public class CatalogoDAOImpl implements CatalogoDAO {
         List<TipoTransmision> lista = new ArrayList<>();
         String sql = "SELECT ID_TRANSMISION, NOMBRE FROM TIPOS_TRANSMISION WHERE ACTIVO = TRUE ORDER BY NOMBRE";
         try (Connection conn = obtenerConexion();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 TipoTransmision tt = new TipoTransmision();
                 tt.setIdTransmision(rs.getInt("ID_TRANSMISION"));
@@ -148,7 +148,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
                 lista.add(tt);
             }
         } catch (SQLException e) {
-            throw new ErrorDeAccesoADatosException("Error al obtener transmisiones", e);
+            throw new ErrorDeAccesoADatosException("Error al obtener transmisiones" + ": " + e.getMessage());
         }
         return lista;
     }
@@ -158,8 +158,8 @@ public class CatalogoDAOImpl implements CatalogoDAO {
         List<Categoria> lista = new ArrayList<>();
         String sql = "SELECT ID_CATEGORIA, NOMBRE FROM CATEGORIAS WHERE ACTIVO = TRUE ORDER BY NOMBRE";
         try (Connection conn = obtenerConexion();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Categoria c = new Categoria();
                 c.setIdCategoria(rs.getInt("ID_CATEGORIA"));
@@ -167,7 +167,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
                 lista.add(c);
             }
         } catch (SQLException e) {
-            throw new ErrorDeAccesoADatosException("Error al obtener categorías", e);
+            throw new ErrorDeAccesoADatosException("Error al obtener categorías" + ": " + e.getMessage());
         }
         return lista;
     }
@@ -177,8 +177,8 @@ public class CatalogoDAOImpl implements CatalogoDAO {
         List<EtiquetaAmbiental> lista = new ArrayList<>();
         String sql = "SELECT ID_ETIQUETA, NOMBRE FROM ETIQUETAS_AMBIENTALES WHERE ACTIVO = TRUE ORDER BY NOMBRE";
         try (Connection conn = obtenerConexion();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 EtiquetaAmbiental e = new EtiquetaAmbiental();
                 e.setIdEtiqueta(rs.getInt("ID_ETIQUETA"));
@@ -186,7 +186,7 @@ public class CatalogoDAOImpl implements CatalogoDAO {
                 lista.add(e);
             }
         } catch (SQLException e) {
-            throw new ErrorDeAccesoADatosException("Error al obtener etiquetas", e);
+            throw new ErrorDeAccesoADatosException("Error al obtener etiquetas" + ": " + e.getMessage());
         }
         return lista;
     }

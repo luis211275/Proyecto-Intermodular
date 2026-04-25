@@ -46,7 +46,7 @@ public class CocheService {
         }
     }
 
-    public int publicarCoche(Coche c) throws ErrorDeNegocioException, ErrorDeAccesoADatosException {
+    public int publicarCoche(Coche c) throws ErrorDeNegocioException, ErrorDeAccesoADatosException, PrecioInvalidoException, DatosIncompletosException {
         // Validaciones de negocio
         validarCoche(c);
         
@@ -55,23 +55,23 @@ public class CocheService {
             idGenerado = cocheDAO.insertarCocheNuevo(c);
         } catch (ErrorDeAccesoADatosException e) {
             // Si falla la BD, intentamos borrar la imagen si existe (Transaccionalidad de Disco)
-            if (c.getUrlImagen() != null && !c.getUrlImagen().isEmpty()) {
-                borrarImagen(c.getUrlImagen());
+            if (c.getImagen() != null && !c.getImagen().isEmpty()) {
+                borrarImagen(c.getImagen());
             }
             throw e;
         }
         return idGenerado;
     }
 
-    private void validarCoche(Coche c) throws ErrorDeNegocioException {
+    private void validarCoche(Coche c) throws ErrorDeNegocioException, PrecioInvalidoException, DatosIncompletosException {
         if (c.getPrecioVenta() == null || c.getPrecioVenta().doubleValue() <= 0) {
             throw new PrecioInvalidoException("El precio debe ser mayor a 0");
         }
         if (c.getAnioFabricacion() < 1900) {
-            throw new DatosIncompletosException("Año de fabricación inválido");
+            throw new ErrorDeNegocioException("Año de fabricación inválido");
         }
         if (c.getKilometraje() < 0) {
-            throw new DatosIncompletosException("El kilometraje no puede ser negativo");
+            throw new ErrorDeNegocioException("El kilometraje no puede ser negativo");
         }
         if (c.getVersion() == null || c.getVersion().getIdVersion() == 0) {
             throw new DatosIncompletosException("Debe especificar una versión válida");
