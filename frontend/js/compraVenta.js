@@ -1,196 +1,211 @@
-import { mostrarNotificacion, navegarA } from './router.js';
 
-const API_BASE = '/api';
+let cocheId = null;
+let cocheActual = null;
 
-export const inicializarCompraVenta = async () => {
-    const parametrosConsulta = new URLSearchParams(window.location.search);
-    const id = parametrosConsulta.get('id');
-
-    if (!id) {
-        mostrarNotificacion('ID de coche no proporcionado', 'error');
-        navegarA('/');
-        return;
-    }
-
-    try {
-        const respuesta = await fetch(`${API_BASE}/coches/${id}`);
-        if (!respuesta.ok) throw new Error('Coche no encontrado');
-        const coche = await respuesta.json();
-
-        // Normalizar imagen si viene como urlImagen
-        if (coche.urlImagen && !coche.imagen) {
-            coche.imagen = coche.urlImagen;
-        }
-
-        mostrarContrato(coche);
-        mostrarResumenPrecios(coche);
-        configurarEscuchadoresEventos(coche);
-    } catch (err) {
-        console.error(err);
-        mostrarNotificacion('Error al cargar datos de compra.', 'error');
-        navegarA('/');
-    }
-};
-
-function mostrarContrato(coche) {
-    const contenedor = document.getElementById('contrato-content');
-    const usuarioAutenticado = JSON.parse(localStorage.getItem('auth_user')) || { nombre: 'Invitado', apellido: '', dni: 'No disponible', telefono: 'No disponible' };
-
-    contenedor.innerHTML = `
-        <div class="legal-doc">
-            <h2 class="legal-title">CONTRATO DE COMPRAVENTA DE VEHÍCULO USADO</h2>
-            
-            <div class="contract-grid">
-                <div class="party-card">
-                    <p class="party-role">EL VENDEDOR</p>
-                    <p><strong>Nombre:</strong> ${escaparHtml(coche.vendedorNombre)}</p>
-                    <p><strong>DNI:</strong> ${escaparHtml(coche.vendedorDni || 'No disponible')}</p>
-                    <p><strong>Teléfono:</strong> ${escaparHtml(coche.vendedorTelefono || 'No disponible')}</p>
-                </div>
-                <div class="party-card">
-                    <p class="party-role">EL COMPRADOR</p>
-                    <p><strong>Nombre:</strong> ${escaparHtml(usuarioAutenticado.nombre + (usuarioAutenticado.apellido ? ' ' + usuarioAutenticado.apellido : ''))}</p>
-                    <p><strong>DNI:</strong> ${escaparHtml(usuarioAutenticado.dni || 'No disponible')}</p>
-                    <p><strong>Teléfono:</strong> ${escaparHtml(usuarioAutenticado.telefono || 'No disponible')}</p>
-                </div>
-            </div>
-
-            <section class="legal-section" style="margin-top: 1rem;">
-                <h3>OBJETO DEL CONTRATO</h3>
-                <p>La compraventa del vehículo con las siguientes especificaciones:</p>
-                <ul class="legal-specs">
-                    <li><strong>Categoría:</strong> ${escaparHtml(coche.categoria || 'No disponible')}</li>
-                    <li><strong>Marca/Modelo:</strong> ${escaparHtml(coche.marca)} ${escaparHtml(coche.modelo)}</li>
-                    <li><strong>Versión:</strong> ${escaparHtml(coche.version || 'No disponible')}</li>
-                    <li><strong>Combustible:</strong> ${escaparHtml(coche.combustible)}</li>
-                    <li><strong>Transmisión:</strong> ${escaparHtml(coche.transmision)}</li>
-                    <li><strong>Color:</strong> ${escaparHtml(coche.color || 'No disponible')}</li>
-                    <li><strong>Etiqueta:</strong> ${escaparHtml(coche.etiquetaAmbiental || coche.etiqueta || 'No disponible')}</li>
-                    <li><strong>Kilometraje:</strong> ${formatearNumero(coche.km)} km</li>
-                    <li><strong>Año:</strong> ${coche.anio}</li>
-                    <li><strong>Ciudad:</strong> ${escaparHtml(coche.ciudad)}</li>
-                    <li><strong>Estado:</strong> ${escaparHtml(coche.estado)}</li>
-                </ul>
-            </section>
-
-            <section class="legal-section">
-                <h3>CLÁUSULAS</h3>
-                <p>1. El precio acordado por el vehículo es de <strong>${formatearPrecio(coche.total)}€</strong> (impuestos y comisiones incluidos).</p>
-                <p>2. El vendedor declara que el vehículo se encuentra en el estado de conservación descrito.</p>
-                <p>3. El comprador acepta el vehículo en su estado actual, exonerando a la plataforma de cualquier responsabilidad civil o penal derivada de la transacción.</p>
-            </section>
-        </div>
-    `;
+function estaLogueado() {
+    return !!localStorage.getItem("auth_user") || !!localStorage.getItem("auth_user_id");
 }
 
-function mostrarResumenPrecios(coche) {
-    const contenedor = document.getElementById('precio-summary');
-    contenedor.innerHTML = `
-        <div class="price-row"><span>Subtotal:</span><strong>${formatearPrecio(coche.subtotal)}€</strong></div>
-        <div class="price-row"><span>IVA (21%):</span><strong>${formatearPrecio(coche.iva)}€</strong></div>
-        <div class="price-row"><span>Comisión (2%):</span><strong>${formatearPrecio(coche.comision)}€</strong></div>
-        <div class="price-row total"><span>TOTAL:</span><strong>${formatearPrecio(coche.total)}€</strong></div>
-    `;
+function mandarALogin() {
+    localStorage.setItem("redirect_after_login", window.location.href);
+    window.location.href = "login.html";
 }
 
-function configurarEscuchadoresEventos(coche) {
-    const verificarTerminos = document.getElementById('acepto-terminos');
-    const botonContinuar = document.getElementById('continuar-pago');
-    const botonCancelar = document.getElementById('cancelar-compra');
-    const botonPagar = document.getElementById('btn-pagar');
+function actualizarNavbarSesion() {
+    const login = document.getElementById("login");
+    const venta = document.getElementById("ventaCoche");
+    if (!login) return;
 
-    verificarTerminos.onchange = (e) => {
-        botonContinuar.disabled = !e.target.checked;
-    };
+    if (estaLogueado()) {
+        login.innerText = "⎋ Cerrar sesión";
+        login.onclick = () => {
+            localStorage.removeItem("auth_user");
+            localStorage.removeItem("auth_user_id");
+            window.location.href = "home.html";
+        };
+    } else {
+        login.innerText = "Iniciar Sesión";
+        login.onclick = () => {
+            window.location.href = "login.html";
+        };
+    }
 
-    botonContinuar.onclick = () => {
-        document.getElementById('seccion-contrato').classList.add('hidden');
-        document.getElementById('seccion-pago').classList.remove('hidden');
-        // Aseguramos que el formulario de pago sea visible al continuar
-        document.getElementById('pago-form-container').classList.remove('hidden');
-        window.scrollTo(0, 0);
-    };
-
-    botonCancelar.onclick = () => navegarA('/');
-
-    document.getElementById('volver-contrato').onclick = () => {
-        document.getElementById('seccion-pago').classList.add('hidden');
-        document.getElementById('seccion-contrato').classList.remove('hidden');
-        window.scrollTo(0, 0);
-    };
-
-    const formularioPago = document.getElementById('form-pago');
-    if (formularioPago) {
-        formularioPago.onsubmit = async (e) => {
-            e.preventDefault();
-            
-            if (botonPagar) botonPagar.disabled = true;
-            const cargador = document.getElementById('pago-spinner');
-            const contenidoOriginal = document.getElementById('pago-form-container');
-
-            // 1. OCULTAMOS TODO el formulario e imagen mockup INMEDIATAMENTE
-            if (contenidoOriginal) contenidoOriginal.classList.add('hidden');
-            
-            // 2. PREPARAMOS EL SPINNER DINÁMICAMENTE para que no exista antes de este momento
-            if (cargador) {
-                cargador.innerHTML = `
-                    <div class="cargador" style="margin: 0 auto 1.5rem; width: 50px; height: 50px; border: 4px solid rgba(0,0,0,0.1); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                    <p id="pago-status-text" style="font-weight: 500; color: var(--text-main); font-size: 1.1rem;">Iniciando conexión segura...</p>
-                `;
-                cargador.classList.remove('hidden');
-            }
-            
-            const textoEstado = document.getElementById('pago-status-text');
-            
-            const estados = [
-                'Iniciando conexión segura...',
-                'Validando datos de la tarjeta...',
-                'Esperando autorización de la entidad bancaria...',
-                'Procesando cobro...',
-                'Pago aceptado. Finalizando compra...'
-            ];
-
-            for (let i = 0; i < estados.length; i++) {
-                if (textoEstado) textoEstado.textContent = estados[i];
-                await new Promise(r => setTimeout(r, 1000));
-            }
-
-            try {
-                const respuesta = await fetch('/api/marcarVehiculoComoVendido', {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: coche.idCoche })
-                });
-                if (!respuesta.ok) throw new Error('Error al actualizar estado en BD');
-                
-                mostrarNotificacion('¡Compra completada con éxito!', 'success');
-                setTimeout(() => {
-                    navegarA('/');
-                }, 1500);
-            } catch (err) {
-                console.error(err);
-                mostrarNotificacion('Error al finalizar la compra.', 'error');
-                if (botonPagar) botonPagar.disabled = false;
-                if (cargador) {
-                    cargador.classList.add('hidden');
-                    cargador.innerHTML = ''; // Limpiamos
-                }
-                if (contenidoOriginal) contenidoOriginal.classList.remove('hidden');
-            }
+    if (venta) {
+        venta.onclick = () => {
+            window.location.href = estaLogueado() ? "publicar.html" : "login.html";
         };
     }
 }
 
-function formatearNumero(valor) {
-    return new Intl.NumberFormat('es-ES').format(valor);
+actualizarNavbarSesion();
+
+function mostrarNotificacion(mensaje, tipo = 'success') {
+    let contenedor = document.getElementById('notification-container');
+    if (!contenedor) {
+        contenedor = document.createElement('div');
+        contenedor.id = 'notification-container';
+        document.body.appendChild(contenedor);
+    }
+    const notificacion = document.createElement('div');
+    notificacion.className = `toast ${tipo}`;
+    notificacion.textContent = mensaje;
+    contenedor.appendChild(notificacion);
+    setTimeout(() => {
+        notificacion.classList.add('fade-out');
+        setTimeout(() => notificacion.remove(), 300);
+    }, 3000);
 }
 
-function formatearPrecio(valor) {
-    return new Intl.NumberFormat('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(valor);
-}
-
-function escaparHtml(cadena) {
+function limpiarTextoHtml(cadena) {
     return String(cadena || '').replace(/[&<>"']/g, m => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     }[m]));
 }
+
+const inicializarCompra = async () => {
+    if (!estaLogueado()) { mandarALogin(); return; }
+
+    const params = new URLSearchParams(window.location.search);
+    cocheId = params.get('id');
+
+    if (!cocheId) {
+        mostrarNotificacion('Vehículo no especificado.', 'error');
+        window.location.href = "home.html";
+        return;
+    }
+
+    await cargarDatosCoche();
+    configurarEventos();
+};
+
+async function cargarDatosCoche() {
+    try {
+        const res = await fetch(`/api/coches/${cocheId}`);
+        if (!res.ok) throw new Error('Coche no encontrado');
+        cocheActual = await res.json();
+        renderizarContrato();
+    } catch (err) {
+        mostrarNotificacion('Error al cargar datos del vehículo.', 'error');
+        window.location.href = "home.html";
+    }
+}
+
+function renderizarContrato() {
+    const contenedor = document.getElementById('contrato-content');
+    const user = JSON.parse(localStorage.getItem("auth_user") || "{}");
+
+    let nombreComprador = "No disponible";
+    if (user.nombres && user.apellidos) {
+        nombreComprador = `${user.nombres} ${user.apellidos}`;
+    } else if (user.nombres || user.apellidos) {
+        nombreComprador = user.nombres || user.apellidos;
+    } else if (user.email) {
+        nombreComprador = user.email;
+    }
+
+    const dniComprador = user.dni || "No disponible";
+    const fechaActual = new Date().toLocaleDateString('es-ES');
+    const fechaPub = cocheActual.fechaPublicacion ? new Date(cocheActual.fechaPublicacion).toLocaleDateString('es-ES') : "No disponible";
+
+    contenedor.innerHTML = `
+        <h2 style="text-align: center; text-transform: uppercase; margin-bottom: 1.5rem;">CONTRATO DE COMPRAVENTA DE VEHÍCULO</h2>
+        <p><strong>FECHA:</strong> ${fechaActual} | <strong>Ciudad:</strong> ${limpiarTextoHtml(cocheActual.ciudad || "No disponible")}</p>
+        
+        <div style="margin-top: 1.5rem;">
+            <h3>PARTES:</h3>
+            <p><strong>VENDEDOR:</strong> ${limpiarTextoHtml(cocheActual.vendedorNombre || "No disponible")}, <strong>DNI/NIE:</strong> ${limpiarTextoHtml(cocheActual.vendedorDni || "No disponible")}</p>
+            <p><strong>COMPRADOR:</strong> ${limpiarTextoHtml(nombreComprador)}, <strong>DNI/NIE:</strong> ${limpiarTextoHtml(dniComprador)}</p>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+            <h3>DATOS DEL VEHÍCULO:</h3>
+            <p><strong>Marca / Modelo:</strong> ${limpiarTextoHtml(cocheActual.marca || "No disponible")} / ${limpiarTextoHtml(cocheActual.modelo || "No disponible")}</p>
+            <p><strong>Categoría / Versión:</strong> ${limpiarTextoHtml(cocheActual.categoria || "No disponible")} / ${limpiarTextoHtml(cocheActual.version || "No disponible")}</p>
+            <p><strong>Año Fab. / Color:</strong> ${limpiarTextoHtml(cocheActual.anio || cocheActual.anioFabricacion || "No disponible")} / ${limpiarTextoHtml(cocheActual.color || "No disponible")}</p>
+            <p><strong>Etiqueta / Combustible:</strong> ${limpiarTextoHtml(cocheActual.etiquetaAmbiental || cocheActual.etiqueta || "No disponible")} / ${limpiarTextoHtml(cocheActual.combustible || "No disponible")}</p>
+            <p><strong>Transmisión:</strong> ${limpiarTextoHtml(cocheActual.transmision || "No disponible")} | <strong>Fecha Publicación:</strong> ${fechaPub}</p>
+        </div>
+
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="#" id="ver-terminos" style="color: #db9c37; font-weight: bold; text-decoration: underline;">Ver Términos y Condiciones</a>
+        </div>
+    `;
+    renderizarResumenPrecios();
+
+    document.getElementById('ver-terminos')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('modal-terminos').showModal();
+    });
+}
+
+function renderizarResumenPrecios() {
+    const precioBase = Number(cocheActual.precioVenta || cocheActual.precio);
+    const comision = precioBase * 0.03;
+    const total = precioBase + comision;
+    const summary = document.getElementById('precio-summary');
+    summary.innerHTML = `
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Precio vehículo:</span> <span>${precioBase.toLocaleString()} €</span></div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Comisión (3%):</span> <span>${comision.toLocaleString()} €</span></div>
+        <div style="display: flex; justify-content: space-between; font-weight:bold; border-top: 1px solid #cbd5e1; padding-top: 5px;"><span>Total:</span> <span>${total.toLocaleString()} €</span></div>
+    `;
+}
+
+function configurarEventos() {
+
+    const seccionContrato = document.getElementById('seccion-contrato');
+    const seccionPago = document.getElementById('seccion-pago');
+    const pagoFormContainer = document.getElementById('pago-form-container');
+    const pagoSpinner = document.getElementById('pago-spinner');
+    const btnContinuar = document.getElementById('continuar-pago');
+    const checkbox = document.getElementById('acepto-terminos');
+
+    seccionContrato.classList.remove('hidden');
+    seccionPago.classList.add('hidden');
+    pagoFormContainer.classList.add('hidden');
+    pagoSpinner.classList.add('hidden');
+    btnContinuar.disabled = true;
+
+    checkbox?.addEventListener('change', (e) => {
+        btnContinuar.disabled = !e.target.checked;
+    });
+
+    btnContinuar?.addEventListener('click', () => {
+        seccionContrato.classList.add('hidden');
+        seccionPago.classList.remove('hidden');
+        pagoFormContainer.classList.remove('hidden');
+    });
+
+    document.getElementById('cerrar-modal-terminos')?.addEventListener('click', () => {
+        document.getElementById('modal-terminos').close();
+    });
+
+    document.getElementById('volver-contrato')?.addEventListener('click', () => {
+        seccionContrato.classList.remove('hidden');
+        seccionPago.classList.add('hidden');
+    });
+
+    document.getElementById('form-pago')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        pagoFormContainer.classList.add('hidden');
+        pagoSpinner.classList.remove('hidden');
+        pagoSpinner.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+                <div class="spinner" style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                <p>Procesando pago seguro...</p>
+            </div>
+            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+        `;
+
+        setTimeout(() => {
+            mostrarNotificacion('¡Compra realizada con éxito!', 'success');
+            setTimeout(() => window.location.href = "home.html", 1500);
+        }, 2000);
+    });
+
+    document.getElementById('cancelar-compra')?.addEventListener('click', () => {
+        window.location.href = "home.html";
+    });
+}
+
+document.addEventListener('DOMContentLoaded', inicializarCompra);

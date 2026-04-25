@@ -1,36 +1,50 @@
 package org.example.model;
 
 public class Usuario {
-  private String nombre;
-  private String apellido;
+  private int idUsuario;
+  private String nombres;
+  private String apellidos;
   private String email;
   private String password;
-  private int telefono;
+  private String telefono;
   private String dni;
 
-  public Usuario(String nombre, String apellido, String email, String password, int telefono, String dni) {
-    this.nombre = nombre;
-    this.apellido = apellido;
+  public Usuario() {
+  }
+
+  public Usuario(int idUsuario, String nombre, String apellido, String email, String password, String telefono,
+      String dni) {
+    this.idUsuario = idUsuario;
+    this.nombres = nombre;
+    this.apellidos = apellido;
     this.email = email;
     this.password = password;
     this.telefono = telefono;
     this.dni = dni;
   }
 
-  public String getNombre() {
-    return nombre;
+  public int getIdUsuario() {
+    return idUsuario;
   }
 
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
+  public void setIdUsuario(int idUsuario) {
+    this.idUsuario = idUsuario;
   }
 
-  public String getApellido() {
-    return apellido;
+  public String getNombres() {
+    return nombres;
   }
 
-  public void setApellido(String apellido) {
-    this.apellido = apellido;
+  public void setNombres(String nombres) {
+    this.nombres = nombres;
+  }
+
+  public String getApellidos() {
+    return apellidos;
+  }
+
+  public void setApellidos(String apellidos) {
+    this.apellidos = apellidos;
   }
 
   public String getEmail() {
@@ -49,11 +63,11 @@ public class Usuario {
     this.password = password;
   }
 
-  public int getTelefono() {
+  public String getTelefono() {
     return telefono;
   }
 
-  public void setTelefono(int telefono) {
+  public void setTelefono(String telefono) {
     this.telefono = telefono;
   }
 

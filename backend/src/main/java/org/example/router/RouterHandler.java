@@ -5,6 +5,8 @@ import com.sun.net.httpserver.HttpHandler;
 import org.example.controller.CatalogoController;
 import org.example.controller.CocheController;
 import org.example.controller.UsuarioController;
+import org.example.exception.ErrorDeAccesoADatosException;
+import org.example.exception.ErrorDeNegocioException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,10 +22,6 @@ public class RouterHandler implements HttpHandler {
   private final CocheController cocheController = new CocheController();
   private final CatalogoController catalogoController = new CatalogoController();
 
-  /*
-   * Todo lo relacionado con usuario, login y register prevalece del segundo archivo.
-   * Por eso las rutas /user se delegan completas al UsuarioController.handle(exchange).
-   */
   private final UsuarioController registerController = new UsuarioController();
 
   @Override
@@ -39,28 +37,25 @@ public class RouterHandler implements HttpHandler {
       return;
     }
 
+    if (path.equals("/")) {
+      exchange.getResponseHeaders().set("Location", "/html/home.html");
+      exchange.sendResponseHeaders(302, -1);
+      return;
+    }
+
+    // Redirigir peticiones de HTML en raíz a la carpeta /html/
+    if (path.endsWith(".html") && !path.startsWith("/html/")) {
+      exchange.getResponseHeaders().set("Location", "/html" + path);
+      exchange.sendResponseHeaders(302, -1);
+      return;
+    }
+
     try {
-      /*
-       * USUARIOS / LOGIN / REGISTER
-       *
-       * Prevalece el segundo archivo.
-       * Ejemplos:
-       * /user
-       * /user/login
-       * /user/register
-       */
       if (path.startsWith("/user")) {
         registerController.handle(exchange);
         return;
       }
 
-      /*
-       * Archivos estáticos del frontend:
-       * /css/...
-       * /js/...
-       * /views/...
-       * /assets/...
-       */
       if (esRutaEstatico(path)) {
         servirArchivoPublic(exchange, path);
         return;
@@ -68,17 +63,10 @@ public class RouterHandler implements HttpHandler {
 
       boolean esApi = path.startsWith("/api/");
 
-      /*
-       * SPA fallback.
-       * Si no es API ni archivo estático, devuelve frontend/index.html.
-       * Ejemplos:
-       * /
-       * /publicar
-       * /compraVenta
-       * /detalle/1
-       */
       if (!esApi) {
-        servirArchivo(exchange, PUBLIC_DIR + "/index.html", "text/html; charset=UTF-8");
+        // Si no es API y no se capturó como estático arriba, redirigir a home
+        exchange.getResponseHeaders().set("Location", "/html/home.html");
+        exchange.sendResponseHeaders(302, -1);
         return;
       }
 
@@ -228,7 +216,7 @@ public class RouterHandler implements HttpHandler {
         sendResponse(exchange, 200, cocheController.eliminarAnuncioVehiculo(id));
 
       } else if (path.equals("/api/docs") && method.equals("GET")) {
-        servirArchivo(exchange, "src/main/resources/openapi-coches.html", "text/html; charset=UTF-8");
+        servirArchivo(exchange, "backend/src/main/resources/openapi-coches.html", "text/html; charset=UTF-8");
 
       } else if (path.startsWith("/api/coches/") && method.equals("GET")) {
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
@@ -322,8 +310,9 @@ public class RouterHandler implements HttpHandler {
   private boolean esRutaEstatico(String path) {
     return path.startsWith("/css/")
         || path.startsWith("/js/")
-        || path.startsWith("/views/")
-        || path.startsWith("/assets/");
+        || path.startsWith("/html/")
+        || path.startsWith("/assets/")
+        || path.endsWith(".html");
   }
 
   private boolean esRutaSpa(String path) {

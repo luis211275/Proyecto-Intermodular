@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registro</title>
+        <link rel="stylesheet" href="../css/register.css">
+    </head>
+    <body>
+        
+    <div class="grid-layout">
+        <header>
+            <h1>Nombre</h1>
+            <h3 id="ventaCoche">Vende tu Coche</h3>
+            <h3 id="login">Iniciar Sesión</h3>
+        </header>
+
+        <main class="main-content" id="register-main">
+            <form id="form-register">
+                <h2>Registro de usuario</h2>
+                <label>Nombre: <input type="text" id="nameRegister" placeholder="Nombre del usuario"></label>
+                <label>Apellido: <input type="text" id="apellidoRegister" placeholder="Apellido del usuario"></label>
+                <label>Email: <input type="text" id="emailRegister" placeholder="Email del usuario" ></label>
+                <label>DNI: <input type="text" id="dniRegister" placeholder="DNI del usuario" ></label>
+                <label>Telefono: <input type="number" id="telefonoRegister" placeholder="Teléfono del usuario"></label>
+                <label>Contraseña: <input type="password" id="passwordRegister" placeholder="Contraseña del usuario" ></label>
+                <p id="mensajeRegistro"></p>
+                <button id="btnRegister">Registrar Usuario</button>
+            </form>
+            <script src="../js/register.js"></script>
+        </main>
+
+        <footer>© 2026 Proyecto Intermodular. Todos los derechos reservados.</footer>
+    </div>
+
+    </body>
+</html>

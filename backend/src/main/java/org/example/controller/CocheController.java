@@ -1,8 +1,7 @@
 package org.example.controller;
 
 import com.sun.net.httpserver.HttpExchange;
-import org.example.exception.ErrorDeAccesoADatosException;
-import org.example.exception.ErrorDeNegocioException;
+import org.example.exception.*;
 import org.example.model.*;
 import org.example.service.CocheService;
 
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class CocheController {
   private CocheService cocheService = new CocheService();
-  private static final String DIRECTORIO_SUBIDA = "src/main/resources/public/assets/img/cars/";
+  private static final String DIRECTORIO_SUBIDA = "frontend/assets/img/cars/";
 
   public String listarCoches(Map<String, String> filtros) throws ErrorDeAccesoADatosException {
     List<Coche> coches = cocheService.obtenerCochesDisponibles(filtros);
@@ -47,8 +46,8 @@ public class CocheController {
 
     // Mapa para guardar los campos del formulario
     Map<String, String> campos = new HashMap<>();
-    String urlImagen = "";
-    
+    String imagen = "";
+
     byte[] buffer = flujoEntrada.readAllBytes();
     String cuerpo = new String(buffer, StandardCharsets.ISO_8859_1);
     String[] partes = cuerpo.split("--" + delimitador);
@@ -68,13 +67,15 @@ public class CocheController {
 
             int finEncabezado = parte.indexOf("\r\n\r\n") + 4;
             int inicioPie = parte.lastIndexOf("\r\n");
-            
+
             if (finEncabezado > 4 && inicioPie > finEncabezado) {
-                String contenidoArchivo = parte.substring(finEncabezado, inicioPie);
-                // Usamos Files.copy con un InputStream del contenido extraído para cumplir la regla
-                java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(contenidoArchivo.getBytes(StandardCharsets.ISO_8859_1));
-                Files.copy(bis, rutaArchivo, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                urlImagen = "/assets/img/cars/" + nombreUnico;
+              String contenidoArchivo = parte.substring(finEncabezado, inicioPie);
+              // Usamos Files.copy con un InputStream del contenido extraído para cumplir la
+              // regla
+              java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(
+                  contenidoArchivo.getBytes(StandardCharsets.ISO_8859_1));
+              Files.copy(bis, rutaArchivo, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+              imagen = "/assets/img/cars/" + nombreUnico;
             }
           }
         } else {
@@ -93,8 +94,8 @@ public class CocheController {
     coche.setAnioFabricacion(Integer.parseInt(campos.getOrDefault("anio", "0")));
     coche.setKilometraje(Integer.parseInt(campos.getOrDefault("km", "0")));
     coche.setPrecioVenta(new BigDecimal(campos.getOrDefault("precio", "0")));
-    coche.setUrlImagen(urlImagen);
-    coche.setEstado("Disponible"); // REGLA DE HIERRO: Debe insertar el coche con ESTADO = 'Disponible'
+    coche.setImagen(imagen);
+    coche.setEstado("Disponible"); // Debe insertar el coche con ESTADO = 'Disponible'
 
     Version version = new Version();
     version.setIdVersion(Integer.parseInt(campos.getOrDefault("id_version", "0")));
@@ -128,7 +129,12 @@ public class CocheController {
     vendedor.setIdUsuario(Integer.parseInt(campos.getOrDefault("id_vendedor", "1")));
     coche.setVendedor(vendedor);
 
-    int idGenerado = cocheService.publicarCoche(coche);
+    int idGenerado;
+    try {
+        idGenerado = cocheService.publicarCoche(coche);
+    } catch (ErrorDeNegocioException | PrecioInvalidoException | DatosIncompletosException e) {
+        throw new ErrorDeNegocioException(e.getMessage());
+    }
     return "{\"status\": \"success\", \"message\":\"Coche publicado correctamente\", \"id\":" + idGenerado + "}";
   }
 
@@ -173,7 +179,8 @@ public class CocheController {
             "\"color\":\"%s\",\"fechaPublicacion\":\"%s\",\"vendedorId\":%d," +
             "\"vendedorNombre\":\"%s\",\"vendedorEmail\":\"%s\",\"vendedorDni\":\"%s\",\"vendedorTelefono\":\"%s\"," +
             "\"subtotal\":%s,\"iva\":%s,\"comision\":%s,\"total\":%s}",
-        c.getIdCoche(), c.getAnioFabricacion(), c.getKilometraje(), c.getPrecioVenta(), c.getEstado(), normalizarUrlImagen(c.getUrlImagen()),
+        c.getIdCoche(), c.getAnioFabricacion(), c.getKilometraje(), c.getPrecioVenta(), c.getEstado(),
+        normalizarUrlImagen(c.getImagen()),
         c.getVersion().getModelo().getMarca().getNombre(),
         c.getVersion().getModelo().getNombre(),
         c.getVersion().getNombre(),
@@ -193,14 +200,15 @@ public class CocheController {
         c.getSubtotal() != null ? c.getSubtotal().toString() : "0",
         c.getIva() != null ? c.getIva().toString() : "0",
         c.getComision() != null ? c.getComision().toString() : "0",
-        c.getTotal() != null ? c.getTotal().toString() : "0"
-    );
+        c.getTotal() != null ? c.getTotal().toString() : "0");
   }
 
   private String normalizarUrlImagen(String url) {
-    if (url == null) return "";
+    if (url == null)
+      return "";
     String u = url.trim().replace("\\", "/");
-    if (u.isEmpty()) return "";
+    if (u.isEmpty())
+      return "";
 
     // Compatibilidad con datos antiguos en BD
     String prefix1 = "src/main/resources/public";
@@ -213,7 +221,8 @@ public class CocheController {
       u = u.substring("fontend".length());
     }
 
-    if (!u.startsWith("/")) u = "/" + u;
+    if (!u.startsWith("/"))
+      u = "/" + u;
     return u;
   }
 }

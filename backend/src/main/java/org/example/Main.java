@@ -1,11 +1,9 @@
 package org.example;
 
 import com.sun.net.httpserver.HttpServer;
-import org.example.config.DatabaseConfig;
 import org.example.router.RouterHandler;
 import org.example.service.UsuarioService;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class Main {
@@ -16,15 +14,12 @@ public class Main {
       server.setExecutor(null);
       server.start();
 
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    System.out.println("Servidor iniciado en: http://localhost:8080/");
+    } catch (Exception e) {
+      System.out.println("Error: " + e.getMessage());
+    }
+    System.out.println("Servidor iniciado en: http://localhost:8080/home.html");
     System.out.println("Documentación: http://localhost:8080/api/docs");
-        UsuarioService usuario = new UsuarioService();
+    UsuarioService usuario = new UsuarioService();
 
-
-
-    }
-    }
-
+  }
+}
