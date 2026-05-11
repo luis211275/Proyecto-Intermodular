@@ -53,11 +53,26 @@ h1 {
 /* Links o elementos superiores */
 #ventaCoche, #login {
     display: inline-block;
-    margin-right: 30px;
-    color: #db9c37;
-    text-decoration: none;
     font-weight: bold;
     cursor: pointer;
+    vertical-align: middle;
+}
+
+#ventaCoche {
+    margin-right: 400px;
+}
+
+#ventaCoche a, #login a {
+    color: #db9c37;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#ventaCoche a:visited, #login a:visited,
+#ventaCoche a:hover, #login a:hover,
+#ventaCoche a:active, #login a:active {
+    color: #db9c37;
+    text-decoration: none;
 }
 
 #ventaCoche {
