@@ -5,10 +5,10 @@ public class Usuario {
     private String apellido;
     private String email;
     private String password;
-    private int telefono;
+    private String telefono;
     private String dni;
 
-    public Usuario(String nombre, String apellido, String email, String password, int telefono, String dni) {
+    public Usuario(String nombre, String apellido, String email, String password, String telefono, String dni) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
@@ -49,11 +49,11 @@ public class Usuario {
         this.password = password;
     }
 
-    public int getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 

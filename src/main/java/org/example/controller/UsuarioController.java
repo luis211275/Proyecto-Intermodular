@@ -37,7 +37,6 @@ public class UsuarioController {
                     JsonObject responseJson = new JsonObject();
 
                     UsuarioService usuario = new UsuarioService();
-                    UsuarioDao dao = new UsuarioDao();
 
 
 
@@ -73,7 +72,6 @@ public class UsuarioController {
                         System.out.println(body);
 
                         JsonObject responseJson = new JsonObject();
-                        UsuarioService servicio = new UsuarioService();
                         UsuarioDao dao = new UsuarioDao();
 
                         // Llamamos a la lógica del service
