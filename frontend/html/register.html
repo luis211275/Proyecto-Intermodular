@@ -8,30 +8,38 @@
     </head>
     <body>
         
-    <div class="grid-layout">
-        <header>
-            <h1>Nombre</h1>
-            <h3 id="ventaCoche">Vende tu Coche</h3>
-            <h3 id="login">Iniciar Sesión</h3>
+        <header id="register-header">
+            <h1>Registro de usuario</h1>
         </header>
 
-        <main class="main-content" id="register-main">
+        <main id="register-main">
+
             <form id="form-register">
-                <h2>Registro de usuario</h2>
-                <label>Nombre: <input type="text" id="nameRegister" placeholder="Nombre del usuario"></label>
-                <label>Apellido: <input type="text" id="apellidoRegister" placeholder="Apellido del usuario"></label>
-                <label>Email: <input type="text" id="emailRegister" placeholder="Email del usuario" ></label>
-                <label>DNI: <input type="text" id="dniRegister" placeholder="DNI del usuario" ></label>
-                <label>Telefono: <input type="number" id="telefonoRegister" placeholder="Teléfono del usuario"></label>
-                <label>Contraseña: <input type="password" id="passwordRegister" placeholder="Contraseña del usuario" ></label>
+                <label>Nombre: <input type="text" id="nameRegister" placeholder="Nombre del usuario"></label><br>
+
+                <label>Apellido: <input type="text" id="apellidoRegister" placeholder="Apellido del usuario"></label><br>
+                
+                <label>Email: <input type="text" id="emailRegister" placeholder="Email del usuario" ></label><br>
+                
+                <label>DNI: <input type="text" id="dniRegister" placeholder="DNI del usuario" ></label><br>
+                
+                <label>Telefono: <input type="number" id="telefonoRegister" placeholder="Teléfono del usuario"></label><br>
+
+                <label>Contraseña: <input type="password" id="passwordRegister" placeholder="Contraseña del usuario" ></label><br>
+
                 <p id="mensajeRegistro"></p>
+
                 <button id="btnRegister">Registrar Usuario</button>
             </form>
+
             <script src="../js/register.js"></script>
+
+            
         </main>
 
-        <footer>© 2026 Proyecto Intermodular. Todos los derechos reservados.</footer>
-    </div>
+        <footer id="register-footer">
+            <p>&copy; 2026 Proyecto Intermodular. Todos los derechos reservados.</p>
+        </footer>
 
     </body>
 </html>

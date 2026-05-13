@@ -8,57 +8,25 @@ let cocheSeleccionadoActual = null;
 let viendoFavoritos = false; // Variable para saber si estamos en la vista de favoritos
 const btnFavoritosTop = document.getElementById("favoritos");
 
-// Tarea 2: Funciones simples de auth
-function estaLogueado() {
-    return !!localStorage.getItem("auth_user") || !!localStorage.getItem("auth_user_id");
-}
-
-function mandarALogin() {
-    localStorage.setItem("redirect_after_login", window.location.href);
-    window.location.href = "login.html";
-}
-
-function actualizarNavbarSesion() {
-    const login = document.getElementById("login");
-    const venta = document.getElementById("ventaCoche");
-    if (!login) return;
-
-    if (estaLogueado()) {
-        login.innerText = "⎋ Cerrar sesión";
-        login.onclick = () => {
-            localStorage.removeItem("auth_user");
-            localStorage.removeItem("auth_user_id");
-            window.location.href = "home.html";
-        };
-    } else {
-        login.innerText = "Iniciar Sesión";
-        login.onclick = () => {
-            window.location.href = "login.html";
-        };
-    }
-
-    if (venta) {
-        venta.onclick = () => {
-            if (!estaLogueado()) {
-                mandarALogin();
-            } else {
-                window.location.href = "publicar.html";
-            }
-        };
-    }
-}
-
-actualizarNavbarSesion();
+// Modal Filtros variables
+const modalFiltro = document.getElementById("modalFiltro");
+const btnAbrirFiltros = document.getElementById("filtros");
+const btnCerrarFiltro = document.getElementById("btnCerrarFiltro");
+const btnAplicarFiltros = document.getElementById("btnAplicarFiltros");
 
 // 1. Cargar y guardar los coches
-async function cargarCoches() {
+async function cargarPrimerosDiezCoches() {
+    const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     contenedor.innerHTML = "<p>Cargando catálogo...</p>";
 
     try {
-        const res = await fetch("/api/coches");
-        if (!res.ok) throw new Error("Error en el servidor");
+        const promesas = ids.map(id => 
+            fetch(`http://localhost:8080/api/coches/${id}`).then(res => res.ok ? res.json() : null)
+        );
 
-        cochesOriginales = await res.json();
+        const resultados = await Promise.all(promesas);
+        cochesOriginales = resultados.filter(c => c !== null);
+        
         listarCoches(cochesOriginales);
     } catch (error) {
         console.error("Error al conectar:", error);
@@ -70,14 +38,14 @@ async function cargarCoches() {
 function listarCoches(lista) {
     contenedor.innerHTML = "";
     if (lista.length === 0) {
-        contenedor.innerHTML = "<p>No se han encontrado coches.</p>";
+        contenedor.innerHTML = "<p>No se han encontrado coches con esos filtros.</p>";
         return;
     }
 
     lista.forEach(coche => {
         const tarjeta = document.createElement("div");
         tarjeta.classList.add("tarjeta");
-
+        
         const precio = coche.precioVenta || coche.precio || "Consultar";
         const imagen = coche.urlImagen || coche.imagen;
 
@@ -86,62 +54,63 @@ function listarCoches(lista) {
             <p><strong>${precio} €</strong> - ${coche.ciudad}</p>
             <img src="${imagen}" alt="${coche.marca}">
         `;
-
+        
         tarjeta.addEventListener("click", () => abrirModal(coche));
         contenedor.appendChild(tarjeta);
     });
 }
 
-// 3. Lógica del Buscador
+// 3. Lógica del Buscador Simple
 document.getElementById("buscar").addEventListener("input", (e) => {
     const termino = e.target.value.toLowerCase();
-    const filtrados = cochesOriginales.filter(c =>
-        c.marca.toLowerCase().includes(termino) ||
-        c.modelo.toLowerCase().includes(termino)
+    const filtrados = cochesOriginales.filter(c => 
+        (c.marca && c.marca.toLowerCase().includes(termino)) || 
+        (c.modelo && c.modelo.toLowerCase().includes(termino))
     );
     listarCoches(filtrados);
 });
 
-// 4. Lógica de Favoritos (Botón Superior como Interruptor) - Tarea 5: Proteger
+// 4. Lógica de Favoritos (Botón Superior como Interruptor)
 btnFavoritosTop.addEventListener("click", () => {
-    if (!estaLogueado()) {
-        mandarALogin();
-        return;
-    }
-
-    viendoFavoritos = !viendoFavoritos; // Alterna entre true y false
+    viendoFavoritos = !viendoFavoritos;
 
     if (viendoFavoritos) {
-        // Entramos en modo favoritos
         btnFavoritosTop.innerText = "Salir de Favoritos";
         btnFavoritosTop.style.backgroundColor = "#ef4444";
-
+        
         const soloFavoritos = cochesOriginales.filter(c => favoritos.includes(c.id || c.idCoche));
         listarCoches(soloFavoritos);
     } else {
-        // Salimos de favoritos, volvemos a la lista general
         btnFavoritosTop.innerText = "Favoritos";
         btnFavoritosTop.style.backgroundColor = "#7c3aed";
-
+        
         listarCoches(cochesOriginales);
     }
 });
 
-// 5. Resetear vista (Buscador y Favoritos)
+// 5. Resetear vista (Buscador, Filtros y Favoritos)
 document.getElementById("resetear").addEventListener("click", () => {
     document.getElementById("buscar").value = "";
-
+    
     viendoFavoritos = false;
     btnFavoritosTop.innerText = "Favoritos";
     btnFavoritosTop.style.backgroundColor = "#7c3aed";
+    
+    // Resetea los selectores del filtro avanzado
+    const selectores = modalFiltro.querySelectorAll("select");
+    selectores.forEach(select => select.value = "");
+
+    // Resetea los inputs de rango (Precio y Kilometraje)
+    const inputsRango = modalFiltro.querySelectorAll('input[type="number"]');
+    inputsRango.forEach(input => input.value = "");
 
     listarCoches(cochesOriginales);
 });
 
-// 6. Modal y Relleno de datos
+// 6. Modal y Relleno de datos del Coche
 function abrirModal(coche) {
     cocheSeleccionadoActual = coche;
-
+    
     const precio = coche.precioVenta || coche.precio || 0;
     const kms = coche.kilometraje || coche.km || 0;
     const anio = coche.anioFabricacion || coche.anio || "N/A";
@@ -155,9 +124,9 @@ function abrirModal(coche) {
     document.getElementById("modalTransmision").innerText = coche.transmision || "No especificado";
     document.getElementById("modalKM").innerText = Number(kms).toLocaleString() + " km";
     document.getElementById("modalCiudad").innerText = coche.ciudad || "No especificada";
-
+    
     const desc = document.getElementById("modalDescripcion");
-    if (desc) desc.innerText = `Estado: ${coche.estado || 'Disponible'} | Etiqueta: ${coche.etiquetaAmbiental || 'N/A'}`;
+    if(desc) desc.innerText = `Estado: ${coche.estado || 'Disponible'} | Etiqueta: ${coche.etiquetaAmbiental || 'N/A'}`;
 
     // Obtener ID real del coche
     const cocheId = coche.id || coche.idCoche;
@@ -175,43 +144,111 @@ function abrirModal(coche) {
     modal.showModal();
 }
 
-// Tarea 7: Conectar botón comprar
-document.getElementById("btnComprar").addEventListener("click", () => {
-    if (!estaLogueado()) {
-        mandarALogin();
-        return;
-    }
-
-    const id = cocheSeleccionadoActual.id || cocheSeleccionadoActual.idCoche;
-    window.location.href = `compraVenta.html?id=${id}`;
-});
-
-
-// 7. Evento para añadir/quitar favorito dentro del modal - Tarea 6: Proteger
+// 7. Evento para añadir/quitar favorito dentro del modal
 document.getElementById("btnFavoritoModal").addEventListener("click", () => {
-    if (!estaLogueado()) {
-        mandarALogin();
-        return;
-    }
-
     const id = cocheSeleccionadoActual.id || cocheSeleccionadoActual.idCoche;
-
+    
     if (favoritos.includes(id)) {
         favoritos = favoritos.filter(favId => favId !== id);
     } else {
         favoritos.push(id);
     }
-
+    
     localStorage.setItem("favoritos", JSON.stringify(favoritos));
-    abrirModal(cocheSeleccionadoActual);
-
-    // Si estamos en la vista de favoritos y quitamos un coche, actualizar la lista de fondo
+    abrirModal(cocheSeleccionadoActual); // Recarga para cambiar color
+    
     if (viendoFavoritos) {
         const soloFavoritos = cochesOriginales.filter(c => favoritos.includes(c.id || c.idCoche));
         listarCoches(soloFavoritos);
     }
 });
-
-cargarCoches();
-
 document.getElementById("cerrarModal").addEventListener("click", () => modal.close());
+
+const mapeoAtributos = {
+    "modalFMarca": "marca",
+    "modalFModelo": "modelo",
+    "modalFAnio": ["anioFabricacion", "anio"], 
+    "modalFColor": "color",
+    "modalFCombustible": "combustible",
+    "modalFTransmision": "transmision",
+    "modalFCiudad": "ciudad",
+    "modalFEtiqAmb": "etiquetaAmbiental",
+    "modalFVersion": "version",
+    "modalFDisponible": ["estado", "disponible"]
+};
+
+// Función auxiliar para obtener un valor del coche teniendo en cuenta distintas posibles propiedades
+function obtenerValorCoche(coche, propiedades) {
+    if (Array.isArray(propiedades)) {
+        for (let prop of propiedades) {
+            if (coche[prop] !== undefined) return coche[prop];
+        }
+        return undefined;
+    }
+    return coche[propiedades];
+}
+
+btnAbrirFiltros.addEventListener("click", () => {
+    // Al abrir el modal, poblamos las opciones dinámicamente según los coches cargados
+    for (let selectId in mapeoAtributos) {
+        const selectElement = document.getElementById(selectId);
+        const propiedad = mapeoAtributos[selectId];
+        
+        const valorActual = selectElement.value;
+        const valoresUnicos = [...new Set(cochesOriginales.map(c => obtenerValorCoche(c, propiedad)))].filter(v => v !== undefined && v !== "");
+        
+        selectElement.innerHTML = '<option value="">Todos</option>';
+        valoresUnicos.sort().forEach(valor => {
+            selectElement.innerHTML += `<option value="${valor}" ${valorActual == valor ? 'selected' : ''}>${valor}</option>`;
+        });
+    }
+    
+    modalFiltro.showModal();
+});
+
+btnAplicarFiltros.addEventListener("click", () => {
+    // Obtenemos los valores de rango ingresados, si están vacíos asignamos 0 o Infinito
+    const precioMin = parseFloat(document.getElementById("modalFPrecioMin").value) || 0;
+    const precioMax = parseFloat(document.getElementById("modalFPrecioMax").value) || Infinity;
+    
+    const kmMin = parseFloat(document.getElementById("modalFKMMin").value) || 0;
+    const kmMax = parseFloat(document.getElementById("modalFKMMax").value) || Infinity;
+
+    const cochesFiltrados = cochesOriginales.filter(coche => {
+        // 1. Filtrar por los selectores exactos
+        const cumpleSelectores = Object.keys(mapeoAtributos).every(selectId => {
+            const selectValor = document.getElementById(selectId).value;
+            if (selectValor === "") return true; // Si está en "Todos", ignora
+            
+            const cocheValor = obtenerValorCoche(coche, mapeoAtributos[selectId]);
+            return String(cocheValor) === String(selectValor);
+        });
+
+        if (!cumpleSelectores) return false;
+
+        // 2. Filtrar por rango de Precio
+        const precioCoche = parseFloat(obtenerValorCoche(coche, ["precioVenta", "precio"])) || 0;
+        if (precioCoche < precioMin || precioCoche > precioMax) return false;
+
+        // 3. Filtrar por rango de Kilometraje
+        const kmCoche = parseFloat(obtenerValorCoche(coche, ["kilometraje", "km"])) || 0;
+        if (kmCoche < kmMin || kmCoche > kmMax) return false;
+
+        // Si pasa todas las validaciones
+        return true;
+    });
+
+    viendoFavoritos = false;
+    btnFavoritosTop.innerText = "Favoritos";
+    btnFavoritosTop.style.backgroundColor = "#7c3aed";
+
+    listarCoches(cochesFiltrados);
+    modalFiltro.close();
+});
+
+btnCerrarFiltro.addEventListener("click", () => {
+    modalFiltro.close();
+});
+
+// Iniciamos la app
+cargarPrimerosDiezCoches();
