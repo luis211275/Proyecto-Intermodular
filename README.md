@@ -1,49 +1,49 @@
-# Marketplace de Coches - Proyecto Intermodular
+# 🏎️ Compra y venta de coches
 
-Este proyecto es una plataforma de compraventa de coches, desarrollada como proyecto intermodular.
 
-## Stack Tecnológico
 
-- **Backend:** Java 21 con `HttpServer`.
-- **Base de Datos:** PostgreSQL.
-- **Frontend:** HTML5, CSS3 y JavaScript con `fetch` API.
-- **Persistencia:** JDBC.
-- **Testing:** JUnit 5.
+Bienvenido al repositorio oficial de nuestra plataforma de compraventa de vehículos. Este proyecto nace como un análisis profundo del **sector profesional tecnológico**, enfocado en ofrecer una experiencia de usuario fluida, segura y eficiente para la adquisición de automóviles.
 
-## Requisitos Previos
+---
 
-- Java 21 instalado.
-- Maven 3.x.
-- PostgreSQL ejecutándose en el puerto 5432.
-- Base de datos llamada `intermodular` con usuario/password `postgres`/`postgres`.
+## 🚀 Descripción del Proyecto
 
-## Instalación y Ejecución
+Esta aplicación web permite a los usuarios gestionar todo el proceso de búsqueda y adquisición de vehículos. La web conecta una base de datos robusta con una interfaz intuitiva para el usuario final.
 
-1. **Base de Datos:**
-   Ejecuta los scripts SQL en orden:
-   - `src/main/resources/DDL.sql`
-   - `src/main/resources/DML.sql`
 
-2. **Compilar y Ejecutar:**
-   ```bash
-   mvn clean compile
-   mvn exec:java -Dexec.mainClass="org.example.Main"
-   ```
+## ✨ Características Principales
 
-3. **Acceso:**
-   - Aplicación: [http://localhost:8080/](http://localhost:8080/)
-   - Documentación API: [http://localhost:8080/api/docs](http://localhost:8080/api/docs)
+* **Autenticación de Usuarios**: Sistema completo de Registro e Inicio de Sesión para garantizar la seguridad de las transacciones.
+* **Catálogo Dinámico**: Visualización de una amplia gama de coches extraídos directamente de una base de datos centralizada.
+* **Buscador Inteligente**: Barra de búsqueda rápida para encontrar modelos específicos al instante.
+* **Filtros Avanzados**: Búsqueda detallada por parámetros técnicos (marca, modelo, año, kilometraje, etc.).
+* **Gestión de Favoritos**: Permite a los usuarios guardar sus vehículos preferidos para verlos más tarde.
+* **Módulo de Compra**: Proceso de checkout integrado para la adquisición del vehículo.
 
-## Estructura del Proyecto
+## 🛠️ Tecnologías Utilizadas
 
-- `src/main/java/org.example/model`: POJOs de las entidades.
-- `src/main/java/org.example/dao`: Capa de acceso a datos (SQL puro).
-- `src/main/java/org.example/service`: Lógica de negocio.
-- `src/main/java/org.example/router`: Servidor y manejo de rutas.
-- `frontend`: Frontend (HTML/JS).
+Basándonos en los estándares de empresas como **Melit Technologies** y **Ensalza**, hemos implementado:
 
-## Autores
-- Luis Lopez-Nuño Sánchez
-- Daniel Nieto Ladino
-- Julio Martín Rodríguez Sánchez
-&copy; 2026 · Proyecto Intermodular
+* **Frontend**: HTML5, CSS3 (Diseño Responsive) y JavaScript.
+* **Backend**: Lógica de servidor para la gestión de usuarios y transacciones.
+* **Base de Datos**: Gestión de inventario de vehículos y perfiles de usuario.
+  
+## 📂 Estructura del Repositorio
+
+* `/src`: Código fuente de la aplicación.
+* `/public`: Recursos estáticos (imágenes, iconos).
+* `/database`: Scripts de configuración de la base de datos.
+* `/docs`: Documentación adicional y análisis del sector.
+
+---
+
+
+
+## 👥 Autores
+
+Proyecto desarrollado por:
+* **Luis** 
+* **Daniel** 
+* **Julio** 
+
+---
