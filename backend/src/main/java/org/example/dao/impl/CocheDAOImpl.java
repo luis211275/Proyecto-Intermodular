@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementación de la interfaz CocheDAO para interactuar con la base de datos.
+ */
 public class CocheDAOImpl implements CocheDAO {
 
   private Connection obtenerConexion() throws ErrorDeAccesoADatosException {

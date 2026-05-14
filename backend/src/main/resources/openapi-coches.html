@@ -667,8 +667,44 @@
           <div class="section-heading">
             <div>
               <h3>Endpoints</h3>
-              <p>Rutas disponibles con ejemplos request y response.</p>
+              <p>Usuarios, Coches, Favoritos, Catálogo y Docs.</p>
             </div>
+          </div>
+
+          <div class="schema-card" style="margin-bottom: 28px;">
+            <h4>Estructura actual</h4>
+            <pre><code>Usuarios
+POST /user/register
+POST /user/logger
+GET /user/{id}
+GET /user/email
+
+Coches
+GET /api/coches
+GET /api/coches/{id}
+POST /api/publicarvehiculo
+PATCH /api/marcarvehiculocomovendido
+PATCH /api/cambiarestadoanunciovehiculo
+DELETE /api/eliminaranunciovehiculo
+
+Favoritos
+GET /api/favoritos
+POST /api/favoritos
+DELETE /api/favoritos
+
+Catálogo
+GET /api/marcas
+GET /api/modelos
+GET /api/versiones
+GET /api/ciudades
+GET /api/combustibles
+GET /api/transmisiones
+GET /api/categorias
+GET /api/colores
+GET /api/etiquetas
+
+Docs
+GET /api/docs</code></pre>
           </div>
 
           <div id="endpointList" class="endpoint-list"></div>
@@ -767,7 +803,7 @@
         {
           method: "GET",
           path: "/api/coches",
-          tag: "Vehículos",
+          tag: "Coches",
           summary: "Listar vehículos disponibles",
           description:
             "Devuelve todos los coches con estado Disponible. Acepta filtros opcionales por query string.",
@@ -812,7 +848,7 @@
         {
           method: "GET",
           path: "/api/coches/{id}",
-          tag: "Vehículos",
+          tag: "Coches",
           summary: "Obtener vehículo por ID",
           description: "Devuelve el detalle completo de un coche.",
           params: [["id", "path", "integer", "Sí", "1"]],
@@ -851,7 +887,7 @@
         {
           method: "POST",
           path: "/api/publicarvehiculo",
-          tag: "Vehículos",
+          tag: "Coches",
           summary: "Publicar un nuevo vehículo",
           description:
             "Postman: Body > form-data. Todos en Text menos imagen en File. Copia estos valores tal cual.",
@@ -902,7 +938,7 @@ IMPORTANTE
         {
           method: "PATCH",
           path: "/api/marcarvehiculocomovendido",
-          tag: "Vehículos",
+          tag: "Coches",
           summary: "Marcar vehículo como vendido",
           description: "Registra la factura, su línea y marca el coche como vendido.",
           request: `{
@@ -917,7 +953,7 @@ IMPORTANTE
         {
           method: "PATCH",
           path: "/api/cambiarestadoanunciovehiculo",
-          tag: "Vehículos",
+          tag: "Coches",
           summary: "Cambiar el estado de un anuncio",
           description: "Estados esperados en la práctica: Disponible, Vendido, Desactivado.",
           request: `{
@@ -932,7 +968,7 @@ IMPORTANTE
         {
           method: "DELETE",
           path: "/api/eliminaranunciovehiculo",
-          tag: "Vehículos",
+          tag: "Coches",
           summary: "Eliminar anuncio",
           description:
             "Borrado funcional. Cambia el estado del coche a Desactivado.",
@@ -1208,7 +1244,7 @@ IMPORTANTE
         {
           method: "GET",
           path: "/api/docs",
-          tag: "Meta",
+          tag: "Docs",
           summary: "Documentación estilo OpenApi",
           description: "Sirve esta página de documentación.",
           response: `openapi-coches.html`,
@@ -1222,6 +1258,7 @@ IMPORTANTE
       const filterButtons = document.querySelectorAll(".filter-btn");
 
       let currentFilter = "ALL";
+      const tagOrder = ["Usuarios", "Coches", "Favoritos", "Catálogo", "Docs"];
 
       function methodClass(method) {
         return method === "GET" ||
@@ -1309,6 +1346,10 @@ IMPORTANTE
             `${endpoint.method} ${endpoint.path} ${endpoint.tag} ${endpoint.summary} ${endpoint.description || ""}`.toLowerCase();
           const matchesSearch = !term || searchable.includes(term);
           return matchesMethod && matchesSearch;
+        }).sort((a, b) => {
+          const tagDiff = tagOrder.indexOf(a.tag) - tagOrder.indexOf(b.tag);
+          if (tagDiff !== 0) return tagDiff;
+          return a.path.localeCompare(b.path);
         });
 
         endpointList.innerHTML = filtered
@@ -1384,15 +1425,21 @@ IMPORTANTE
       }
 
       function renderSidebar() {
-        sidebarEndpoints.innerHTML = endpoints
-          .map(
-            (endpoint, index) => `
-      <a class="side-link" href="#${endpointId(endpoint, index)}">
+        sidebarEndpoints.innerHTML = [...endpoints]
+          .sort((a, b) => {
+            const tagDiff = tagOrder.indexOf(a.tag) - tagOrder.indexOf(b.tag);
+            if (tagDiff !== 0) return tagDiff;
+            return a.path.localeCompare(b.path);
+          })
+          .map((endpoint) => {
+            const originalIndex = endpoints.indexOf(endpoint);
+            return `
+      <a class="side-link" href="#${endpointId(endpoint, originalIndex)}">
         <span class="side-method ${methodClass(endpoint.method)}">${endpoint.method}</span>
         <span>${escapeHtml(endpoint.path)}</span>
       </a>
-    `,
-          )
+    `;
+          })
           .join("");
       }
 

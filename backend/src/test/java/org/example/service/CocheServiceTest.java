@@ -7,11 +7,17 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Pruebas unitarias para el servicio CocheService.
+ */
 public class CocheServiceTest {
 
     private CocheService cocheService = new CocheService();
 
-    @Test
+  /**
+   * Prueba la validación de un precio negativo.
+   */
+  @Test
     public void testValidarPrecioNegativo() {
         Coche c = new Coche();
         c.setPrecioVenta(new BigDecimal("-100"));
@@ -23,7 +29,10 @@ public class CocheServiceTest {
         assertEquals("El precio debe ser mayor a 0", exception.getMessage());
     }
 
-    @Test
+  /**
+   * Prueba la validación de un año de fabricación inválido.
+   */
+  @Test
     public void testValidarAnioInvalido() {
         Coche c = new Coche();
         c.setPrecioVenta(new BigDecimal("10000"));
@@ -36,7 +45,10 @@ public class CocheServiceTest {
         assertEquals("Año de fabricación inválido", exception.getMessage());
     }
 
-    @Test
+  /**
+   * Prueba la validación de un kilometraje negativo.
+   */
+  @Test
     public void testValidarKilometrajeNegativo() {
         Coche c = new Coche();
         c.setPrecioVenta(new BigDecimal("10000"));

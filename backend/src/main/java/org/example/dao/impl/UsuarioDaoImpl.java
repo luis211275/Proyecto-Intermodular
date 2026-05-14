@@ -11,24 +11,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Implementación de la interfaz UsuarioDao para interactuar con la base de datos.
+ */
 public class UsuarioDaoImpl implements UsuarioDao {
 
   @Override
-  public boolean findByEmail(String emailBuscado) {
+  public boolean existePorEmail(String emailBuscado) {
     boolean found = true;
     String sql = "SELECT id_usuario, nombres FROM usuarios WHERE email = ?";
 
     try (Connection conn = DatabaseConfig.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-      // Sustituye el ? por el nombre que queremos buscar.
+      // Pasamos el valor.
       stmt.setString(1, emailBuscado);
 
-      // Ejecuta la consulta SELECT.
+      // Lanzamos la consulta.
       ResultSet rs = stmt.executeQuery();
 
       if (rs.next()) {
-        // Si existe al menos un usuario con ese nombre...
+        // Revisamos si existe.
         System.out.println("Ya existe este email en la Base de datos pon otro");
       } else {
         System.out.println("No existe ningún usuario con el email: " + emailBuscado);
@@ -43,53 +46,24 @@ public class UsuarioDaoImpl implements UsuarioDao {
   }
 
   @Override
-  public boolean findByDni(String dniBuscado) {
+  public boolean existePorDni(String dniBuscado) {
     boolean found = true;
     String sql = "SELECT id_usuario, nombres FROM usuarios WHERE dni = ?";
 
     try (Connection conn = DatabaseConfig.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-      // Sustituye el ? por el nombre que queremos buscar.
+      // Pasamos el valor.
       stmt.setString(1, dniBuscado);
 
-      // Ejecuta la consulta SELECT.
+      // Lanzamos la consulta.
       ResultSet rs = stmt.executeQuery();
 
       if (rs.next()) {
-        // Si existe al menos un usuario con ese nombre...
+        // Revisamos si existe.
         System.out.println("Ya existe este DNI en la Base de datos pon otro");
       } else {
         System.out.println("No existe ningún usuario con el DNI: " + dniBuscado);
-        found = false;
-
-      }
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return found;
-  }
-
-  @Override
-  public boolean findByTelefono(String telefonoBuscado) {
-    boolean found = true;
-    String sql = "SELECT id_usuario, nombres FROM usuarios WHERE email = ?";
-
-    try (Connection conn = DatabaseConfig.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-      // Sustituye el ? por el nombre que queremos buscar.
-      stmt.setString(1, telefonoBuscado);
-
-      // Ejecuta la consulta SELECT.
-      ResultSet rs = stmt.executeQuery();
-
-      if (rs.next()) {
-        // Si existe al menos un usuario con ese nombre...
-        System.out.println("Ya existe este telefono en la Base de datos pon otro");
-      } else {
-        System.out.println("No existe ningún usuario con el telefono: " + telefonoBuscado);
         found = false;
 
       }
@@ -114,41 +88,22 @@ public class UsuarioDaoImpl implements UsuarioDao {
       stmt.setString(1, email);
       ResultSet rs = stmt.executeQuery();
       if (rs.next()) {
-        // email existe, comprobamos contraseña
+        // Revisamos la clave.
         String contraseña = rs.getString("password");
 
         if (contraseña.equals(password)) {
           return 0;
         } else {
-          return 2; // contraseña mal introducida
+          return 2; // Marcamos clave incorrecta.
         }
       } else {
-        return 1;// Email inexistente en la base de datos
+        return 1;// Marcamos email ausente.
       }
     } catch (Exception e) {
       e.printStackTrace();
-      return 3;// error en la base de datos
+      return 3;// Marcamos error de datos.
     }
 
-  }
-
-  @Override
-  public int obtenerIdUsuarioPorEmail(String email) {
-    String sql = "SELECT id_usuario FROM usuarios WHERE email = ?";
-
-    try (Connection conn = DatabaseConfig.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
-      stmt.setString(1, email);
-      ResultSet rs = stmt.executeQuery();
-
-      if (rs.next()) {
-        return rs.getInt("id_usuario");
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    return 0;
   }
 
   @Override
@@ -226,34 +181,4 @@ public class UsuarioDaoImpl implements UsuarioDao {
     }
   }
 
-  @Override
-  public void listarUsuarios() {
-
-    // Definimos la consulta SQL que queremos ejecutar sobre la base de datos.
-    String sql = "SELECT * FROM usuarios";
-
-    // Try-with-resources: abre los recursos y los cierra automáticamente al
-    // terminar.
-    // Establece la conexión con la base de datos usando nuestra clase
-    // ConnectionBBDD.
-    try (Connection conn = DatabaseConfig.getConnection();
-        // Prepara la sentencia SQL para evitar errores y ataques (SQL Injection).
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        // Ejecuta la consulta y guarda los resultados en un ResultSet.
-        ResultSet rs = stmt.executeQuery()) {
-
-      // Itera por cada fila devuelta por la consulta.
-      while (rs.next()) {
-        // Obtiene los datos de cada columna ("id" y "nombre") y los imprime por
-        // consola.
-        System.out.println(rs.getString("nombres") + " - " + rs.getString("apellidos") + " - " + rs.getString("email")
-            + "-" + rs.getString("dni") + " - " + rs.getString("password") + "-" + rs.getString("telefono"));
-      }
-
-    } catch (Exception e) {
-      // Si ocurre cualquier error (conexión, SQL, lectura), se imprime la traza para
-      // depurar.
-      e.printStackTrace();
-    }
-  }
 }

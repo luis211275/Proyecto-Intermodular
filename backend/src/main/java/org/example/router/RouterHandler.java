@@ -15,6 +15,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Enrutador para gestionar las peticiones HTTP.
+ */
 public class RouterHandler implements HttpHandler {
 
   private static final String PUBLIC_DIR = "frontend";
@@ -43,7 +46,7 @@ public class RouterHandler implements HttpHandler {
       return;
     }
 
-    // Redirigir peticiones de HTML en raíz a la carpeta /html/
+    // Redirigimos los html.
     if (path.endsWith(".html") && !path.startsWith("/html/")) {
       exchange.getResponseHeaders().set("Location", "/html" + path);
       exchange.sendResponseHeaders(302, -1);
@@ -64,7 +67,7 @@ public class RouterHandler implements HttpHandler {
       boolean esApi = path.startsWith("/api/");
 
       if (!esApi) {
-        // Si no es API y no se capturó como estático arriba, redirigir a home
+        // Redirigimos al inicio.
         exchange.getResponseHeaders().set("Location", "/html/home.html");
         exchange.sendResponseHeaders(302, -1);
         return;
@@ -314,18 +317,6 @@ public class RouterHandler implements HttpHandler {
         || path.startsWith("/html/")
         || path.startsWith("/assets/")
         || path.endsWith(".html");
-  }
-
-  private boolean esRutaSpa(String path) {
-    if (path == null || path.isEmpty()) {
-      return false;
-    }
-
-    if (path.startsWith("/api/")) {
-      return false;
-    }
-
-    return !path.contains(".");
   }
 
   private void servirArchivoPublic(HttpExchange exchange, String requestPath) throws IOException {

@@ -103,8 +103,7 @@ async function asegurarDatosComprador() {
 
     const idUsuario = localStorage.getItem("auth_user_id");
     try {
-        // Algunas sesiones antiguas solo guardaban el email.
-        // Primero intentamos por id y, si no existe, usamos el email guardado.
+        // Probamos id o email.
         let url = null;
         if (idUsuario) {
             url = `http://localhost:8080/user/${idUsuario}`;

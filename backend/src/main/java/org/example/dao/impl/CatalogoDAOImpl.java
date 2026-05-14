@@ -9,6 +9,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementación de la interfaz CatalogoDAO para interactuar con la base de datos.
+ */
 public class CatalogoDAOImpl implements CatalogoDAO {
 
     private Connection obtenerConexion() throws ErrorDeAccesoADatosException {

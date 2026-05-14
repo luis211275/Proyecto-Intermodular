@@ -16,7 +16,7 @@ btnRegister.addEventListener("click", (e) => {
     };
     
     
-    // --- DENTRO DEL EVENT LISTENER DEL BOTÓN REGISTER ---
+    // Validamos los datos.
 
     mensajeHtml.innerText = "";
 

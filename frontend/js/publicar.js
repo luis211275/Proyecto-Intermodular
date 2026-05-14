@@ -65,8 +65,7 @@ async function asegurarIdUsuarioSesion() {
     }
 
     try {
-        // Algunas sesiones antiguas solo guardaban el email.
-        // Aquí recuperamos el id real antes de publicar para no usar otro vendedor por error.
+        // Recuperamos el id real.
         const respuesta = await fetch(`http://localhost:8080/user/email?value=${encodeURIComponent(user.email)}`);
         if (!respuesta.ok) {
             return null;
@@ -113,7 +112,7 @@ const inicializarPublicar = async () => {
         }
     };
 
-    // Carga inicial de selectores estáticos
+    // Cargamos selectores.
     await cargarSelector('marcas', 'marcaId', 'Seleccione marca');
     await cargarSelector('ciudades', 'id_ciudad', 'Seleccione ciudad');
     await cargarSelector('combustibles', 'id_combustible', 'Combustible');
@@ -122,13 +121,13 @@ const inicializarPublicar = async () => {
     await cargarSelector('colores', 'id_color', 'Color');
     await cargarSelector('etiquetas', 'id_etiqueta', 'Etiqueta');
 
-    // Al cambiar marca, limpiar modelos y versiones
+    // Actualizamos marca.
     document.getElementById('marcaId')?.addEventListener('change', async (e) => {
         const idMarca = e.target.value;
         const selectModelo = document.getElementById('modeloId');
         const selectVersion = document.getElementById('id_version');
 
-        // Limpiar ambos
+        // Limpiamos ambos.
         establecerSelector('modeloId', '<option value="">Seleccione modelo</option>', true);
         establecerSelector('id_version', '<option value="">Seleccione modelo primero</option>', true);
 
@@ -141,12 +140,12 @@ const inicializarPublicar = async () => {
         } catch (err) { }
     });
 
-    // Al cambiar modelo, cargar versiones
+    // Actualizamos modelo.
     document.getElementById('modeloId')?.addEventListener('change', async (e) => {
         const idModelo = e.target.value;
         const selectVersion = document.getElementById('id_version');
 
-        // Limpiar versiones
+        // Limpiamos versiones.
         establecerSelector('id_version', '<option value="">Seleccione versión</option>', true);
 
         if (!idModelo) return;

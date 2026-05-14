@@ -2,6 +2,7 @@
 const btnIniciarL = document.getElementById("btnLogin");
 const form = document.getElementById("form-login");
 const mensajeHtml = document.getElementById("mensajeError");
+const btnVolver = document.getElementById("btnVolver");
 
 btnIniciarL.addEventListener("click", (e) => {
     e.preventDefault();
@@ -30,9 +31,7 @@ btnIniciarL.addEventListener("click", (e) => {
     })
     .then(data => {
         console.log("Éxito:", data.message);
-        // Antes solo redirigíamos a home.html y no persistíamos ninguna sesión.
-        // Como publicar.js y compraVenta.js validan el login leyendo localStorage,
-        // el usuario parecía deslogueado al entrar en rutas protegidas.
+        // Guardamos la sesión.
         const usuarioAutenticado = {
             email: data.email || login.email,
             nombres: data.nombres || "",
@@ -41,19 +40,15 @@ btnIniciarL.addEventListener("click", (e) => {
             telefono: data.telefono || ""
         };
 
-        // Ahora guardamos una sesión mínima para que el resto del frontend
-        // detecte correctamente que el usuario ya está autenticado.
-        // También guardamos nombre y DNI para mostrarlos en la compraventa.
+        // Guardamos datos básicos.
         localStorage.setItem("auth_user", JSON.stringify(usuarioAutenticado));
 
-        // Antes no guardábamos el id del usuario y publicar.js acababa usando
-        // un id fijo por defecto. Ahora guardamos el id real que devuelve el backend.
+        // Guardamos el id real.
         if (data.userId) {
             localStorage.setItem("auth_user_id", String(data.userId));
         }
 
-        // Si el usuario fue enviado aquí desde una página protegida, lo
-        // devolvemos a esa URL en lugar de mandarlo siempre al home.
+        // Respetamos la vuelta pendiente.
         const redirectPendiente = localStorage.getItem("redirect_after_login");
         if (redirectPendiente) {
             localStorage.removeItem("redirect_after_login");
@@ -61,7 +56,7 @@ btnIniciarL.addEventListener("click", (e) => {
             return;
         }
 
-        // Si no hay redirección pendiente, mantenemos el comportamiento normal.
+        // Volvemos al inicio.
         window.location.href = "home.html";
     })
     .catch(error => {
@@ -69,4 +64,8 @@ btnIniciarL.addEventListener("click", (e) => {
         mensajeHtml.innerText = error.message;
         mensajeHtml.style.color = "red";
     });
+});
+
+btnVolver?.addEventListener("click", () => {
+    window.location.href = "home.html";
 });
