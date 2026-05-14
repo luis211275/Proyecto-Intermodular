@@ -6,7 +6,29 @@
 
 1. **PostgreSQL**:
 
-- Descargamos el instalador desde [postgresql.org](https://www.postgresql.org/download/).
+- Descargamos el instalador desde [postgresql.org](https://www.postgresql.org/download/). Eligiendo el sistema operativo y la version que queramos
+ <img width="60" height="60" alt="image" src="https://github.com/user-attachments/assets/1e688ea1-c48c-4469-9c74-7c20cad9e092" />
+
+
+ - Una vez registrados en pgAdmin, usando el puerto predeterminado(5432) y la contraseña, crearemos la database, dandole click derecho a database, newDatabase
+
+   <img width="514" height="112" alt="image" src="https://github.com/user-attachments/assets/870cbd2b-60e1-47f6-9ec1-bc30f49d4820" />
+
+
+- Una vez dentro, debemos añadirle un nombre y darle a save para confirmar el nombre y la creacion de la base de datos.
+
+  <img width="502" height="349" alt="image" src="https://github.com/user-attachments/assets/b94119c0-7fb0-4034-aa66-a9c698a9e8b2" />
+
+
+- Una vez creada la base de datos,le damos click derecho a la carpeta y pinchamos en query tool
+  
+  <img width="321" height="444" alt="image" src="https://github.com/user-attachments/assets/3f7fb57e-5780-47bf-9675-fb9cf67ff63b" />
+
+- Una vez dentro 
+
+
+
+
 
 - Ejecutar el instalador y seguimos los pasos:
     - Seleccionamos los componentes (PostgreSQL, pgAdmin, etc...).
