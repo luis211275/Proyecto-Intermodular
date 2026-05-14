@@ -24,51 +24,68 @@
   
   <img width="321" height="444" alt="image" src="https://github.com/user-attachments/assets/3f7fb57e-5780-47bf-9675-fb9cf67ff63b" />
 
-- Una vez dentro 
+- Una vez dentro en la parte del backend, resources, hay dos archivos DDL y DML, con ellos debemos descargar el archivo, y dentro de pgAdmin debemos darle a openFile
+  <img width="870" height="286" alt="image" src="https://github.com/user-attachments/assets/0afa03c8-a266-4073-b46e-2fddd2c438c2" />
 
+- Primero abriremos el DML y le daremos al F5 para crear las tablas, y posteriormente al DDL para crear los inserts.
 
+- Con estos pasos, podremos tener na base de datos funcional, Importante, no debemos salir del pgAdmin si queremos que funcione, sino, se perdera la conexion con la base de datos.
 
-
-
-- Ejecutar el instalador y seguimos los pasos:
-    - Seleccionamos los componentes (PostgreSQL, pgAdmin, etc...).
-    - Elige el puerto predeterminado (5432).
-    - Establece una contraseña para el usuario `postgres`.
-- Al finalizar, se abrirá una ventana para configurar pgAdmin.
-
-
-2. **pgAdmin**:
-
-    - Durante la instalación de PostgreSQL, se instala automáticamente pgAdmin.
-    - Accede a través del navegador en `http://localhost:8080`.
-    - Inicia sesión con el correo y contraseña definidos durante la instalación.
-    - Conéctate al servidor PostgreSQL usando el host `localhost`, usuario `postgres` y la contraseña establecida.
 
 
 ### Instalación de IntelliJ IDEA (IJ).
 
-1. Descarga IntelliJ IDEA Community o Ultimate desde [jetbrains.com/idea](https://www.jetbrains.com/idea/download/).
-2. Ejecuta el instalador y sigue las instrucciones.
-3. Al abrirlo por primera vez:
-    - Configura el `JDK` (En este proyecto se ha usado openkdj-25).
-    - Abre o crea un proyecto de java y configura las dependencias(IntelliJ/Maven/Gradle). En este caso se ha usado `Maven`.
+- Primero deberemos instalar el IntelliJ con este enlace [jetbrains.com/idea](https://www.jetbrains.com/idea/download/)
+
+  <img width="70" height="60" alt="image" src="https://github.com/user-attachments/assets/09bc00e9-c6ec-410c-a5f4-f26e3895c87e" />
+
+- Una vez instalado necesitaremos darle a clone repository
+
+  <img width="265" height="98" alt="image" src="https://github.com/user-attachments/assets/d1c69e2d-eadd-4394-8b74-a23a8d154aab" />
+
+- Nos vamos al repositorio de github que tenemos y en el apartado de `code` se copia y se pega en la url y pòsteriormente le damos a clone.
+
+  <img width="605" height="597" alt="image" src="https://github.com/user-attachments/assets/6d193765-8c58-4693-b708-0c148dfe0d30" />
+
+- Ya dentro buscamos en la carpeta del backend, database config, y cambiamos nuestras credenciales
+  
+  <img width="1223" height="332" alt="image" src="https://github.com/user-attachments/assets/22d71ba9-b5db-444d-822d-a790d1f245bf" />
+
+- Finalmente nos iremos al Main y le daremos a play, el icono verde que hay arriba a la derecha del codigo.
+
+  <img width="1006" height="576" alt="image" src="https://github.com/user-attachments/assets/3a600635-9304-4ea4-878f-0035a72dbf15" />
+
+- Esto nos deberia de funcionar.
+
+  <img width="1134" height="123" alt="image" src="https://github.com/user-attachments/assets/2c5312a7-a4af-4fe4-9806-ba6bc16b62b8" />
+
+- Importante, como en la base de datos, esto no lo podremos parar, ya que sino no funcionara a pagina web
+
+
 
 ### Instalacion de Visual Studio / VS Code.
 
-- Descarga desde [code.visualstudio.com](https://code.visualstudio.com/).   
-- Instálalo y abre o crea un proyecto.
-- Si es necessario, instala extensiones utiles en uno de los iconos de la izquierda: *Live Server* o *Prettier* son algunas de las que se han usado para este proyecto.
-- Abre la carpeta del proyecto y crea nuevos folders acabando con *.html*, *.css* o *.js*.
-- Finalmente, usa la extension de `Live Server` para previsualizar la pagina web localmente.
+- Debemos instalar Visual Studio con el siguiente enlace: [code.visualstudio.com](https://code.visualstudio.com/)
 
-### GitHub.
+  <img width="225" height="155" alt="image" src="https://github.com/user-attachments/assets/82bfc618-f74e-419e-acd8-f3fcdd0d04c2" />
 
-- Registrese o inicie sesión en GitHub y posteriormente crea un nuevo repositorio en [github.com](https://github.com).
-- Clona el repositorio localmente:
-```bash
-  git clone https://github.com/usuario/proyecto.git
-  ```
 
+- Una vez instalado y dentro en la parte superior del programa ponemos lo siguiente:
+
+<img width="601" height="100" alt="image" src="https://github.com/user-attachments/assets/b469d13c-1406-403f-bb14-b6228b7dfd7a" />
+
+
+- Despues de haberlo clonado necesitamos instalarnos una extension, se pueden descargar desde la parte izquierda del programa, llamado live Server.
+
+  <img width="768" height="184" alt="image" src="https://github.com/user-attachments/assets/b3f69981-49ca-4475-8921-bb137eae8080" />
+
+- Finalmente entramos en home.html que esta en la carpeta de frontend y ejecutamos el programa dandole abajo a la derecha al live server
+
+  <img width="82" height="23" alt="image" src="https://github.com/user-attachments/assets/b8bd8026-8b64-4bb7-8ee7-16b77392dd71" />
+
+
+
+ **Con todo esto seremos capaces de hacer que el programa funcione**
 
 
 
