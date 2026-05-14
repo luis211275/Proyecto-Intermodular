@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.example.config.DatabaseConfig;
 import org.example.dao.UsuarioDao;
+import org.example.model.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -129,6 +130,77 @@ public class UsuarioDaoImpl implements UsuarioDao {
       return 3;// error en la base de datos
     }
 
+  }
+
+  @Override
+  public int obtenerIdUsuarioPorEmail(String email) {
+    String sql = "SELECT id_usuario FROM usuarios WHERE email = ?";
+
+    try (Connection conn = DatabaseConfig.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, email);
+      ResultSet rs = stmt.executeQuery();
+
+      if (rs.next()) {
+        return rs.getInt("id_usuario");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return 0;
+  }
+
+  @Override
+  public Usuario obtenerUsuarioPorEmail(String email) {
+    String sql = "SELECT id_usuario, nombres, apellidos, email, dni, telefono FROM usuarios WHERE email = ?";
+
+    try (Connection conn = DatabaseConfig.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setString(1, email);
+      ResultSet rs = stmt.executeQuery();
+
+      if (rs.next()) {
+        Usuario usuario = new Usuario();
+        usuario.setIdUsuario(rs.getInt("id_usuario"));
+        usuario.setNombres(rs.getString("nombres"));
+        usuario.setApellidos(rs.getString("apellidos"));
+        usuario.setEmail(rs.getString("email"));
+        usuario.setDni(rs.getString("dni"));
+        usuario.setTelefono(rs.getString("telefono"));
+        return usuario;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
+  @Override
+  public Usuario obtenerUsuarioPorId(int idUsuario) {
+    String sql = "SELECT id_usuario, nombres, apellidos, email, dni, telefono FROM usuarios WHERE id_usuario = ?";
+
+    try (Connection conn = DatabaseConfig.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql)) {
+      stmt.setInt(1, idUsuario);
+      ResultSet rs = stmt.executeQuery();
+
+      if (rs.next()) {
+        Usuario usuario = new Usuario();
+        usuario.setIdUsuario(rs.getInt("id_usuario"));
+        usuario.setNombres(rs.getString("nombres"));
+        usuario.setApellidos(rs.getString("apellidos"));
+        usuario.setEmail(rs.getString("email"));
+        usuario.setDni(rs.getString("dni"));
+        usuario.setTelefono(rs.getString("telefono"));
+        return usuario;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return null;
   }
 
   @Override

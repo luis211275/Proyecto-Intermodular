@@ -13,6 +13,10 @@ public interface CocheDAO {
 
   int insertarCocheNuevo(Coche c) throws ErrorDeAccesoADatosException;
 
+  void registrarCompra(int cocheId, int compradorId, int vendedorId,
+      java.math.BigDecimal totalBase, java.math.BigDecimal ivaImporte,
+      java.math.BigDecimal comisionPlataforma, java.math.BigDecimal totalPagado) throws ErrorDeAccesoADatosException;
+
   boolean actualizarEstadoAVendido(int id) throws ErrorDeAccesoADatosException;
 
   boolean desactivarAnuncioPorEliminacion(int id) throws ErrorDeAccesoADatosException;

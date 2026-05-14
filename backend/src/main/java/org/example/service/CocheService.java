@@ -2,14 +2,13 @@ package org.example.service;
 
 import org.example.dao.CocheDAO;
 import org.example.dao.impl.CocheDAOImpl;
-import org.example.exception.ErrorDeNegocioException;
-import org.example.exception.ErrorDeAccesoADatosException;
-import org.example.exception.PrecioInvalidoException;
 import org.example.exception.DatosIncompletosException;
+import org.example.exception.ErrorDeAccesoADatosException;
+import org.example.exception.ErrorDeNegocioException;
+import org.example.exception.PrecioInvalidoException;
 import org.example.model.Coche;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
@@ -34,33 +33,21 @@ public class CocheService {
 
     private void calcularPrecios(Coche c) {
         if (c.getPrecioVenta() != null) {
-            BigDecimal subtotal = c.getPrecioVenta();
-            BigDecimal iva = subtotal.multiply(new BigDecimal("0.21")).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal comision = subtotal.multiply(new BigDecimal("0.05")).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal total = subtotal.add(iva).add(comision).setScale(2, RoundingMode.HALF_UP);
+            double precio = c.getPrecioVenta().doubleValue();
+            double iva = Math.round(precio * 0.21 * 100.0) / 100.0;
+            double comision = Math.round(precio * 0.03 * 100.0) / 100.0;
+            double total = Math.round((precio + iva + comision) * 100.0) / 100.0;
 
-            c.setSubtotal(subtotal);
-            c.setIva(iva);
-            c.setComision(comision);
-            c.setTotal(total);
+            c.setSubtotal(BigDecimal.valueOf(precio));
+            c.setIva(BigDecimal.valueOf(iva));
+            c.setComision(BigDecimal.valueOf(comision));
+            c.setTotal(BigDecimal.valueOf(total));
         }
     }
 
     public int publicarCoche(Coche c) throws ErrorDeNegocioException, ErrorDeAccesoADatosException, PrecioInvalidoException, DatosIncompletosException {
-        // Validaciones de negocio
         validarCoche(c);
-        
-        int idGenerado = 0;
-        try {
-            idGenerado = cocheDAO.insertarCocheNuevo(c);
-        } catch (ErrorDeAccesoADatosException e) {
-            // Si falla la BD, intentamos borrar la imagen si existe (Transaccionalidad de Disco)
-            if (c.getImagen() != null && !c.getImagen().isEmpty()) {
-                borrarImagen(c.getImagen());
-            }
-            throw e;
-        }
-        return idGenerado;
+        return cocheDAO.insertarCocheNuevo(c);
     }
 
     private void validarCoche(Coche c) throws ErrorDeNegocioException, PrecioInvalidoException, DatosIncompletosException {
@@ -94,20 +81,39 @@ public class CocheService {
         if (c.getCategoria() == null || c.getCategoria().getIdCategoria() == 0) {
             throw new DatosIncompletosException("Debe especificar una categoría");
         }
-    }
-
-    private void borrarImagen(String urlRelativa) {
-        try {
-            String pathStr = "src/main/resources/public" + urlRelativa;
-            java.nio.file.Path path = java.nio.file.Paths.get(pathStr);
-            java.nio.file.Files.deleteIfExists(path);
-        } catch (Exception e) {
-            System.err.println("No se pudo borrar la imagen tras error en BD: " + e.getMessage());
+        if (c.getVendedor() == null || c.getVendedor().getIdUsuario() == 0) {
+            throw new DatosIncompletosException("Debe existir un vendedor válido para publicar el anuncio");
         }
     }
 
     public void marcarComoVendido(int idCoche) throws ErrorDeAccesoADatosException {
         cocheDAO.actualizarEstadoAVendido(idCoche);
+    }
+
+    public void registrarCompra(int idCoche, int compradorId) throws ErrorDeAccesoADatosException, DatosIncompletosException {
+        Coche coche = obtenerCochePorId(idCoche);
+
+        if (coche == null) {
+            throw new DatosIncompletosException("El coche no existe");
+        }
+        if (compradorId <= 0) {
+            throw new DatosIncompletosException("Debe existir un comprador válido");
+        }
+        if (coche.getVendedor() == null || coche.getVendedor().getIdUsuario() <= 0) {
+            throw new DatosIncompletosException("Debe existir un vendedor válido");
+        }
+
+        calcularPrecios(coche);
+
+        cocheDAO.registrarCompra(
+            idCoche,
+            compradorId,
+            coche.getVendedor().getIdUsuario(),
+            coche.getSubtotal(),
+            coche.getIva(),
+            coche.getComision(),
+            coche.getTotal()
+        );
     }
 
     public void cambiarEstadoAnuncio(int idCoche, String nuevoEstado) throws ErrorDeAccesoADatosException {

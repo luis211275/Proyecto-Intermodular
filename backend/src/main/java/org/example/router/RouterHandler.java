@@ -179,21 +179,22 @@ public class RouterHandler implements HttpHandler {
 
         sendResponse(exchange, 200, catalogoController.obtenerVersiones(modeloId));
 
-      } else if (path.equals("/api/publicarVehiculo") && method.equals("POST")) {
+      } else if (path.equals("/api/publicarvehiculo") && method.equals("POST")) {
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
         sendResponse(exchange, 201, cocheController.publicarVehiculo(exchange));
 
-      } else if (path.equals("/api/marcarVehiculoComoVendido") && method.equals("PATCH")) {
+      } else if (path.equals("/api/marcarvehiculocomovendido") && method.equals("PATCH")) {
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
 
         java.util.Scanner s = new java.util.Scanner(exchange.getRequestBody()).useDelimiter("\\A");
         String body = s.hasNext() ? s.next() : "";
 
         int id = Integer.parseInt(body.split("\"id\"\\s*:\\s*")[1].split("[^0-9]")[0]);
+        int compradorId = Integer.parseInt(body.split("\"compradorId\"\\s*:\\s*")[1].split("[^0-9]")[0]);
 
-        sendResponse(exchange, 200, cocheController.marcarVehiculoComoVendido(id));
+        sendResponse(exchange, 200, cocheController.marcarVehiculoComoVendido(id, compradorId));
 
-      } else if (path.equals("/api/cambiarEstadoAnuncioVehiculo") && method.equals("PATCH")) {
+      } else if (path.equals("/api/cambiarestadoanunciovehiculo") && method.equals("PATCH")) {
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
 
         java.util.Scanner s = new java.util.Scanner(exchange.getRequestBody()).useDelimiter("\\A");
@@ -204,7 +205,7 @@ public class RouterHandler implements HttpHandler {
 
         sendResponse(exchange, 200, cocheController.cambiarEstadoAnuncioVehiculo(id, estado));
 
-      } else if (path.equals("/api/eliminarAnuncioVehiculo") && method.equals("DELETE")) {
+      } else if (path.equals("/api/eliminaranunciovehiculo") && method.equals("DELETE")) {
         exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
 
         int id = 0;
