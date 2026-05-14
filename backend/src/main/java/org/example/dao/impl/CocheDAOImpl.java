@@ -245,6 +245,64 @@ public class CocheDAOImpl implements CocheDAO {
     }
   }
 
+  @Override
+  public void registrarCompra(int cocheId, int compradorId, int vendedorId,
+      BigDecimal totalBase, BigDecimal ivaImporte, BigDecimal comisionPlataforma,
+      BigDecimal totalPagado) throws ErrorDeAccesoADatosException {
+    String sqlFactura = "INSERT INTO FACTURAS " +
+        "(COMPRADOR_ID, VENDEDOR_ID, TOTAL_BASE, IVA_IMPORTE, COMISION_PLATAFORMA, TOTAL_PAGADO) " +
+        "VALUES (?, ?, ?, ?, ?, ?)";
+    String sqlLinea = "INSERT INTO LINEAS_FACTURA (FACTURA_ID, COCHE_ID, PRECIO_VENTA_MOMENTO) VALUES (?, ?, ?)";
+    String sqlEstado = "UPDATE COCHES SET ESTADO = 'Vendido' WHERE ID_COCHE = ?";
+
+    try (Connection conn = obtenerConexion()) {
+      conn.setAutoCommit(false);
+
+      try (
+          PreparedStatement facturaStmt = conn.prepareStatement(sqlFactura, Statement.RETURN_GENERATED_KEYS);
+          PreparedStatement lineaStmt = conn.prepareStatement(sqlLinea);
+          PreparedStatement estadoStmt = conn.prepareStatement(sqlEstado)
+      ) {
+        facturaStmt.setInt(1, compradorId);
+        facturaStmt.setInt(2, vendedorId);
+        facturaStmt.setBigDecimal(3, totalBase);
+        facturaStmt.setBigDecimal(4, ivaImporte);
+        facturaStmt.setBigDecimal(5, comisionPlataforma);
+        facturaStmt.setBigDecimal(6, totalPagado);
+        facturaStmt.executeUpdate();
+
+        int facturaId;
+        try (ResultSet generatedKeys = facturaStmt.getGeneratedKeys()) {
+          if (!generatedKeys.next()) {
+            throw new ErrorDeAccesoADatosException("No se pudo generar la factura.");
+          }
+          facturaId = generatedKeys.getInt(1);
+        }
+
+        lineaStmt.setInt(1, facturaId);
+        lineaStmt.setInt(2, cocheId);
+        lineaStmt.setBigDecimal(3, totalBase);
+        lineaStmt.executeUpdate();
+
+        estadoStmt.setInt(1, cocheId);
+        estadoStmt.executeUpdate();
+
+        conn.commit();
+      } catch (Exception e) {
+        conn.rollback();
+        throw e;
+      } finally {
+        conn.setAutoCommit(true);
+      }
+    } catch (SQLException e) {
+      throw new ErrorDeAccesoADatosException("Error al registrar la compra: " + e.getMessage());
+    } catch (ErrorDeAccesoADatosException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new ErrorDeAccesoADatosException("Error al registrar la compra: " + e.getMessage());
+    }
+  }
+
   private void validarCocheParaInsertar(Coche c) throws ErrorDeAccesoADatosException {
     if (c == null) {
       throw new ErrorDeAccesoADatosException("Error: El objeto Coche no puede ser nulo.");

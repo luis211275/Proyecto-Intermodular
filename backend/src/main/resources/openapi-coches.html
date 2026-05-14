@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Market API | Documentación</title>
+    <title>BSCars API | Documentación</title>
 
     <style>
       :root {
@@ -594,11 +594,16 @@
     <div class="layout">
       <aside class="sidebar">
         <div class="brand">
-          <div class="brand-badge">● API SPEC v1.0</div>
-          <h1 style="color: var(--text); font-weight: 800; letter-spacing: -0.04em;">Market</h1>
-          <p>
-            Documentación técnica premium para el catálogo de vehículos.
-          </p>
+          <h1
+            style="
+              color: var(--text);
+              font-weight: 800;
+              letter-spacing: -0.04em;
+            "
+          >
+            BSCars
+          </h1>
+          <p>Documentación técnica premium para el catálogo de vehículos.</p>
         </div>
 
         <div class="sidebar-section-title">Secciones</div>
@@ -615,9 +620,10 @@
             <div>
               <h2>Documentación REST</h2>
               <p>
-                API REST del proyecto <strong>Market</strong>, construida
-                con Java puro. Incluye vehículos, favoritos, catálogos, usuarios
-                y documentación.
+                API REST del proyecto <strong>BSCars</strong>, construida con
+                Java (backend), PostgreSQL (Base de Datos) y HTML/CSS/JavaScript
+                (Frontend). Incluye vehículos, favoritos, catálogos, usuarios y
+                documentación.
               </p>
             </div>
             <div class="server-pill">http://localhost:8080</div>
@@ -633,10 +639,6 @@
               <strong>JSON / Multipart</strong>
             </div>
             <div class="stat">
-              <span>Servidor</span>
-              <strong>Java puro</strong>
-            </div>
-            <div class="stat">
               <span>Docs</span>
               <strong>/api/docs</strong>
             </div>
@@ -649,7 +651,7 @@
               <input
                 id="searchInput"
                 type="search"
-                placeholder="Buscar endpoint, ruta, tag, descripción..."
+                placeholder="Buscar endpoint..."
               />
             </div>
 
@@ -665,9 +667,7 @@
           <div class="section-heading">
             <div>
               <h3>Endpoints</h3>
-              <p>
-                Rutas disponibles con ejemplos curl, fetch, request y response.
-              </p>
+              <p>Rutas disponibles con ejemplos request y response.</p>
             </div>
           </div>
 
@@ -757,7 +757,7 @@
         </section>
 
         <div class="footer">
-          Market API · Documentación HTML estática · Servidor local
+          BSCars API · Documentación al estilo OpenApi · Servidor local
         </div>
       </main>
     </div>
@@ -808,10 +808,6 @@
     "total": 39140.00
   }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/coches?marcaId=1&precioMax=40000"`,
-          fetch: `fetch("/api/coches?marcaId=1&precioMax=40000")
-  .then(res => res.json())
-  .then(data => console.log(data));`,
         },
         {
           method: "GET",
@@ -821,147 +817,130 @@
           description: "Devuelve el detalle completo de un coche.",
           params: [["id", "path", "integer", "Sí", "1"]],
           response: `{
-  "idCoche": 1,
-  "anio": 2023,
-  "km": 50,
-  "precio": 38000.00,
-  "estado": "Disponible",
-  "imagen": "/assets/img/cars/audi_a3_grey.jpg",
-  "marca": "Audi",
-  "modelo": "A3",
-  "version": "35 TFSI S line",
-  "ciudad": "Madrid"
-}`,
+    "idCoche": 1,
+    "anio": 2023,
+    "km": 50,
+    "precio": 38000.00,
+    "estado": "Disponible",
+    "imagen": "/assets/img/cars/audi_a3_grey.jpg",
+    "marca": "Audi",
+    "modelo": "A3",
+    "version": "35 TFSI S line",
+    "ciudad": "Madrid",
+    "activo": true,
+    "combustible": "Gasolina",
+    "transmision": "Automático",
+    "etiquetaAmbiental": "C",
+    "categoria": "Compacto",
+    "color": "Gris",
+    "fechaPublicacion": "2024-01-15 10:00:00.0",
+    "vendedorId": 1,
+    "vendedorNombre": "Juan García",
+    "vendedorEmail": "juan@mail.com",
+    "vendedorDni": "11111111A",
+    "vendedorTelefono": "600000001",
+    "subtotal": 38000.00,
+    "iva": 7980.00,
+    "comision": 1140.00,
+    "total": 39140.00
+  }`,
           error: `{
   "error": "Coche no encontrado"
 }`,
-          curl: `curl -X GET "http://localhost:8080/api/coches/1"`,
-          fetch: `fetch("/api/coches/1")
-  .then(res => res.json())
-  .then(data => console.log(data));`,
         },
         {
           method: "POST",
-          path: "/api/publicarVehiculo",
+          path: "/api/publicarvehiculo",
           tag: "Vehículos",
           summary: "Publicar un nuevo vehículo",
           description:
-            "Recibe multipart/form-data con imagen y datos del vehículo.",
-          params: [],
-          request: `anio=2022
-km=15000
-precio=29000
-id_version=4
-id_combustible=1
-id_transmision=2
-id_ciudad=1
-id_color=3
-id_etiqueta=3
-id_categoria=3
-id_vendedor=1
-imagen=@coche.jpg`,
+            "Postman: Body > form-data. Todos en Text menos imagen en File. Copia estos valores tal cual.",
+          params: [
+            ["anio", "form-data", "integer", "Sí", "2022"],
+            ["km", "form-data", "integer", "Sí", "18500"],
+            ["precio", "form-data", "number", "Sí", "27990"],
+            ["id_version", "form-data", "integer", "Sí", "4"],
+            ["id_combustible", "form-data", "integer", "Sí", "1"],
+            ["id_transmision", "form-data", "integer", "Sí", "2"],
+            ["id_ciudad", "form-data", "integer", "Sí", "2"],
+            ["id_color", "form-data", "integer", "Sí", "4"],
+            ["id_etiqueta", "form-data", "integer", "Sí", "3"],
+            ["id_categoria", "form-data", "integer", "Sí", "3"],
+            ["id_vendedor", "form-data", "integer", "Sí", "1"],
+            ["imagen", "form-data", "file", "Sí", "coche.jpg"],
+          ],
+          request: `POSTMAN
+
+1. Body > form-data
+2. anio -> Text -> 2022
+3. km -> Text -> 18500
+4. precio -> Text -> 27990
+5. id_version -> Text -> 4
+6. id_combustible -> Text -> 1
+7. id_transmision -> Text -> 2
+8. id_ciudad -> Text -> 2
+9. id_color -> Text -> 4
+10. id_etiqueta -> Text -> 3
+11. id_categoria -> Text -> 3
+12. id_vendedor -> Text -> 1
+13. imagen -> File -> seleccionar imagen
+
+IMPORTANTE
+- imagen no va como texto
+- imagen no va como ruta
+- imagen va en tipo File`,
           response: `{
   "status": "success",
   "message": "Coche publicado correctamente",
-  "id": 11
+  "id": 24
 }`,
           error: `{
   "status": "error",
   "message": "Petición debe ser multipart/form-data"
 }`,
-          curl: `curl -X POST "http://localhost:8080/api/publicarVehiculo" \\
-  -F "anio=2022" \\
-  -F "km=15000" \\
-  -F "precio=29000" \\
-  -F "id_version=4" \\
-  -F "id_combustible=1" \\
-  -F "id_transmision=2" \\
-  -F "id_ciudad=1" \\
-  -F "id_color=3" \\
-  -F "id_etiqueta=3" \\
-  -F "id_categoria=3" \\
-  -F "id_vendedor=1" \\
-  -F "imagen=@coche.jpg"`,
-          fetch: `const formData = new FormData();
-formData.append("anio", "2022");
-formData.append("km", "15000");
-formData.append("precio", "29000");
-formData.append("id_version", "4");
-formData.append("id_combustible", "1");
-formData.append("id_transmision", "2");
-formData.append("id_ciudad", "1");
-formData.append("id_color", "3");
-formData.append("id_etiqueta", "3");
-formData.append("id_categoria", "3");
-formData.append("id_vendedor", "1");
-formData.append("imagen", fileInput.files[0]);
-
-fetch("/api/publicarVehiculo", {
-  method: "POST",
-  body: formData
-});`,
         },
         {
           method: "PATCH",
-          path: "/api/marcarVehiculoComoVendido",
+          path: "/api/marcarvehiculocomovendido",
           tag: "Vehículos",
           summary: "Marcar vehículo como vendido",
-          description: "Actualiza el estado del coche a Vendido.",
+          description: "Registra la factura, su línea y marca el coche como vendido.",
           request: `{
-  "id": 1
+  "id": 8,
+  "compradorId": 4
 }`,
           response: `{
   "status": "success",
   "message": "Coche marcado como vendido"
 }`,
-          curl: `curl -X PATCH "http://localhost:8080/api/marcarVehiculoComoVendido" \\
-  -H "Content-Type: application/json" \\
-  -d '{"id":1}'`,
-          fetch: `fetch("/api/marcarVehiculoComoVendido", {
-  method: "PATCH",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ id: 1 })
-});`,
         },
         {
           method: "PATCH",
-          path: "/api/cambiarEstadoAnuncioVehiculo",
+          path: "/api/cambiarestadoanunciovehiculo",
           tag: "Vehículos",
-          summary: "Cambiar estado de un anuncio",
-          description: "Estados válidos: Disponible, Vendido, Desactivado.",
+          summary: "Cambiar el estado de un anuncio",
+          description: "Estados esperados en la práctica: Disponible, Vendido, Desactivado.",
           request: `{
-  "id": 1,
+  "id": 24,
   "estado": "Desactivado"
 }`,
           response: `{
   "status": "success",
   "message": "Estado del anuncio actualizado a Desactivado"
 }`,
-          curl: `curl -X PATCH "http://localhost:8080/api/cambiarEstadoAnuncioVehiculo" \\
-  -H "Content-Type: application/json" \\
-  -d '{"id":1,"estado":"Desactivado"}'`,
-          fetch: `fetch("/api/cambiarEstadoAnuncioVehiculo", {
-  method: "PATCH",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ id: 1, estado: "Desactivado" })
-});`,
         },
         {
           method: "DELETE",
-          path: "/api/eliminarAnuncioVehiculo",
+          path: "/api/eliminaranunciovehiculo",
           tag: "Vehículos",
           summary: "Eliminar anuncio",
           description:
             "Borrado funcional. Cambia el estado del coche a Desactivado.",
-          params: [["id", "query", "integer", "Sí", "1"]],
+          params: [["id", "query", "integer", "Sí", "24"]],
           response: `{
   "status": "success",
   "message": "Anuncio eliminado (borrado funcional)"
 }`,
-          curl: `curl -X DELETE "http://localhost:8080/api/eliminarAnuncioVehiculo?id=1"`,
-          fetch: `fetch("/api/eliminarAnuncioVehiculo?id=1", {
-  method: "DELETE"
-});`,
         },
         {
           method: "GET",
@@ -969,19 +948,37 @@ fetch("/api/publicarVehiculo", {
           tag: "Favoritos",
           summary: "Listar favoritos de un usuario",
           description: "Devuelve los coches favoritos de un usuario.",
-          params: [["usuarioId", "query", "integer", "Sí", "1"]],
+          params: [["usuarioId", "query", "integer", "Sí", "4"]],
           response: `[
   {
-    "idCoche": 3,
-    "marca": "BMW",
-    "modelo": "Serie 3",
-    "precio": 31000.00
+    "idCoche": 8,
+    "anio": 2022,
+    "km": 12500,
+    "precio": 29000.00,
+    "estado": "Disponible",
+    "imagen": "/assets/img/cars/golf_red.jpg",
+    "marca": "Volkswagen",
+    "modelo": "Golf",
+    "version": "1.5 TSI Life",
+    "ciudad": "Barcelona",
+    "activo": true,
+    "combustible": "Gasolina",
+    "transmision": "Automático",
+    "etiquetaAmbiental": "C",
+    "categoria": "Compacto",
+    "color": "Rojo",
+    "fechaPublicacion": "2026-04-24 21:16:02.29577",
+    "vendedorId": 2,
+    "vendedorNombre": "Maria López",
+    "vendedorEmail": "maria@mail.com",
+    "vendedorDni": "22222222B",
+    "vendedorTelefono": "600000002",
+    "subtotal": 29000.00,
+    "iva": 6090.00,
+    "comision": 870.00,
+    "total": 35960.00
   }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/favoritos?usuarioId=1"`,
-          fetch: `fetch("/api/favoritos?usuarioId=1")
-  .then(res => res.json())
-  .then(data => console.log(data));`,
         },
         {
           method: "POST",
@@ -990,21 +987,13 @@ fetch("/api/publicarVehiculo", {
           summary: "Añadir coche a favoritos",
           description: "Guarda un coche como favorito del usuario.",
           request: `{
-  "usuarioId": 1,
-  "cocheId": 3
+  "usuarioId": 4,
+  "cocheId": 8
 }`,
           response: `{
   "status": "success",
   "message": "Coche añadido a favoritos"
 }`,
-          curl: `curl -X POST "http://localhost:8080/api/favoritos" \\
-  -H "Content-Type: application/json" \\
-  -d '{"usuarioId":1,"cocheId":3}'`,
-          fetch: `fetch("/api/favoritos", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ usuarioId: 1, cocheId: 3 })
-});`,
         },
         {
           method: "DELETE",
@@ -1013,17 +1002,13 @@ fetch("/api/publicarVehiculo", {
           summary: "Quitar coche de favoritos",
           description: "Elimina un coche de favoritos.",
           params: [
-            ["usuarioId", "query", "integer", "Sí", "1"],
-            ["cocheId", "query", "integer", "Sí", "3"],
+            ["usuarioId", "query", "integer", "Sí", "4"],
+            ["cocheId", "query", "integer", "Sí", "8"],
           ],
           response: `{
   "status": "success",
   "message": "Coche eliminado de favoritos"
 }`,
-          curl: `curl -X DELETE "http://localhost:8080/api/favoritos?usuarioId=1&cocheId=3"`,
-          fetch: `fetch("/api/favoritos?usuarioId=1&cocheId=3", {
-  method: "DELETE"
-});`,
         },
         {
           method: "GET",
@@ -1036,8 +1021,6 @@ fetch("/api/publicarVehiculo", {
   { "id": 3, "nombre": "BMW" },
   { "id": 4, "nombre": "Audi" }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/marcas"`,
-          fetch: `fetch("/api/marcas").then(res => res.json());`,
         },
         {
           method: "GET",
@@ -1049,21 +1032,17 @@ fetch("/api/publicarVehiculo", {
   { "id": 1, "nombre": "Corolla" },
   { "id": 2, "nombre": "RAV4" }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/modelos?marcaId=1"`,
-          fetch: `fetch("/api/modelos?marcaId=1").then(res => res.json());`,
         },
         {
           method: "GET",
           path: "/api/versiones",
           tag: "Catálogo",
           summary: "Listar versiones por modelo",
-          params: [["modeloId", "query", "integer", "Sí", "1"]],
+          params: [["modeloId", "query", "integer", "Sí", "3"]],
           response: `[
-  { "id": 1, "nombre": "1.8 Hybrid Active" },
-  { "id": 2, "nombre": "2.0 Hybrid Style" }
+  { "id": 4, "nombre": "1.5 TSI Life" },
+  { "id": 5, "nombre": "GTI 2.0 TSI" }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/versiones?modeloId=1"`,
-          fetch: `fetch("/api/versiones?modeloId=1").then(res => res.json());`,
         },
         {
           method: "GET",
@@ -1077,8 +1056,6 @@ fetch("/api/publicarVehiculo", {
   { "id": 4, "nombre": "Sevilla" },
   { "id": 5, "nombre": "Zaragoza" }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/ciudades"`,
-          fetch: `fetch("/api/ciudades").then(res => res.json());`,
         },
         {
           method: "GET",
@@ -1092,8 +1069,6 @@ fetch("/api/publicarVehiculo", {
   { "id": 4, "nombre": "Eléctrico" },
   { "id": 5, "nombre": "GLP" }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/combustibles"`,
-          fetch: `fetch("/api/combustibles").then(res => res.json());`,
         },
         {
           method: "GET",
@@ -1105,8 +1080,6 @@ fetch("/api/publicarVehiculo", {
   { "id": 2, "nombre": "Automático" },
   { "id": 3, "nombre": "Semiautomático" }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/transmisiones"`,
-          fetch: `fetch("/api/transmisiones").then(res => res.json());`,
         },
         {
           method: "GET",
@@ -1121,8 +1094,6 @@ fetch("/api/publicarVehiculo", {
   { "id": 5, "nombre": "Monovolumen" },
   { "id": 6, "nombre": "Pick-up" }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/categorias"`,
-          fetch: `fetch("/api/categorias").then(res => res.json());`,
         },
         {
           method: "GET",
@@ -1136,8 +1107,6 @@ fetch("/api/publicarVehiculo", {
   { "id": 4, "nombre": "Rojo" },
   { "id": 5, "nombre": "Azul" }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/colores"`,
-          fetch: `fetch("/api/colores").then(res => res.json());`,
         },
         {
           method: "GET",
@@ -1151,8 +1120,6 @@ fetch("/api/publicarVehiculo", {
   { "id": 4, "nombre": "B" },
   { "id": 5, "nombre": "Sin Etiqueta" }
 ]`,
-          curl: `curl -X GET "http://localhost:8080/api/etiquetas"`,
-          fetch: `fetch("/api/etiquetas").then(res => res.json());`,
         },
         {
           method: "POST",
@@ -1160,11 +1127,11 @@ fetch("/api/publicarVehiculo", {
           tag: "Usuarios",
           summary: "Registrar nuevo usuario",
           request: `{
-  "nombres": "Juan",
-  "apellidos": "García",
-  "email": "juan@mail.com",
-  "dni": "11111111A",
-  "telefono": "600000001",
+  "nombres": "Julio Martín",
+  "apellidos": "Rodríguez Sánchez",
+  "email": "julitors@gmail.com",
+  "dni": "70007571D",
+  "telefono": "671422554",
   "password": "Segura1"
 }`,
           response: `{
@@ -1175,21 +1142,6 @@ fetch("/api/publicarVehiculo", {
   "status": "error",
   "message": "El email ya esta registrado"
 }`,
-          curl: `curl -X POST "http://localhost:8080/user/register" \\
-  -H "Content-Type: application/json" \\
-  -d '{"nombres":"Juan","apellidos":"García","email":"juan@mail.com","dni":"11111111A","telefono":"600000001","password":"Segura1"}'`,
-          fetch: `fetch("/user/register", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    nombres: "Juan",
-    apellidos: "García",
-    email: "juan@mail.com",
-    dni: "11111111A",
-    telefono: "600000001",
-    password: "Segura1"
-  })
-});`,
         },
         {
           method: "POST",
@@ -1197,38 +1149,69 @@ fetch("/api/publicarVehiculo", {
           tag: "Usuarios",
           summary: "Iniciar sesión",
           request: `{
-  "email": "juan@mail.com",
+  "email": "julitors@gmail.com",
   "password": "Segura1"
 }`,
           response: `{
   "status": "ok",
-  "message": "Login correcto"
+  "message": "Login correcto",
+  "userId": 4,
+  "email": "julitors@gmail.com",
+  "nombres": "Julio Martín",
+  "apellidos": "Rodríguez Sánchez",
+  "dni": "70007571D",
+  "telefono": "671422554"
 }`,
           error: `{
   "status": "error",
   "message": "Correo no registrado"
 }`,
-          curl: `curl -X POST "http://localhost:8080/user/logger" \\
-  -H "Content-Type: application/json" \\
-  -d '{"email":"juan@mail.com","password":"Segura1"}'`,
-          fetch: `fetch("/user/logger", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    email: "juan@mail.com",
-    password: "Segura1"
-  })
-});`,
+        },
+        {
+          method: "GET",
+          path: "/user/{id}",
+          tag: "Usuarios",
+          summary: "Obtener usuario por ID",
+          params: [["id", "path", "integer", "Sí", "4"]],
+          response: `{
+  "id": 4,
+  "nombres": "Julio Martín",
+  "apellidos": "Rodríguez Sánchez",
+  "email": "julitors@gmail.com",
+  "dni": "70007571D",
+  "telefono": "671422554"
+}`,
+          error: `{
+  "status": "error",
+  "message": "Usuario no encontrado"
+}`,
+        },
+        {
+          method: "GET",
+          path: "/user/email",
+          tag: "Usuarios",
+          summary: "Obtener usuario por email",
+          params: [["value", "query", "string", "Sí", "julitors@gmail.com"]],
+          response: `{
+  "id": 4,
+  "nombres": "Julio Martín",
+  "apellidos": "Rodríguez Sánchez",
+  "email": "julitors@gmail.com",
+  "dni": "70007571D",
+  "telefono": "671422554"
+}`,
+          error: `{
+  "status": "error",
+  "message": "Email no informado"
+}`,
         },
         {
           method: "GET",
           path: "/api/docs",
           tag: "Meta",
-          summary: "Documentación HTML",
+          summary: "Documentación estilo OpenApi",
           description: "Sirve esta página de documentación.",
-          response: `text/html`,
-          curl: `curl -X GET "http://localhost:8080/api/docs"`,
-          fetch: `fetch("/api/docs").then(res => res.text());`,
+          response: `openapi-coches.html`,
         },
       ];
 
@@ -1352,7 +1335,7 @@ fetch("/api/publicarVehiculo", {
               </div>
               <div class="meta-box">
                 <span>Content-Type</span>
-                <code>${endpoint.path === "/api/publicarVehiculo" ? "multipart/form-data" : "application/json"}</code>
+                <code>${endpoint.path === "/api/publicarvehiculo" ? "multipart/form-data" : "application/json"}</code>
               </div>
               <div class="meta-box">
                 <span>Servidor local</span>
@@ -1370,8 +1353,6 @@ fetch("/api/publicarVehiculo", {
               ${codeBlock("Request", endpoint.request)}
               ${codeBlock("Response 200/201", endpoint.response)}
               ${codeBlock("Error", endpoint.error)}
-              ${codeBlock("curl", endpoint.curl)}
-              ${codeBlock("fetch JavaScript", endpoint.fetch)}
             </div>
           </div>
         </article>

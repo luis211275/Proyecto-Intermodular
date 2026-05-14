@@ -2,7 +2,6 @@ package org.example;
 
 import com.sun.net.httpserver.HttpServer;
 import org.example.router.RouterHandler;
-import org.example.service.UsuarioService;
 
 import java.net.InetSocketAddress;
 
@@ -17,9 +16,8 @@ public class Main {
     } catch (Exception e) {
       System.out.println("Error: " + e.getMessage());
     }
+    System.out.println("\n==Bienvenidos a BSCars - Compra y venta de Coches==");
     System.out.println("Servidor iniciado en: http://localhost:8080/home.html");
     System.out.println("Documentación: http://localhost:8080/api/docs");
-    UsuarioService usuario = new UsuarioService();
-
   }
 }

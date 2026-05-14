@@ -14,7 +14,7 @@ function actualizarNavbarSesion() {
     if (!login) return;
 
     if (estaLogueado()) {
-        login.innerText = "⎋ Cerrar sesión";
+        login.innerText = "Cerrar sesión";
         login.onclick = () => {
             localStorage.removeItem("auth_user");
             localStorage.removeItem("auth_user_id");
@@ -51,6 +51,42 @@ function mostrarNotificacion(mensaje, tipo = 'success') {
         notificacion.classList.add('fade-out');
         setTimeout(() => notificacion.remove(), 300);
     }, 3000);
+}
+
+async function asegurarIdUsuarioSesion() {
+    const idActual = localStorage.getItem("auth_user_id");
+    if (idActual) {
+        return idActual;
+    }
+
+    const user = JSON.parse(localStorage.getItem("auth_user") || "{}");
+    if (!user.email) {
+        return null;
+    }
+
+    try {
+        // Algunas sesiones antiguas solo guardaban el email.
+        // Aquí recuperamos el id real antes de publicar para no usar otro vendedor por error.
+        const respuesta = await fetch(`http://localhost:8080/user/email?value=${encodeURIComponent(user.email)}`);
+        if (!respuesta.ok) {
+            return null;
+        }
+
+        const datosUsuario = await respuesta.json();
+        if (datosUsuario.id) {
+            localStorage.setItem("auth_user_id", String(datosUsuario.id));
+            localStorage.setItem("auth_user", JSON.stringify({
+                email: datosUsuario.email || user.email || "",
+                nombres: datosUsuario.nombres || user.nombres || "",
+                apellidos: datosUsuario.apellidos || user.apellidos || "",
+                dni: datosUsuario.dni || user.dni || "",
+                telefono: datosUsuario.telefono || user.telefono || ""
+            }));
+            return String(datosUsuario.id);
+        }
+    } catch (error) { }
+
+    return null;
 }
 
 const inicializarPublicar = async () => {
@@ -125,11 +161,16 @@ const inicializarPublicar = async () => {
     document.getElementById('formVenta')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const datosFormulario = new FormData(e.currentTarget);
-        const idVendedor = localStorage.getItem('auth_user_id') || 1;
+        const idVendedor = await asegurarIdUsuarioSesion();
+        if (!idVendedor) {
+            mostrarNotificacion("No se ha podido identificar tu usuario. Cierra sesión y vuelve a entrar.", "error");
+            return;
+        }
+
         datosFormulario.set('id_vendedor', String(idVendedor));
 
         try {
-            const respuesta = await fetch('/api/publicarVehiculo', {
+            const respuesta = await fetch('/api/publicarvehiculo', {
                 method: 'POST',
                 body: datosFormulario
             });

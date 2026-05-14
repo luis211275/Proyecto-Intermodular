@@ -17,7 +17,7 @@ function actualizarNavbarSesion() {
     if (!login) return;
 
     if (estaLogueado()) {
-        login.innerText = "⎋ Cerrar sesión";
+        login.innerText = "Cerrar sesión";
         login.onclick = () => {
             localStorage.removeItem("auth_user");
             localStorage.removeItem("auth_user_id");
@@ -62,6 +62,82 @@ function limpiarTextoHtml(cadena) {
     }[m]));
 }
 
+function formatearImporte(valor) {
+    return Number(valor || 0).toLocaleString('es-ES', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+async function finalizarCompra() {
+    if (!cocheId) {
+        throw new Error("Vehículo no especificado");
+    }
+
+    const compradorId = Number(localStorage.getItem("auth_user_id"));
+    if (!compradorId) {
+        throw new Error("Comprador no especificado");
+    }
+
+    const respuesta = await fetch('/api/marcarvehiculocomovendido', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            id: Number(cocheId),
+            compradorId
+        })
+    });
+
+    if (!respuesta.ok) {
+        throw new Error("No se pudo registrar la compra");
+    }
+}
+
+async function asegurarDatosComprador() {
+    const user = JSON.parse(localStorage.getItem("auth_user") || "{}");
+    const tieneDatosBasicos = (user.nombres || user.apellidos) && user.dni;
+
+    if (tieneDatosBasicos) {
+        return user;
+    }
+
+    const idUsuario = localStorage.getItem("auth_user_id");
+    try {
+        // Algunas sesiones antiguas solo guardaban el email.
+        // Primero intentamos por id y, si no existe, usamos el email guardado.
+        let url = null;
+        if (idUsuario) {
+            url = `http://localhost:8080/user/${idUsuario}`;
+        } else if (user.email) {
+            url = `http://localhost:8080/user/email?value=${encodeURIComponent(user.email)}`;
+        } else {
+            return user;
+        }
+
+        const respuesta = await fetch(url);
+        if (!respuesta.ok) {
+            return user;
+        }
+
+        const datosUsuario = await respuesta.json();
+        const usuarioActualizado = {
+            email: datosUsuario.email || user.email || "",
+            nombres: datosUsuario.nombres || "",
+            apellidos: datosUsuario.apellidos || "",
+            dni: datosUsuario.dni || "",
+            telefono: datosUsuario.telefono || ""
+        };
+
+        if (datosUsuario.id) {
+            localStorage.setItem("auth_user_id", String(datosUsuario.id));
+        }
+        localStorage.setItem("auth_user", JSON.stringify(usuarioActualizado));
+        return usuarioActualizado;
+    } catch (error) {
+        return user;
+    }
+}
+
 const inicializarCompra = async () => {
     if (!estaLogueado()) { mandarALogin(); return; }
 
@@ -74,6 +150,7 @@ const inicializarCompra = async () => {
         return;
     }
 
+    await asegurarDatosComprador();
     await cargarDatosCoche();
     configurarEventos();
 };
@@ -108,26 +185,41 @@ function renderizarContrato() {
     const fechaPub = cocheActual.fechaPublicacion ? new Date(cocheActual.fechaPublicacion).toLocaleDateString('es-ES') : "No disponible";
 
     contenedor.innerHTML = `
-        <h2 style="text-align: center; text-transform: uppercase; margin-bottom: 1.5rem;">CONTRATO DE COMPRAVENTA DE VEHÍCULO</h2>
-        <p><strong>FECHA:</strong> ${fechaActual} | <strong>Ciudad:</strong> ${limpiarTextoHtml(cocheActual.ciudad || "No disponible")}</p>
-        
-        <div style="margin-top: 1.5rem;">
-            <h3>PARTES:</h3>
-            <p><strong>VENDEDOR:</strong> ${limpiarTextoHtml(cocheActual.vendedorNombre || "No disponible")}, <strong>DNI/NIE:</strong> ${limpiarTextoHtml(cocheActual.vendedorDni || "No disponible")}</p>
-            <p><strong>COMPRADOR:</strong> ${limpiarTextoHtml(nombreComprador)}, <strong>DNI/NIE:</strong> ${limpiarTextoHtml(dniComprador)}</p>
+        <div class="contrato-encabezado">
+            <h2>Contrato de compraventa de vehículo</h2>
+            <p>${fechaActual} · ${limpiarTextoHtml(cocheActual.ciudad || "No disponible")}</p>
         </div>
 
-        <div style="margin-top: 1.5rem;">
-            <h3>DATOS DEL VEHÍCULO:</h3>
-            <p><strong>Marca / Modelo:</strong> ${limpiarTextoHtml(cocheActual.marca || "No disponible")} / ${limpiarTextoHtml(cocheActual.modelo || "No disponible")}</p>
-            <p><strong>Categoría / Versión:</strong> ${limpiarTextoHtml(cocheActual.categoria || "No disponible")} / ${limpiarTextoHtml(cocheActual.version || "No disponible")}</p>
-            <p><strong>Año Fab. / Color:</strong> ${limpiarTextoHtml(cocheActual.anio || cocheActual.anioFabricacion || "No disponible")} / ${limpiarTextoHtml(cocheActual.color || "No disponible")}</p>
-            <p><strong>Etiqueta / Combustible:</strong> ${limpiarTextoHtml(cocheActual.etiquetaAmbiental || cocheActual.etiqueta || "No disponible")} / ${limpiarTextoHtml(cocheActual.combustible || "No disponible")}</p>
-            <p><strong>Transmisión:</strong> ${limpiarTextoHtml(cocheActual.transmision || "No disponible")} | <strong>Fecha Publicación:</strong> ${fechaPub}</p>
+        <div class="bloque-contrato">
+            <h3>Partes</h3>
+            <div class="contrato-grid contrato-grid-dos">
+                <div class="dato-contrato">
+                    <span class="dato-etiqueta">Vendedor</span>
+                    <strong>${limpiarTextoHtml(cocheActual.vendedorNombre || "No disponible")}</strong>
+                    <small>DNI/NIE: ${limpiarTextoHtml(cocheActual.vendedorDni || "No disponible")}</small>
+                </div>
+                <div class="dato-contrato">
+                    <span class="dato-etiqueta">Comprador</span>
+                    <strong>${limpiarTextoHtml(nombreComprador)}</strong>
+                    <small>DNI/NIE: ${limpiarTextoHtml(dniComprador)}</small>
+                </div>
+            </div>
         </div>
 
-        <div style="margin-top: 2rem; text-align: center;">
-            <a href="#" id="ver-terminos" style="color: #db9c37; font-weight: bold; text-decoration: underline;">Ver Términos y Condiciones</a>
+        <div class="bloque-contrato">
+            <h3>Datos del vehículo</h3>
+            <div class="contrato-grid">
+                <div class="dato-contrato"><span class="dato-etiqueta">Marca / Modelo</span><strong>${limpiarTextoHtml(cocheActual.marca || "No disponible")} / ${limpiarTextoHtml(cocheActual.modelo || "No disponible")}</strong></div>
+                <div class="dato-contrato"><span class="dato-etiqueta">Categoría / Versión</span><strong>${limpiarTextoHtml(cocheActual.categoria || "No disponible")} / ${limpiarTextoHtml(cocheActual.version || "No disponible")}</strong></div>
+                <div class="dato-contrato"><span class="dato-etiqueta">Año / Color</span><strong>${limpiarTextoHtml(cocheActual.anio || cocheActual.anioFabricacion || "No disponible")} / ${limpiarTextoHtml(cocheActual.color || "No disponible")}</strong></div>
+                <div class="dato-contrato"><span class="dato-etiqueta">Etiqueta / Combustible</span><strong>${limpiarTextoHtml(cocheActual.etiquetaAmbiental || cocheActual.etiqueta || "No disponible")} / ${limpiarTextoHtml(cocheActual.combustible || "No disponible")}</strong></div>
+                <div class="dato-contrato"><span class="dato-etiqueta">Transmisión</span><strong>${limpiarTextoHtml(cocheActual.transmision || "No disponible")}</strong></div>
+                <div class="dato-contrato"><span class="dato-etiqueta">Fecha publicación</span><strong>${fechaPub}</strong></div>
+            </div>
+        </div>
+
+        <div class="enlace-terminos">
+            <a href="#" id="ver-terminos">Ver Términos y Condiciones</a>
         </div>
     `;
     renderizarResumenPrecios();
@@ -139,14 +231,16 @@ function renderizarContrato() {
 }
 
 function renderizarResumenPrecios() {
-    const precioBase = Number(cocheActual.precioVenta || cocheActual.precio);
-    const comision = precioBase * 0.03;
-    const total = precioBase + comision;
+    const precioBase = Number(cocheActual.subtotal ?? cocheActual.precioVenta ?? cocheActual.precio ?? 0);
+    const iva = Math.round(precioBase * 0.21 * 100) / 100;
+    const comision = Math.round(precioBase * 0.03 * 100) / 100;
+    const total = Math.round((precioBase + iva + comision) * 100) / 100;
     const summary = document.getElementById('precio-summary');
     summary.innerHTML = `
-        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Precio vehículo:</span> <span>${precioBase.toLocaleString()} €</span></div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;"><span>Comisión (3%):</span> <span>${comision.toLocaleString()} €</span></div>
-        <div style="display: flex; justify-content: space-between; font-weight:bold; border-top: 1px solid #cbd5e1; padding-top: 5px;"><span>Total:</span> <span>${total.toLocaleString()} €</span></div>
+        <div class="fila-precio"><span>Precio vehículo</span><strong>${formatearImporte(precioBase)} €</strong></div>
+        <div class="fila-precio"><span>IVA (21%)</span><strong>${formatearImporte(iva)} €</strong></div>
+        <div class="fila-precio"><span>Comisión (3%)</span><strong>${formatearImporte(comision)} €</strong></div>
+        <div class="fila-precio fila-precio-total"><span>Total</span><strong>${formatearImporte(total)} €</strong></div>
     `;
 }
 
@@ -192,15 +286,38 @@ function configurarEventos() {
         pagoSpinner.innerHTML = `
             <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
                 <div class="spinner" style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                <p>Procesando pago seguro...</p>
+                <p id="estado-pago-texto">Esperando conexión con el banco...</p>
             </div>
             <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
         `;
 
-        setTimeout(() => {
-            mostrarNotificacion('¡Compra realizada con éxito!', 'success');
-            setTimeout(() => window.location.href = "home.html", 1500);
-        }, 2000);
+        const pasosPago = [
+            "Esperando conexión con el banco...",
+            "Validando información...",
+            "Procesando pago...",
+            "Pago aceptado."
+        ];
+
+        const textoEstadoPago = document.getElementById('estado-pago-texto');
+        let pasoActual = 0;
+
+        const intervaloPago = setInterval(async () => {
+            pasoActual += 1;
+
+            if (pasoActual < pasosPago.length) {
+                textoEstadoPago.textContent = pasosPago[pasoActual];
+                return;
+            }
+
+            clearInterval(intervaloPago);
+            try {
+                await finalizarCompra();
+                mostrarNotificacion('¡Compra realizada con éxito!', 'success');
+                setTimeout(() => window.location.href = "home.html", 1500);
+            } catch (error) {
+                mostrarNotificacion('El pago se simuló, pero no se pudo registrar la compra.', 'error');
+            }
+        }, 3000);
     });
 
     document.getElementById('cancelar-compra')?.addEventListener('click', () => {

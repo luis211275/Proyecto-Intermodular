@@ -1,6 +1,41 @@
 const contenedor = document.querySelector(".contenedor");
 const modal = document.getElementById("modalCoche");
 
+function estaLogueado() {
+    return !!localStorage.getItem("auth_user") || !!localStorage.getItem("auth_user_id");
+}
+
+function actualizarNavbarSesion() {
+    const login = document.getElementById("login");
+    const venta = document.getElementById("ventaCoche");
+    if (!login) return;
+
+    // Antes home.js no actualizaba la cabecera después del login.
+    // Ahora mostramos "Cerrar sesión" si hay sesión guardada en localStorage.
+    if (estaLogueado()) {
+        login.innerHTML = "<a href=\"#\">Cerrar sesión</a>";
+        login.onclick = (e) => {
+            e.preventDefault();
+            localStorage.removeItem("auth_user");
+            localStorage.removeItem("auth_user_id");
+            window.location.href = "home.html";
+        };
+    } else {
+        login.innerHTML = "<a href=\"../html/login.html\">Iniciar Sesión</a>";
+        login.onclick = null;
+    }
+
+    if (venta) {
+        venta.innerHTML = "<a href=\"#\">Vende tu Coche</a>";
+        venta.onclick = (e) => {
+            e.preventDefault();
+            window.location.href = estaLogueado() ? "publicar.html" : "login.html";
+        };
+    }
+}
+
+actualizarNavbarSesion();
+
 // Variables de estado
 let cochesOriginales = [];
 let favoritos = JSON.parse(localStorage.getItem("favoritos")) || []; // IDs de favoritos
@@ -15,18 +50,19 @@ const btnCerrarFiltro = document.getElementById("btnCerrarFiltro");
 const btnAplicarFiltros = document.getElementById("btnAplicarFiltros");
 
 // 1. Cargar y guardar los coches
-async function cargarPrimerosDiezCoches() {
-    const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+async function cargarCochesDisponibles() {
     contenedor.innerHTML = "<p>Cargando catálogo...</p>";
 
     try {
-        const promesas = ids.map(id => 
-            fetch(`http://localhost:8080/api/coches/${id}`).then(res => res.ok ? res.json() : null)
-        );
+        // Antes solo pedíamos los coches del 1 al 10, así que los anuncios nuevos
+        // sí se guardaban pero no llegaban a mostrarse en home.
+        // Ahora pedimos directamente el listado completo de coches disponibles.
+        const respuesta = await fetch("http://localhost:8080/api/coches");
+        if (!respuesta.ok) {
+            throw new Error("No se pudo cargar el catálogo");
+        }
 
-        const resultados = await Promise.all(promesas);
-        cochesOriginales = resultados.filter(c => c !== null);
-        
+        cochesOriginales = await respuesta.json();
         listarCoches(cochesOriginales);
     } catch (error) {
         console.error("Error al conectar:", error);
@@ -141,6 +177,15 @@ function abrirModal(coche) {
         btnFav.classList.remove("es-favorito");
     }
 
+    const btnComprar = document.getElementById("btnComprar");
+    if (btnComprar) {
+        // Antes el botón iba a compraVenta.html sin enviar el id del coche.
+        // Ahora redirige con el id correcto del anuncio seleccionado.
+        btnComprar.onclick = () => {
+            window.location.href = `compraVenta.html?id=${cocheId}`;
+        };
+    }
+
     modal.showModal();
 }
 
@@ -251,4 +296,4 @@ btnCerrarFiltro.addEventListener("click", () => {
 });
 
 // Iniciamos la app
-cargarPrimerosDiezCoches();
+cargarCochesDisponibles();

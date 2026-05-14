@@ -78,7 +78,7 @@ INSERT INTO COCHES (ANIO_FABRICACION,
                     KILOMETRAJE,
                     PRECIO_VENTA,
                     ESTADO,
-                    URL_IMAGEN,
+                    IMAGEN,
                     VERSION_ID,
                     COMBUSTIBLE_ID,
                     TRANSMISION_ID,
@@ -105,7 +105,7 @@ VALUES
 (2019, 85000, 19500.00, 'Disponible', '/assets/img/cars/corolla_blue.jpg', 2, 3, 2, 2, 5, 2, 1, 2),
 
 -- 6. Toyota Corolla blanco
-(2023, 0, 35500.00, 'Disponible', '/assets/img/cars/corolla_white.jpg', 1, 3, 2, 1, 1, 2, 1, 1),
+(2023, 1525, 35500.00, 'Disponible', '/assets/img/cars/corolla_white.jpg', 1, 3, 2, 1, 1, 2, 1, 1),
 
 -- 7. Volkswagen Golf GTI
 (2023, 100, 45000.00, 'Disponible', '/assets/img/cars/golf_gti.jpg', 5, 1, 2, 4, 4, 3, 3, 2),
