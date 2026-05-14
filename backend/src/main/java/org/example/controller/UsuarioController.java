@@ -11,13 +11,22 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Controlador para gestionar las operaciones de usuario.
+ */
 public class UsuarioController {
-    public void handle(HttpExchange exchange) throws IOException {
+  /**
+   * Maneja las peticiones HTTP.
+   *
+   * @param exchange el objeto HttpExchange.
+   * @throws IOException si ocurre un error de entrada/salida.
+   */
+  public void handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
         String method = exchange.getRequestMethod();
         String query = exchange.getRequestURI().getQuery();
 
-        // CORS
+        // Añadimos CORS.
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
@@ -91,13 +100,9 @@ public class UsuarioController {
                     String body = new String(
                             exchange.getRequestBody().readAllBytes(),
                             StandardCharsets.UTF_8);
-                    System.out.println(body);
 
                     JsonObject responseJson = new JsonObject();
-
                     UsuarioService usuario = new UsuarioService();
-                    UsuarioDao dao = new UsuarioDaoImpl();
-
                     int resultado = usuario.procesarRegistro(body);
 
                     if (resultado == 0) {
@@ -119,13 +124,10 @@ public class UsuarioController {
                             exchange.getRequestBody().readAllBytes(),
                             StandardCharsets.UTF_8);
 
-                    System.out.println(body);
-
                     JsonObject responseJson = new JsonObject();
-                    UsuarioService servicio = new UsuarioService();
                     UsuarioDao dao = new UsuarioDaoImpl();
 
-                    // Llamamos a la lógica del service
+                    // Validamos el acceso.
                     int resultado = dao.validarLogin(body);
 
                     if (resultado == 0) {
@@ -136,10 +138,7 @@ public class UsuarioController {
 
                         responseJson.addProperty("status", "ok");
                         responseJson.addProperty("message", "Login correcto");
-                        // Antes solo devolvíamos "Login correcto" y el frontend no sabía
-                        // qué id de usuario guardar para publicar el coche.
-                        // Ahora también devolvemos el id para que el anuncio se asocie
-                        // al usuario que ha iniciado sesión.
+                        // Devolvemos el id real.
                         responseJson.addProperty("userId", idUsuario);
                         responseJson.addProperty("email", email);
                         if (usuario != null) {
@@ -171,8 +170,16 @@ public class UsuarioController {
         }
     }
 
-    public void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
-        // IMPORTANTE: Asegúrate de que estas líneas NO estén repetidas en otro lado
+  /**
+   * Envía la respuesta HTTP.
+   *
+   * @param exchange   el objeto HttpExchange.
+   * @param statusCode el código de estado HTTP.
+   * @param response   el cuerpo de la respuesta.
+   * @throws IOException si ocurre un error de entrada/salida.
+   */
+  public void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
+        // Repetimos estas cabeceras.
         exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
         exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type");

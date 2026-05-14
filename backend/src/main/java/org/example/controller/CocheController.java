@@ -23,10 +23,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Controlador para gestionar las operaciones relacionadas con los coches.
+ */
 public class CocheController {
   private static final String DIRECTORIO_SUBIDA = "frontend/assets/img/cars/";
   private CocheService cocheService = new CocheService();
 
+  /**
+   * Lista los coches disponibles aplicando los filtros proporcionados.
+   *
+   * @param filtros los filtros para la búsqueda.
+   * @return una cadena JSON con la lista de coches.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
   public String listarCoches(Map<String, String> filtros) throws ErrorDeAccesoADatosException {
     List<Coche> coches = cocheService.obtenerCochesDisponibles(filtros);
     return "[" + coches.stream()
@@ -34,6 +44,13 @@ public class CocheController {
         .collect(Collectors.joining(",")) + "]";
   }
 
+  /**
+   * Obtiene un vehículo por su ID.
+   *
+   * @param id el ID del vehículo a obtener.
+   * @return una cadena JSON con los datos del coche, o null si no se encuentra.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
   public String obtenerVehiculoPorId(int id) throws ErrorDeAccesoADatosException {
     Coche c = cocheService.obtenerCochePorId(id);
     if (c != null) {
@@ -42,6 +59,13 @@ public class CocheController {
     return null;
   }
 
+  /**
+   * Publica un nuevo vehículo a partir de los datos de una petición multipart/form-data.
+   *
+   * @param intercambio el objeto HttpExchange de la petición.
+   * @return una cadena JSON confirmando la publicación.
+   * @throws Exception si ocurre un error durante el proceso.
+   */
   public String publicarVehiculo(HttpExchange intercambio) throws Exception {
     String tipoContenido = intercambio.getRequestHeaders().getFirst("Content-Type");
     if (tipoContenido == null || !tipoContenido.contains("multipart/form-data")) {
@@ -82,22 +106,52 @@ public class CocheController {
     return "{\"status\": \"success\", \"message\":\"Coche publicado correctamente\", \"id\":" + idGenerado + "}";
   }
 
+  /**
+   * Marca un vehículo como vendido.
+   *
+   * @param id el ID del coche a marcar como vendido.
+   * @param compradorId el ID del usuario comprador.
+   * @return una cadena JSON confirmando la operación.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   * @throws DatosIncompletosException si los datos proporcionados son incompletos.
+   */
   public String marcarVehiculoComoVendido(int id, int compradorId) throws ErrorDeAccesoADatosException, DatosIncompletosException {
     cocheService.registrarCompra(id, compradorId);
     return "{\"status\": \"success\", \"message\":\"Coche marcado como vendido\"}";
   }
 
+  /**
+   * Cambia el estado de un anuncio de vehículo.
+   *
+   * @param id el ID del coche cuyo anuncio se va a modificar.
+   * @param nuevoEstado el nuevo estado del anuncio.
+   * @return una cadena JSON confirmando la actualización.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
   public String cambiarEstadoAnuncioVehiculo(int id, String nuevoEstado) throws ErrorDeAccesoADatosException {
     cocheService.cambiarEstadoAnuncio(id, nuevoEstado);
     return "{\"status\": \"success\", \"message\":\"Estado del anuncio actualizado a " + nuevoEstado + "\"}";
   }
 
+  /**
+   * Elimina un anuncio de vehículo (borrado lógico).
+   *
+   * @param id el ID del coche cuyo anuncio se va a eliminar.
+   * @return una cadena JSON confirmando la eliminación.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
   public String eliminarAnuncioVehiculo(int id) throws ErrorDeAccesoADatosException {
     cocheService.eliminarAnuncio(id);
     return "{\"status\": \"success\", \"message\":\"Anuncio eliminado (borrado funcional)\"}";
   }
 
-  // Favoritos
+  /**
+   * Lista los coches favoritos de un usuario.
+   *
+   * @param usuarioId el ID del usuario.
+   * @return una cadena JSON con la lista de coches favoritos.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
   public String listarFavoritosUsuario(int usuarioId) throws ErrorDeAccesoADatosException {
     List<Coche> favoritos = cocheService.listarFavoritos(usuarioId);
     return "[" + favoritos.stream()
@@ -105,11 +159,27 @@ public class CocheController {
         .collect(Collectors.joining(",")) + "]";
   }
 
+  /**
+   * Agrega un vehículo a la lista de favoritos de un usuario.
+   *
+   * @param usuarioId el ID del usuario.
+   * @param cocheId el ID del coche a agregar.
+   * @return una cadena JSON confirmando la operación.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
   public String agregarVehiculoAFavoritos(int usuarioId, int cocheId) throws ErrorDeAccesoADatosException {
     cocheService.agregarFavorito(usuarioId, cocheId);
     return "{\"status\": \"success\", \"message\":\"Coche añadido a favoritos\"}";
   }
 
+  /**
+   * Elimina un vehículo de la lista de favoritos de un usuario.
+   *
+   * @param usuarioId el ID del usuario.
+   * @param cocheId el ID del coche a eliminar.
+   * @return una cadena JSON confirmando la operación.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
   public String eliminarVehiculoDeFavoritos(int usuarioId, int cocheId) throws ErrorDeAccesoADatosException {
     cocheService.eliminarFavorito(usuarioId, cocheId);
     return "{\"status\": \"success\", \"message\":\"Coche eliminado de favoritos\"}";
@@ -221,7 +291,7 @@ public class CocheController {
             "\"vendedorNombre\":\"%s\",\"vendedorEmail\":\"%s\",\"vendedorDni\":\"%s\",\"vendedorTelefono\":\"%s\"," +
             "\"subtotal\":%s,\"iva\":%s,\"comision\":%s,\"total\":%s}",
         c.getIdCoche(), c.getAnioFabricacion(), c.getKilometraje(), c.getPrecioVenta(), c.getEstado(),
-        normalizarUrlImagen(c.getImagen()),
+        c.getImagen(),
         c.getVersion().getModelo().getMarca().getNombre(),
         c.getVersion().getModelo().getNombre(),
         c.getVersion().getNombre(),
@@ -244,26 +314,4 @@ public class CocheController {
         c.getTotal() != null ? c.getTotal().toString() : "0");
   }
 
-  private String normalizarUrlImagen(String url) {
-    if (url == null)
-      return "";
-    String u = url.trim().replace("\\", "/");
-    if (u.isEmpty())
-      return "";
-
-    // Compatibilidad con datos antiguos en BD
-    String prefix1 = "src/main/resources/public";
-    if (u.startsWith(prefix1)) {
-      u = u.substring(prefix1.length());
-    }
-    if (u.startsWith("fontend/")) {
-      u = u.substring("fontend".length()); // deja "/assets/..."
-    } else if (u.startsWith("fontend")) {
-      u = u.substring("fontend".length());
-    }
-
-    if (!u.startsWith("/"))
-      u = "/" + u;
-    return u;
-  }
 }

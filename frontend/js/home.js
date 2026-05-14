@@ -10,8 +10,7 @@ function actualizarNavbarSesion() {
     const venta = document.getElementById("ventaCoche");
     if (!login) return;
 
-    // Antes home.js no actualizaba la cabecera después del login.
-    // Ahora mostramos "Cerrar sesión" si hay sesión guardada en localStorage.
+    // Mostramos la sesión guardada.
     if (estaLogueado()) {
         login.innerHTML = "<a href=\"#\">Cerrar sesión</a>";
         login.onclick = (e) => {
@@ -36,27 +35,25 @@ function actualizarNavbarSesion() {
 
 actualizarNavbarSesion();
 
-// Variables de estado
+// Guardamos el estado.
 let cochesOriginales = [];
-let favoritos = JSON.parse(localStorage.getItem("favoritos")) || []; // IDs de favoritos
+let favoritos = JSON.parse(localStorage.getItem("favoritos")) || []; // Guardamos favoritos.
 let cocheSeleccionadoActual = null;
-let viendoFavoritos = false; // Variable para saber si estamos en la vista de favoritos
+let viendoFavoritos = false; // Controlamos favoritos.
 const btnFavoritosTop = document.getElementById("favoritos");
 
-// Modal Filtros variables
+// Controlamos filtros.
 const modalFiltro = document.getElementById("modalFiltro");
 const btnAbrirFiltros = document.getElementById("filtros");
 const btnCerrarFiltro = document.getElementById("btnCerrarFiltro");
 const btnAplicarFiltros = document.getElementById("btnAplicarFiltros");
 
-// 1. Cargar y guardar los coches
+// Cargamos coches.
 async function cargarCochesDisponibles() {
     contenedor.innerHTML = "<p>Cargando catálogo...</p>";
 
     try {
-        // Antes solo pedíamos los coches del 1 al 10, así que los anuncios nuevos
-        // sí se guardaban pero no llegaban a mostrarse en home.
-        // Ahora pedimos directamente el listado completo de coches disponibles.
+        // Pedimos todo el listado.
         const respuesta = await fetch("http://localhost:8080/api/coches");
         if (!respuesta.ok) {
             throw new Error("No se pudo cargar el catálogo");
@@ -70,7 +67,7 @@ async function cargarCochesDisponibles() {
     }
 }
 
-// 2. Renderizar tarjetas
+// Pintamos tarjetas.
 function listarCoches(lista) {
     contenedor.innerHTML = "";
     if (lista.length === 0) {
@@ -96,7 +93,7 @@ function listarCoches(lista) {
     });
 }
 
-// 3. Lógica del Buscador Simple
+// Filtramos el buscador.
 document.getElementById("buscar").addEventListener("input", (e) => {
     const termino = e.target.value.toLowerCase();
     const filtrados = cochesOriginales.filter(c => 
@@ -106,7 +103,7 @@ document.getElementById("buscar").addEventListener("input", (e) => {
     listarCoches(filtrados);
 });
 
-// 4. Lógica de Favoritos (Botón Superior como Interruptor)
+// Alternamos favoritos.
 btnFavoritosTop.addEventListener("click", () => {
     viendoFavoritos = !viendoFavoritos;
 
@@ -124,7 +121,7 @@ btnFavoritosTop.addEventListener("click", () => {
     }
 });
 
-// 5. Resetear vista (Buscador, Filtros y Favoritos)
+// Reiniciamos la vista.
 document.getElementById("resetear").addEventListener("click", () => {
     document.getElementById("buscar").value = "";
     
@@ -132,18 +129,18 @@ document.getElementById("resetear").addEventListener("click", () => {
     btnFavoritosTop.innerText = "Favoritos";
     btnFavoritosTop.style.backgroundColor = "#7c3aed";
     
-    // Resetea los selectores del filtro avanzado
+    // Limpiamos selectores.
     const selectores = modalFiltro.querySelectorAll("select");
     selectores.forEach(select => select.value = "");
 
-    // Resetea los inputs de rango (Precio y Kilometraje)
+    // Limpiamos rangos.
     const inputsRango = modalFiltro.querySelectorAll('input[type="number"]');
     inputsRango.forEach(input => input.value = "");
 
     listarCoches(cochesOriginales);
 });
 
-// 6. Modal y Relleno de datos del Coche
+// Abrimos el modal.
 function abrirModal(coche) {
     cocheSeleccionadoActual = coche;
     
@@ -164,10 +161,10 @@ function abrirModal(coche) {
     const desc = document.getElementById("modalDescripcion");
     if(desc) desc.innerText = `Estado: ${coche.estado || 'Disponible'} | Etiqueta: ${coche.etiquetaAmbiental || 'N/A'}`;
 
-    // Obtener ID real del coche
+    // Tomamos el id real.
     const cocheId = coche.id || coche.idCoche;
 
-    // Actualizar estado del botón de favoritos en el modal
+    // Ajustamos favoritos.
     const btnFav = document.getElementById("btnFavoritoModal");
     if (favoritos.includes(cocheId)) {
         btnFav.innerText = "Quitar de Favoritos";
@@ -179,8 +176,7 @@ function abrirModal(coche) {
 
     const btnComprar = document.getElementById("btnComprar");
     if (btnComprar) {
-        // Antes el botón iba a compraVenta.html sin enviar el id del coche.
-        // Ahora redirige con el id correcto del anuncio seleccionado.
+        // Enviamos el id correcto.
         btnComprar.onclick = () => {
             window.location.href = `compraVenta.html?id=${cocheId}`;
         };
@@ -189,7 +185,7 @@ function abrirModal(coche) {
     modal.showModal();
 }
 
-// 7. Evento para añadir/quitar favorito dentro del modal
+// Cambiamos favoritos.
 document.getElementById("btnFavoritoModal").addEventListener("click", () => {
     const id = cocheSeleccionadoActual.id || cocheSeleccionadoActual.idCoche;
     
@@ -200,7 +196,7 @@ document.getElementById("btnFavoritoModal").addEventListener("click", () => {
     }
     
     localStorage.setItem("favoritos", JSON.stringify(favoritos));
-    abrirModal(cocheSeleccionadoActual); // Recarga para cambiar color
+    abrirModal(cocheSeleccionadoActual); // Refrescamos el color.
     
     if (viendoFavoritos) {
         const soloFavoritos = cochesOriginales.filter(c => favoritos.includes(c.id || c.idCoche));
@@ -222,7 +218,7 @@ const mapeoAtributos = {
     "modalFDisponible": ["estado", "disponible"]
 };
 
-// Función auxiliar para obtener un valor del coche teniendo en cuenta distintas posibles propiedades
+// Leemos el valor disponible.
 function obtenerValorCoche(coche, propiedades) {
     if (Array.isArray(propiedades)) {
         for (let prop of propiedades) {
@@ -234,7 +230,7 @@ function obtenerValorCoche(coche, propiedades) {
 }
 
 btnAbrirFiltros.addEventListener("click", () => {
-    // Al abrir el modal, poblamos las opciones dinámicamente según los coches cargados
+    // Cargamos opciones del filtro.
     for (let selectId in mapeoAtributos) {
         const selectElement = document.getElementById(selectId);
         const propiedad = mapeoAtributos[selectId];
@@ -252,7 +248,7 @@ btnAbrirFiltros.addEventListener("click", () => {
 });
 
 btnAplicarFiltros.addEventListener("click", () => {
-    // Obtenemos los valores de rango ingresados, si están vacíos asignamos 0 o Infinito
+    // Leemos los rangos.
     const precioMin = parseFloat(document.getElementById("modalFPrecioMin").value) || 0;
     const precioMax = parseFloat(document.getElementById("modalFPrecioMax").value) || Infinity;
     
@@ -260,10 +256,10 @@ btnAplicarFiltros.addEventListener("click", () => {
     const kmMax = parseFloat(document.getElementById("modalFKMMax").value) || Infinity;
 
     const cochesFiltrados = cochesOriginales.filter(coche => {
-        // 1. Filtrar por los selectores exactos
+        // Revisamos selectores.
         const cumpleSelectores = Object.keys(mapeoAtributos).every(selectId => {
             const selectValor = document.getElementById(selectId).value;
-            if (selectValor === "") return true; // Si está en "Todos", ignora
+            if (selectValor === "") return true; // Ignoramos "Todos".
             
             const cocheValor = obtenerValorCoche(coche, mapeoAtributos[selectId]);
             return String(cocheValor) === String(selectValor);
@@ -271,15 +267,15 @@ btnAplicarFiltros.addEventListener("click", () => {
 
         if (!cumpleSelectores) return false;
 
-        // 2. Filtrar por rango de Precio
+        // Revisamos precio.
         const precioCoche = parseFloat(obtenerValorCoche(coche, ["precioVenta", "precio"])) || 0;
         if (precioCoche < precioMin || precioCoche > precioMax) return false;
 
-        // 3. Filtrar por rango de Kilometraje
+        // Revisamos kilometraje.
         const kmCoche = parseFloat(obtenerValorCoche(coche, ["kilometraje", "km"])) || 0;
         if (kmCoche < kmMin || kmCoche > kmMax) return false;
 
-        // Si pasa todas las validaciones
+        // Dejamos los válidos.
         return true;
     });
 
@@ -295,5 +291,5 @@ btnCerrarFiltro.addEventListener("click", () => {
     modalFiltro.close();
 });
 
-// Iniciamos la app
+// Iniciamos la vista.
 cargarCochesDisponibles();

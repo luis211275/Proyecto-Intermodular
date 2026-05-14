@@ -12,10 +12,20 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Servicio para gestionar la lógica de negocio de los coches.
+ */
 public class CocheService {
     private CocheDAO cocheDAO = new CocheDAOImpl();
 
-    public List<Coche> obtenerCochesDisponibles(Map<String, String> filtros) throws ErrorDeAccesoADatosException {
+  /**
+   * Obtiene la lista de coches disponibles filtrada.
+   *
+   * @param filtros los filtros a aplicar.
+   * @return la lista de coches disponibles.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
+  public List<Coche> obtenerCochesDisponibles(Map<String, String> filtros) throws ErrorDeAccesoADatosException {
         List<Coche> coches = cocheDAO.listarCochesDisponibles(filtros);
         for (Coche c : coches) {
             calcularPrecios(c);
@@ -23,7 +33,14 @@ public class CocheService {
         return coches;
     }
 
-    public Coche obtenerCochePorId(int id) throws ErrorDeAccesoADatosException {
+  /**
+   * Obtiene un coche por su ID.
+   *
+   * @param id el ID del coche.
+   * @return el coche encontrado o null.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
+  public Coche obtenerCochePorId(int id) throws ErrorDeAccesoADatosException {
         Coche c = cocheDAO.buscarPorId(id);
         if (c != null) {
             calcularPrecios(c);
@@ -45,7 +62,17 @@ public class CocheService {
         }
     }
 
-    public int publicarCoche(Coche c) throws ErrorDeNegocioException, ErrorDeAccesoADatosException, PrecioInvalidoException, DatosIncompletosException {
+  /**
+   * Publica un nuevo coche.
+   *
+   * @param c el coche a publicar.
+   * @return el ID del coche publicado.
+   * @throws ErrorDeNegocioException      si hay un error en la lógica de negocio.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   * @throws PrecioInvalidoException      si el precio es inválido.
+   * @throws DatosIncompletosException    si faltan datos obligatorios.
+   */
+  public int publicarCoche(Coche c) throws ErrorDeNegocioException, ErrorDeAccesoADatosException, PrecioInvalidoException, DatosIncompletosException {
         validarCoche(c);
         return cocheDAO.insertarCocheNuevo(c);
     }
@@ -86,11 +113,15 @@ public class CocheService {
         }
     }
 
-    public void marcarComoVendido(int idCoche) throws ErrorDeAccesoADatosException {
-        cocheDAO.actualizarEstadoAVendido(idCoche);
-    }
-
-    public void registrarCompra(int idCoche, int compradorId) throws ErrorDeAccesoADatosException, DatosIncompletosException {
+  /**
+   * Registra la compra de un coche.
+   *
+   * @param idCoche     el ID del coche.
+   * @param compradorId el ID del comprador.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   * @throws DatosIncompletosException    si faltan datos obligatorios para la compra.
+   */
+  public void registrarCompra(int idCoche, int compradorId) throws ErrorDeAccesoADatosException, DatosIncompletosException {
         Coche coche = obtenerCochePorId(idCoche);
 
         if (coche == null) {
@@ -116,20 +147,48 @@ public class CocheService {
         );
     }
 
-    public void cambiarEstadoAnuncio(int idCoche, String nuevoEstado) throws ErrorDeAccesoADatosException {
+  /**
+   * Cambia el estado de un anuncio.
+   *
+   * @param idCoche     el ID del coche.
+   * @param nuevoEstado el nuevo estado a establecer.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
+  public void cambiarEstadoAnuncio(int idCoche, String nuevoEstado) throws ErrorDeAccesoADatosException {
         cocheDAO.cambiarEstado(idCoche, nuevoEstado);
     }
 
-    // Favoritos
+  /**
+   * Agrega un coche a favoritos.
+   *
+   * @param usuarioId el ID del usuario.
+   * @param cocheId   el ID del coche.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
+// Gestionamos favoritos.
     public void agregarFavorito(int usuarioId, int cocheId) throws ErrorDeAccesoADatosException {
         cocheDAO.agregarFavorito(usuarioId, cocheId);
     }
 
-    public void eliminarFavorito(int usuarioId, int cocheId) throws ErrorDeAccesoADatosException {
+  /**
+   * Elimina un coche de favoritos.
+   *
+   * @param usuarioId el ID del usuario.
+   * @param cocheId   el ID del coche.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
+  public void eliminarFavorito(int usuarioId, int cocheId) throws ErrorDeAccesoADatosException {
         cocheDAO.eliminarFavorito(usuarioId, cocheId);
     }
 
-    public List<Coche> listarFavoritos(int usuarioId) throws ErrorDeAccesoADatosException {
+  /**
+   * Lista los coches favoritos de un usuario.
+   *
+   * @param usuarioId el ID del usuario.
+   * @return la lista de coches favoritos.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
+  public List<Coche> listarFavoritos(int usuarioId) throws ErrorDeAccesoADatosException {
         List<Coche> favoritos = cocheDAO.listarFavoritos(usuarioId);
         for (Coche c : favoritos) {
             calcularPrecios(c);
@@ -137,11 +196,25 @@ public class CocheService {
         return favoritos;
     }
 
-    public boolean esFavorito(int usuarioId, int cocheId) throws ErrorDeAccesoADatosException {
+  /**
+   * Comprueba si un coche es favorito de un usuario.
+   *
+   * @param usuarioId el ID del usuario.
+   * @param cocheId   el ID del coche.
+   * @return true si es favorito, false en caso contrario.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
+  public boolean esFavorito(int usuarioId, int cocheId) throws ErrorDeAccesoADatosException {
         return cocheDAO.esFavorito(usuarioId, cocheId);
     }
 
-    public void eliminarAnuncio(int idCoche) throws ErrorDeAccesoADatosException {
+  /**
+   * Elimina un anuncio (borrado lógico).
+   *
+   * @param idCoche el ID del coche.
+   * @throws ErrorDeAccesoADatosException si ocurre un error al acceder a los datos.
+   */
+  public void eliminarAnuncio(int idCoche) throws ErrorDeAccesoADatosException {
         cocheDAO.desactivarAnuncioPorEliminacion(idCoche);
     }
 }

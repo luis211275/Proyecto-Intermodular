@@ -3,29 +3,56 @@ info:
   title: BSCars API
   version: 1.0.0
   description: |
-    Documentación real de los endpoints del proyecto Intermodular.
+    Estructura actual de endpoints del proyecto Intermodular.
 
-    Incluye:
-    - rutas `/api/...` del catálogo, coches y favoritos
-    - rutas `/user/...` de usuarios y login
-    - query params reales según el router actual
-    - ejemplos de request body pensados para probar en Postman
+    Usuarios
+    - `POST /user/register`
+    - `POST /user/logger`
+    - `GET /user/{id}`
+    - `GET /user/email`
+
+    Coches
+    - `GET /api/coches`
+    - `GET /api/coches/{id}`
+    - `POST /api/publicarvehiculo`
+    - `PATCH /api/marcarvehiculocomovendido`
+    - `PATCH /api/cambiarestadoanunciovehiculo`
+    - `DELETE /api/eliminaranunciovehiculo`
+
+    Favoritos
+    - `GET /api/favoritos`
+    - `POST /api/favoritos`
+    - `DELETE /api/favoritos`
+
+    Catálogo
+    - `GET /api/marcas`
+    - `GET /api/modelos`
+    - `GET /api/versiones`
+    - `GET /api/ciudades`
+    - `GET /api/combustibles`
+    - `GET /api/transmisiones`
+    - `GET /api/categorias`
+    - `GET /api/colores`
+    - `GET /api/etiquetas`
+
+    Docs
+    - `GET /api/docs`
 
 servers:
   - url: http://localhost:8080
     description: Servidor local
 
 tags:
-  - name: Vehículos
+  - name: Usuarios
+  - name: Coches
   - name: Favoritos
   - name: Catálogo
-  - name: Usuarios
-  - name: Meta
+  - name: Docs
 
 paths:
   /api/coches:
     get:
-      tags: [Vehículos]
+      tags: [Coches]
       summary: Listar coches disponibles
       description: |
         Devuelve solo coches con `estado = "Disponible"`.
@@ -106,7 +133,7 @@ paths:
 
   /api/coches/{id}:
     get:
-      tags: [Vehículos]
+      tags: [Coches]
       summary: Obtener coche por ID
       parameters:
         - name: id
@@ -131,7 +158,7 @@ paths:
 
   /api/publicarvehiculo:
     post:
-      tags: [Vehículos]
+      tags: [Coches]
       summary: Publicar un coche
       description: |
         Postman:
@@ -265,7 +292,7 @@ paths:
 
   /api/marcarvehiculocomovendido:
     patch:
-      tags: [Vehículos]
+      tags: [Coches]
       summary: Marcar coche como vendido
       requestBody:
         required: true
@@ -295,7 +322,7 @@ paths:
 
   /api/cambiarestadoanunciovehiculo:
     patch:
-      tags: [Vehículos]
+      tags: [Coches]
       summary: Cambiar el estado de un anuncio
       description:
         Cambia el estado del anuncio a "Vendido" de "Disponible".
@@ -328,7 +355,7 @@ paths:
 
   /api/eliminaranunciovehiculo:
     delete:
-      tags: [Vehículos]
+      tags: [Coches]
       summary: Eliminar anuncio de forma lógica
       parameters:
         - name: id
@@ -769,7 +796,7 @@ paths:
 
   /api/docs:
     get:
-      tags: [Meta]
+      tags: [Docs]
       summary: Abrir documentación HTML
       responses:
         '200':
