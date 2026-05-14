@@ -2,6 +2,7 @@
 const btnIniciarL = document.getElementById("btnLogin");
 const form = document.getElementById("form-login");
 const mensajeHtml = document.getElementById("mensajeError");
+const btnVolver = document.getElementById("mensajeError");
 
 btnIniciarL.addEventListener("click", (e) => {
     e.preventDefault();
@@ -37,4 +38,12 @@ btnIniciarL.addEventListener("click", (e) => {
         mensajeHtml.innerText = error.message;
         mensajeHtml.style.color = "red";
     });
+});
+
+
+
+
+
+btnVolver.addEventListener("click", (e) =>{
+    window.location.href="home.html";
 });

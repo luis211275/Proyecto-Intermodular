@@ -85,6 +85,33 @@ body{
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+#btnVolver{
+    display: inline-block;
+    padding: 10px 22px;
+    background: rgb(79, 110, 219);
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgb(79, 110, 219);
+    transition: all 0.3s ease;
+}
+
+#btnVolver:hover{
+    background: rgb(91, 125, 240);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgb(79, 110, 219);
+}
+
+#btnVolver:active{
+    transform: scale(0.98);
+    box-shadow: 0 2px 6px rgb(79, 110, 219);
+}
+
+
 #btnLogin{
     background-color: rgb(29, 78, 216);
     color: white;
