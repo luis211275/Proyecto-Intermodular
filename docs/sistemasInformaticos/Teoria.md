@@ -99,7 +99,7 @@ Es la parte visual del sistema, en la que el usuario interactua directamente. Pa
 
 ### - Backend
 
-Es la parte invisible del sistema. Responsable de procesar los datos y comunicarse con la base de datos, entre otras cosas. Fue desarrollado en Java mediante IntelliJ (la version gratuita), con el `openjdk-25` y usando una dependencia `maven` permitiendo desarrollar las aplicaciones con mayor claridad.
+Es la parte invisible del sistema. Responsable de procesar los datos y comunicarse con la base de datos, entre otras cosas. Fue desarrollado en Java mediante IntelliJ (la version gratuita), con el `openjdk-21` y usando una dependencia `maven` permitiendo desarrollar las aplicaciones con mayor claridad.
 
 ### - Base de datos
 
