@@ -1,49 +1,71 @@
-# 🏎️ Compra y venta de coches
+# 🏎️BSCars
 
+## Compra y venta de coches
 
+Proyecto de primero de DAW sobre una web de compra y venta de coches.
 
-Bienvenido al repositorio oficial de nuestra plataforma de compraventa de vehículos. Este proyecto nace como un análisis profundo del **sector profesional tecnológico**, enfocado en ofrecer una experiencia de usuario fluida, segura y eficiente para la adquisición de automóviles.
+La idea del proyecto es que un usuario pueda registrarse, iniciar sesion, ver coches del catalogo y consultar informacion de cada vehiculo. Tambien hemos trabajado la parte de backend con Java y la conexion con base de datos.
 
----
+## Que incluye
 
-## 🚀 Descripción del Proyecto
+- Registro e inicio de sesion de usuarios
+- Catalogo de coches
+- Busqueda de vehiculos
+- Publicacion de coches
+- Paginas de compra y venta
+- Conexion con base de datos PostgreSQL
 
-Esta aplicación web permite a los usuarios gestionar todo el proceso de búsqueda y adquisición de vehículos. La web conecta una base de datos robusta con una interfaz intuitiva para el usuario final.
+## Tecnologias
 
+- Frontend: HTML, CSS y JavaScript
+- Backend: Java
+- Base de datos: PostgreSQL
+- Gestion del proyecto: Maven
+- Tests: JUnit y Mockito
 
-## ✨ Características Principales
+## Estructura del proyecto
 
-* **Autenticación de Usuarios**: Sistema completo de Registro e Inicio de Sesión para garantizar la seguridad de las transacciones.
-* **Catálogo Dinámico**: Visualización de una amplia gama de coches extraídos directamente de una base de datos centralizada.
-* **Buscador Inteligente**: Barra de búsqueda rápida para encontrar modelos específicos al instante.
-* **Filtros Avanzados**: Búsqueda detallada por parámetros técnicos (marca, modelo, año, kilometraje, etc.).
-* **Gestión de Favoritos**: Permite a los usuarios guardar sus vehículos preferidos para verlos más tarde.
-* **Módulo de Compra**: Proceso de checkout integrado para la adquisición del vehículo.
+- `frontend/html`: paginas de la web
+- `frontend/css`: estilos
+- `frontend/js`: scripts del frontend
+- `frontend/assets`: imagenes y recursos
+- `backend/src/main/java`: codigo Java
+- `backend/src/main/resources`: scripts SQL y documentacion al estilo OpenAPI
+- `backend/src/test/java`: tests
+- `docs`: documentacion de las asignaturas Empleabilidad y Sistemas Informáticos
 
-## 🛠️ Tecnologías Utilizadas
+## Como ejecutar el proyecto
 
-Basándonos en los estándares de empresas como **Melit Technologies** y **Ensalza**, hemos implementado:
+Antes de empezar necesitas tener instalado:
 
-* **Frontend**: HTML5, CSS3 (Diseño Responsive) y JavaScript.
-* **Backend**: Lógica de servidor para la gestión de usuarios y transacciones.
-* **Base de Datos**: Gestión de inventario de vehículos y perfiles de usuario.
-  
-## 📂 Estructura del Repositorio
+- Java 21
+- Maven
+- PostgreSQL
 
-* `/src`: Código fuente de la aplicación.
-* `/public`: Recursos estáticos (imágenes, iconos).
-* `/database`: Scripts de configuración de la base de datos.
-* `/docs`: Documentación adicional y análisis del sector.
+Pasos:
 
----
+1. Crear una base de datos en PostgreSQL llamada `intermodular`.
+2. Ejecutar los scripts `backend/src/main/resources/DDL.sql` y `backend/src/main/resources/DML.sql`.
+3. Revisar la configuracion de la base de datos en [DatabaseConfig.java]
+4. Iniciar el proyecto con:
 
+```bash
+mvn exec:java
+```
 
+5. Abrir en el navegador:
 
-## 👥 Autores
+```text
+http://localhost:8080/home.html
+```
 
-Proyecto desarrollado por:
-* **Luis** 
-* **Daniel** 
-* **Julio** 
+## Documentacion
 
----
+- API: `http://localhost:8080/api/docs`
+- OpenAPI: `backend/src/main/resources/openapi.yaml`
+
+## Autores
+
+- Luis Lopez-Nuño Sanchez
+- Daniel Nieto Ladino
+- Julio Martin Rodriguez Sanchez
