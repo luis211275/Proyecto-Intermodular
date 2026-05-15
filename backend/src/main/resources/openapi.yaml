@@ -1,0 +1,918 @@
+openapi: 3.0.3
+info:
+  title: BSCars API
+  version: 1.0.0
+  description: |
+    Estructura actual de endpoints del proyecto Intermodular.
+
+    Usuarios
+    - `POST /user/register`
+    - `POST /user/logger`
+    - `GET /user/{id}`
+    - `GET /user/email`
+
+    Coches
+    - `GET /api/coches`
+    - `GET /api/coches/{id}`
+    - `POST /api/publicarvehiculo`
+    - `PATCH /api/marcarvehiculocomovendido`
+    - `PATCH /api/cambiarestadoanunciovehiculo`
+    - `DELETE /api/eliminaranunciovehiculo`
+
+    Favoritos
+    - `GET /api/favoritos`
+    - `POST /api/favoritos`
+    - `DELETE /api/favoritos`
+
+    Catálogo
+    - `GET /api/marcas`
+    - `GET /api/modelos`
+    - `GET /api/versiones`
+    - `GET /api/ciudades`
+    - `GET /api/combustibles`
+    - `GET /api/transmisiones`
+    - `GET /api/categorias`
+    - `GET /api/colores`
+    - `GET /api/etiquetas`
+
+    Docs
+    - `GET /api/docs`
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor local
+
+tags:
+  - name: Usuarios
+  - name: Coches
+  - name: Favoritos
+  - name: Catálogo
+  - name: Docs
+
+paths:
+  /api/coches:
+    get:
+      tags: [Coches]
+      summary: Listar coches disponibles
+      description: |
+        Devuelve solo coches con `estado = "Disponible"`.
+        Filtros soportados por query string según el backend actual.
+      parameters:
+        - name: marcaId
+          in: query
+          required: false
+          description: Filtra por marca
+          schema:
+            type: integer
+          example: 1
+        - name: modeloId
+          in: query
+          required: false
+          description: Filtra por modelo
+          schema:
+            type: integer
+          example: 3
+        - name: combustibleId
+          in: query
+          required: false
+          description: Filtra por tipo de combustible
+          schema:
+            type: integer
+          example: 1
+        - name: ciudadId
+          in: query
+          required: false
+          description: Filtra por ciudad
+          schema:
+            type: integer
+          example: 2
+        - name: precioMax
+          in: query
+          required: false
+          description: Precio máximo de venta
+          schema:
+            type: number
+            format: double
+          example: 30000
+      responses:
+        '200':
+          description: Lista de coches disponibles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Coche'
+              example:
+                - idCoche: 8
+                  anio: 2022
+                  km: 12500
+                  precio: 29000.00
+                  estado: Disponible
+                  imagen: /assets/img/cars/golf_red.jpg
+                  marca: Volkswagen
+                  modelo: Golf
+                  version: 1.5 TSI Life
+                  ciudad: Barcelona
+                  activo: true
+                  combustible: Gasolina
+                  transmision: Automático
+                  etiquetaAmbiental: C
+                  categoria: Compacto
+                  color: Rojo
+                  fechaPublicacion: '2026-04-24 21:16:02.29577'
+                  vendedorId: 2
+                  vendedorNombre: Maria López
+                  vendedorEmail: maria@mail.com
+                  vendedorDni: 22222222B
+                  vendedorTelefono: '600000002'
+                  subtotal: 29000.00
+                  iva: 6090.00
+                  comision: 870.00
+                  total: 35960.00
+
+  /api/coches/{id}:
+    get:
+      tags: [Coches]
+      summary: Obtener coche por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 8
+      responses:
+        '200':
+          description: Coche encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coche'
+        '404':
+          description: Coche no encontrado
+          content:
+            application/json:
+              example:
+                error: Coche no encontrado
+
+  /api/publicarvehiculo:
+    post:
+      tags: [Coches]
+      summary: Publicar un coche
+      description: |
+        Postman:
+        1. Método: `POST`
+        2. URL: `http://localhost:8080/api/publicarvehiculo`
+        3. Body > `form-data`
+        4. Todos los campos en tipo `Text`
+        5. Solo `imagen` en tipo `File`
+        6. En `imagen`, selecciona un archivo `.jpg` o `.png`
+
+        Copiar en Postman:
+        - `anio` = `2022`
+        - `km` = `18500`
+        - `precio` = `27990`
+        - `id_version` = `4`
+        - `id_combustible` = `1`
+        - `id_transmision` = `2`
+        - `id_ciudad` = `2`
+        - `id_color` = `4`
+        - `id_etiqueta` = `3`
+        - `id_categoria` = `3`
+        - `id_vendedor` = `1`
+        - `imagen` = archivo
+
+        Importante:
+        - `imagen` no va como texto ni como ruta.
+        - `imagen` debe ir como `File`.
+        - En la aplicación `id_vendedor` lo pone el sistema, pero en Postman debes escribirlo tú.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - anio
+                - km
+                - precio
+                - id_version
+                - id_combustible
+                - id_transmision
+                - id_ciudad
+                - id_color
+                - id_etiqueta
+                - id_categoria
+                - id_vendedor
+                - imagen
+              properties:
+                anio:
+                  type: integer
+                  example: 2022
+                km:
+                  type: integer
+                  example: 18500
+                precio:
+                  type: number
+                  format: double
+                  example: 27990
+                id_version:
+                  type: integer
+                  example: 4
+                id_combustible:
+                  type: integer
+                  example: 1
+                id_transmision:
+                  type: integer
+                  example: 2
+                id_ciudad:
+                  type: integer
+                  example: 2
+                id_color:
+                  type: integer
+                  example: 4
+                id_etiqueta:
+                  type: integer
+                  example: 3
+                id_categoria:
+                  type: integer
+                  example: 3
+                id_vendedor:
+                  type: integer
+                  example: 1
+                imagen:
+                  type: string
+                  format: binary
+            example:
+              anio: 2022
+              km: 18500
+              precio: 27990
+              id_version: 4
+              id_combustible: 1
+              id_transmision: 2
+              id_ciudad: 2
+              id_color: 4
+              id_etiqueta: 3
+              id_categoria: 3
+              id_vendedor: 1
+              imagen: <seleccionar archivo en Postman>
+            encoding:
+              imagen:
+                contentType: image/jpeg, image/png
+      responses:
+        '201':
+          description: Coche publicado correctamente
+          content:
+            application/json:
+              example:
+                status: success
+                message: Coche publicado correctamente
+                id: 24
+        '400':
+          description: Error de validación o de negocio
+          content:
+            application/json:
+              examples:
+                multipart_invalido:
+                  value:
+                    status: error
+                    message: Petición debe ser multipart/form-data
+                vendedor_invalido:
+                  value:
+                    status: error
+                    message: Debe existir un vendedor válido para publicar el anuncio
+        '500':
+          description: Error interno o de acceso a datos
+          content:
+            application/json:
+              example:
+                status: error
+                message: Error interno del servidor
+
+  /api/marcarvehiculocomovendido:
+    patch:
+      tags: [Coches]
+      summary: Marcar coche como vendido
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id, compradorId]
+              properties:
+                id:
+                  type: integer
+                  example: 8
+                compradorId:
+                  type: integer
+                  example: 4
+            example:
+              id: 8
+              compradorId: 4
+      responses:
+        '200':
+          description: Compra registrada y coche marcado como vendido
+          content:
+            application/json:
+              example:
+                status: success
+                message: Coche marcado como vendido
+
+  /api/cambiarestadoanunciovehiculo:
+    patch:
+      tags: [Coches]
+      summary: Cambiar el estado de un anuncio
+      description:
+        Cambia el estado del anuncio a "Vendido" de "Disponible".
+        Útil para que el vendedor pueda ocultar temporalmente su anuncio sin eliminarlo.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [id, estado]
+              properties:
+                id:
+                  type: integer
+                  example: 24
+                estado:
+                  type: string
+                  example: Vendido
+            example:
+              id: 24
+              estado: Vendido
+      responses:
+        '200':
+          description: Estado actualizado
+          content:
+            application/json:
+              example:
+                status: success
+                message: Estado del anuncio actualizado a Vendido
+
+  /api/eliminaranunciovehiculo:
+    delete:
+      tags: [Coches]
+      summary: Eliminar anuncio de forma lógica
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 24
+      responses:
+        '200':
+          description: Anuncio eliminado lógicamente
+          content:
+            application/json:
+              example:
+                status: success
+                message: Anuncio eliminado (borrado funcional)
+
+  /api/favoritos:
+    get:
+      tags: [Favoritos]
+      summary: Listar favoritos de un usuario
+      parameters:
+        - name: usuarioId
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 4
+      responses:
+        '200':
+          description: Lista de coches favoritos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Coche'
+    post:
+      tags: [Favoritos]
+      summary: Añadir coche a favoritos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [usuarioId, cocheId]
+              properties:
+                usuarioId:
+                  type: integer
+                  example: 4
+                cocheId:
+                  type: integer
+                  example: 8
+            example:
+              usuarioId: 4
+              cocheId: 8
+      responses:
+        '200':
+          description: Favorito añadido
+          content:
+            application/json:
+              example:
+                status: success
+                message: Coche añadido a favoritos
+    delete:
+      tags: [Favoritos]
+      summary: Eliminar coche de favoritos
+      parameters:
+        - name: usuarioId
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 4
+        - name: cocheId
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 8
+      responses:
+        '200':
+          description: Favorito eliminado
+          content:
+            application/json:
+              example:
+                status: success
+                message: Coche eliminado de favoritos
+
+  /api/marcas:
+    get:
+      tags: [Catálogo]
+      summary: Listar marcas
+      responses:
+        '200':
+          description: Lista de marcas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CatalogoItem'
+              example:
+                - id: 1
+                  nombre: Toyota
+                - id: 2
+                  nombre: Volkswagen
+                - id: 3
+                  nombre: BMW
+                - id: 4
+                  nombre: Audi
+
+  /api/modelos:
+    get:
+      tags: [Catálogo]
+      summary: Listar modelos por marca
+      parameters:
+        - name: marcaId
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Lista de modelos
+          content:
+            application/json:
+              example:
+                - id: 1
+                  nombre: Corolla
+                - id: 2
+                  nombre: RAV4
+
+  /api/versiones:
+    get:
+      tags: [Catálogo]
+      summary: Listar versiones por modelo
+      parameters:
+        - name: modeloId
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 3
+      responses:
+        '200':
+          description: Lista de versiones
+          content:
+            application/json:
+              example:
+                - id: 4
+                  nombre: 1.5 TSI Life
+                - id: 5
+                  nombre: GTI 2.0 TSI
+
+  /api/ciudades:
+    get:
+      tags: [Catálogo]
+      summary: Listar ciudades
+      responses:
+        '200':
+          description: Lista de ciudades
+          content:
+            application/json:
+              example:
+                - id: 1
+                  nombre: Madrid
+                - id: 2
+                  nombre: Barcelona
+                - id: 3
+                  nombre: Valencia
+                - id: 4
+                  nombre: Sevilla
+                - id: 5
+                  nombre: Zaragoza
+
+  /api/combustibles:
+    get:
+      tags: [Catálogo]
+      summary: Listar combustibles
+      responses:
+        '200':
+          description: Lista de combustibles
+          content:
+            application/json:
+              example:
+                - id: 1
+                  nombre: Gasolina
+                - id: 2
+                  nombre: Diesel
+                - id: 3
+                  nombre: Híbrido
+                - id: 4
+                  nombre: Eléctrico
+                - id: 5
+                  nombre: GLP
+
+  /api/transmisiones:
+    get:
+      tags: [Catálogo]
+      summary: Listar transmisiones
+      responses:
+        '200':
+          description: Lista de transmisiones
+          content:
+            application/json:
+              example:
+                - id: 1
+                  nombre: Manual
+                - id: 2
+                  nombre: Automático
+                - id: 3
+                  nombre: Semiautomático
+
+  /api/categorias:
+    get:
+      tags: [Catálogo]
+      summary: Listar categorías
+      responses:
+        '200':
+          description: Lista de categorías
+          content:
+            application/json:
+              example:
+                - id: 1
+                  nombre: Sedán
+                - id: 2
+                  nombre: SUV
+                - id: 3
+                  nombre: Compacto
+                - id: 4
+                  nombre: Deportivo
+                - id: 5
+                  nombre: Monovolumen
+                - id: 6
+                  nombre: Pick-up
+
+  /api/colores:
+    get:
+      tags: [Catálogo]
+      summary: Listar colores
+      responses:
+        '200':
+          description: Lista de colores
+          content:
+            application/json:
+              example:
+                - id: 1
+                  nombre: Blanco
+                - id: 2
+                  nombre: Negro
+                - id: 3
+                  nombre: Gris
+                - id: 4
+                  nombre: Rojo
+                - id: 5
+                  nombre: Azul
+
+  /api/etiquetas:
+    get:
+      tags: [Catálogo]
+      summary: Listar etiquetas ambientales
+      responses:
+        '200':
+          description: Lista de etiquetas
+          content:
+            application/json:
+              example:
+                - id: 1
+                  nombre: '0'
+                - id: 2
+                  nombre: Eco
+                - id: 3
+                  nombre: C
+                - id: 4
+                  nombre: B
+                - id: 5
+                  nombre: Sin Etiqueta
+
+  /user/register:
+    post:
+      tags: [Usuarios]
+      summary: Registrar usuario
+      description: Body JSON listo para usar en Postman
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            example:
+              nombres: Julio Martín
+              apellidos: Rodríguez Sánchez
+              email: julitors@gmail.com
+              dni: 70007571D
+              telefono: '671422554'
+              password: Segura1
+      responses:
+        '200':
+          description: Usuario registrado
+          content:
+            application/json:
+              example:
+                status: ok
+                message: Usuario registrado exitosamente
+        '400':
+          description: Error de registro
+          content:
+            application/json:
+              examples:
+                email_repetido:
+                  value:
+                    status: error
+                    message: El email ya esta registrado
+                dni_repetido:
+                  value:
+                    status: error
+                    message: El DNI ya esta registrado
+
+  /user/logger:
+    post:
+      tags: [Usuarios]
+      summary: Iniciar sesión
+      description: Body JSON listo para usar en Postman
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              email: julitors@gmail.com
+              password: Segura1
+      responses:
+        '200':
+          description: Login correcto
+          content:
+            application/json:
+              example:
+                status: ok
+                message: Login correcto
+                userId: 4
+                email: julitors@gmail.com
+                nombres: Julio Martín
+                apellidos: Rodríguez Sánchez
+                dni: 70007571D
+                telefono: '671422554'
+        '401':
+          description: Contraseña incorrecta u otro error de login
+          content:
+            application/json:
+              example:
+                status: error
+                message: Error al iniciar sesion
+        '404':
+          description: Correo no registrado
+          content:
+            application/json:
+              example:
+                status: error
+                message: Correo no registrado
+
+  /user/{id}:
+    get:
+      tags: [Usuarios]
+      summary: Obtener usuario por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 4
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioResumen'
+              example:
+                id: 4
+                nombres: Julio Martín
+                apellidos: Rodríguez Sánchez
+                email: julitors@gmail.com
+                dni: 70007571D
+                telefono: '671422554'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              example:
+                status: error
+                message: Usuario no encontrado
+
+  /user/email:
+    get:
+      tags: [Usuarios]
+      summary: Obtener usuario por email
+      parameters:
+        - name: value
+          in: query
+          required: true
+          description: Email del usuario
+          schema:
+            type: string
+          example: julitors@gmail.com
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioResumen'
+              example:
+                id: 4
+                nombres: Julio Martín
+                apellidos: Rodríguez Sánchez
+                email: julitors@gmail.com
+                dni: 70007571D
+                telefono: '671422554'
+        '400':
+          description: Falta el email en query
+          content:
+            application/json:
+              example:
+                status: error
+                message: Email no informado
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              example:
+                status: error
+                message: Usuario no encontrado
+
+  /api/docs:
+    get:
+      tags: [Docs]
+      summary: Abrir documentación HTML
+      responses:
+        '200':
+          description: Sirve el archivo `openapi-coches.html`
+          content:
+            text/html: {}
+
+components:
+  schemas:
+    CatalogoItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+
+    Coche:
+      type: object
+      properties:
+        idCoche:
+          type: integer
+        anio:
+          type: integer
+        km:
+          type: integer
+        precio:
+          type: number
+          format: double
+        estado:
+          type: string
+        imagen:
+          type: string
+        marca:
+          type: string
+        modelo:
+          type: string
+        version:
+          type: string
+        ciudad:
+          type: string
+        activo:
+          type: boolean
+        combustible:
+          type: string
+        transmision:
+          type: string
+        etiquetaAmbiental:
+          type: string
+        categoria:
+          type: string
+        color:
+          type: string
+        fechaPublicacion:
+          type: string
+        vendedorId:
+          type: integer
+        vendedorNombre:
+          type: string
+        vendedorEmail:
+          type: string
+        vendedorDni:
+          type: string
+        vendedorTelefono:
+          type: string
+        subtotal:
+          type: number
+          format: double
+        iva:
+          type: number
+          format: double
+        comision:
+          type: number
+          format: double
+        total:
+          type: number
+          format: double
+
+    RegisterRequest:
+      type: object
+      required: [nombres, apellidos, email, dni, telefono, password]
+      properties:
+        nombres:
+          type: string
+        apellidos:
+          type: string
+        email:
+          type: string
+        dni:
+          type: string
+        telefono:
+          type: string
+        password:
+          type: string
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    UsuarioResumen:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombres:
+          type: string
+        apellidos:
+          type: string
+        email:
+          type: string
+        dni:
+          type: string
+        telefono:
+          type: string

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/home.css">
+    <script src="../js/home.js" defer></script>
+    <title>BSCars</title>
+</head>
+<body>
+
+    <div class="grid-layout">
+        <header><h1>BSCars</h1>
+        <h3 id="ventaCoche"><a href="../html/publicar.html">Vende tu Coche</a></h3>
+        <h3 id="login"><a href="../html/login.html">Iniciar Sesión</a></h3>
+        </header>
+    
+    <main id="resultados" class="main-content">
+    
+    <div class="barra-superior">
+
+        <div class="centro">
+
+            <input type="text" id="buscar" placeholder="Busca tu Coche ideal..."/>
+
+            <button id="resetear" type="reset">Borrar</button>
+
+            <button id="filtros">Busqueda Avanzada</button>
+
+            <div class="contenedor-filtro">
+                <dialog id="modalFiltro">
+                    <h2 id="modalBusqAvan">Filtros de Búsqueda</h2>
+                    <div class="filtros-grid">
+                        <p><strong>Marca:</strong> <select id="modalFMarca"><option value="">Todas</option></select></p>
+                        <p><strong>Modelo:</strong> <select id="modalFModelo"><option value="">Todos</option></select></p>
+                        <p><strong>Año:</strong> <select id="modalFAnio"><option value="">Todos</option></select></p>
+                        
+                        <div class="filtro-rango">
+                            <p><strong>Precio (€):</strong></p>
+                            <div class="inputs-rango">
+                                <input type="number" id="modalFPrecioMin" placeholder="Mín" min="0">
+                                <span>-</span>
+                                <input type="number" id="modalFPrecioMax" placeholder="Máx" min="0">
+                            </div>
+                        </div>
+
+                        <p><strong>Color:</strong> <select id="modalFColor"><option value="">Todos</option></select></p>
+                        <p><strong>Combustible:</strong> <select id="modalFCombustible"><option value="">Todos</option></select></p>
+                        <p><strong>Transmisión:</strong> <select id="modalFTransmision"><option value="">Todas</option></select></p>
+                        
+                        <div class="filtro-rango">
+                            <p><strong>Kilometraje (km):</strong></p>
+                            <div class="inputs-rango">
+                                <input type="number" id="modalFKMMin" placeholder="Mín" min="0">
+                                <span>-</span>
+                                <input type="number" id="modalFKMMax" placeholder="Máx" min="0">
+                            </div>
+                        </div>
+
+                        <p><strong>Ciudad:</strong> <select id="modalFCiudad"><option value="">Todas</option></select></p>
+                        <p><strong>Etiqueta Ambiental:</strong> <select id="modalFEtiqAmb"><option value="">Todas</option></select></p>
+                        <p><strong>Version:</strong> <select id="modalFVersion"><option value="">Todas</option></select></p>
+                        <p><strong>Disponibilidad:</strong> <select id="modalFDisponible"><option value="">Todas</option></select></p>
+                    </div>
+                    <div class="modal-botones-pie">
+                        <button id="btnAplicarFiltros">Aplicar Filtros</button>
+                        <button id="btnCerrarFiltro">Cerrar</button>
+                    </div>
+                </dialog>
+            </div>
+        </div>
+
+        <button id="favoritos">Favoritos</button>
+
+    </div>
+
+    <div class="contenedor"></div>
+
+        <dialog id="modalCoche">
+            <div class="modal-contenedor">
+                <div class="modal-col-izquierda">
+                    <img id="modalImagen" src="" alt="Coche">
+                    <button id="btnComprar" onclick="window.location.href='../html/compraVenta.html'">Comprar</button>
+                </div>
+
+                <div class="modal-col-derecha">
+                    <h2 id="modalTitulo"></h2>
+                    <div class="info-detallada">
+                        <p><strong>Año:</strong> <span id="modalAnio"></span></p>
+                        <p><strong>Precio:</strong> <span id="modalPrecio"></span></p>
+                        <p><strong>Color:</strong> <span id="modalColor"></span></p>
+                        <p><strong>Carburante:</strong> <span id="modalCarburante"></span></p>
+                        <p><strong>Transmisión:</strong> <span id="modalTransmision"></span></p>
+                        <p><strong>Kilometraje:</strong> <span id="modalKM"></span></p>
+                        <p><strong>Ciudad:</strong> <span id="modalCiudad"></span></p>
+
+                        <p id="modalDescripcion"></p>
+                    </div>
+                    <div class="modal-botones-pie">
+                    <button id="btnFavoritoModal">Añadir a Favoritos</button>
+                    <button id="cerrarModal">Cerrar</button>
+                    </div>    
+                    
+                </div>
+            </div>
+        </dialog>
+
+        </main>
+
+        <footer>© 2026 BSCars · Proyecto Intermodular. Todos los derechos reservados.</footer>    
+
+    </div>
+
+</body>
+</html>
