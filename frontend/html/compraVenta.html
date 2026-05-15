@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSCars - Compra de Vehículo</title>
+    <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/compraVenta.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="compra-page">
+    <div class="grid-layout">
+        <header>
+            <h1>BSCars</h1>
+            <h3 id="ventaCoche">Vende tu Coche</h3>
+            <h3 id="login">Iniciar Sesión</h3>
+        </header>
+
+        <main class="main-content" id="app">
+            <div class="contenedor-compra">
+                <div class="compra-topbar">
+                    <a href="home.html" class="boton-volver">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                        </svg>
+                        Volver al catálogo
+                    </a>
+                </div>
+                <div class="tarjeta-compra">
+                    <header class="encabezado-compra">
+                        <p class="etiqueta-proceso">Proceso de compra</p>
+                    </header>
+                    <div class="cuerpo-compra">
+                        <section id="seccion-contrato" class="seccion-compra">
+                            <div id="contrato-content" class="papel-contrato"></div>
+                            <div class="area-verificacion-contrato">
+                                <label class="contenedor-casilla">
+                                    <input type="checkbox" id="acepto-terminos">
+                                    <span class="marca-casilla"></span>
+                                    He leído y acepto los Términos y Condiciones y el Contrato de Compraventa.
+                                </label>
+                            </div>
+
+                            <!-- Mostramos los terminos. -->
+                            <dialog id="modal-terminos" class="modal-estilo">
+                                <div class="modal-contenido">
+                                    <h2>TÉRMINOS Y CONDICIONES DE USO Y VENTA</h2>
+                                    <div class="texto-terminos">
+                                        <p>Al proceder con el pago y marcar la casilla de aceptación, las partes (Vendedor y Comprador) acuerdan:</p>
+                                        <p><strong>1. Intermediación:</strong> La plataforma actúa exclusivamente como plataforma tecnológica de contacto. La relación contractual de compraventa se establece únicamente entre el Comprador y el Vendedor.</p>
+                                        <p><strong>2. Comisión de Servicio e IVA:</strong> El uso de la plataforma conlleva una comisión del 3% sobre el valor del vehículo publicado, además del IVA aplicable del 21% sobre la operación. Estos importes se devengan en el momento de la transacción y son independientes de los acuerdos privados posteriores entre las partes.</p>
+                                        <p><strong>3. Pago Seguro:</strong> El Comprador realiza el pago mediante pasarela de pago cifrada. La plataforma no almacena datos sensibles de tarjetas (CVV/PAN), los cuales son gestionados por un proveedor de servicios de pago certificado.</p>
+                                        <p><strong>4. Exención de Responsabilidad:</strong> La plataforma no es responsable de:
+                                            <ul>
+                                                <li>El estado mecánico, estético o legal del vehículo.</li>
+                                                <li>La veracidad de las fotos o descripciones publicadas.</li>
+                                                <li>Vicios ocultos, averías o incumplimientos en la entrega.</li>
+                                                <li>Trámites administrativos ante la DGT o Hacienda.</li>
+                                            </ul>
+                                        </p>
+                                        <p><strong>5. Política de Desistimiento:</strong> Al tratarse de una venta entre particulares mediada por tecnología, la plataforma no ofrece garantía comercial propia. Cualquier reclamación sobre el vehículo deberá tramitarse directamente entre las partes conforme al Código Civil.</p>
+                                        <p><strong>6. Aceptación:</strong> El clic en "Pagar" o "Aceptar" constituye la firma electrónica de estas condiciones y del contrato de compraventa vinculado.</p>
+                                    </div>
+                                    <button type="button" id="cerrar-modal-terminos" class="boton-principal">Cerrar</button>
+                                </div>
+                            </dialog>
+                            <div class="cuadricula-resumen-precios" id="precio-summary"></div>
+                            <div class="acciones-compra">
+                                <button id="continuar-pago" class="boton-principal" disabled>Continuar al Pago</button>
+                                <button id="cancelar-compra" class="boton-enlace-cancelar" type="button">Cancelar y volver
+                                </button>
+                            </div>
+                        </section>
+                        <section id="seccion-pago" class="seccion-compra hidden">
+                            <div class="encabezado-pago">
+                                <p class="etiqueta-proceso">Pago seguro</p>
+                                <h2>Datos de la tarjeta</h2>
+                                <p>Complete el pago para finalizar la compra.</p>
+                            </div>
+                            <div id="pago-content" class="caja-pago">
+                                <div id="pago-form-container" class="hidden">
+
+                                    <form id="form-pago" class="cuadricula-formulario">
+                                        <div class="grupo-formulario ancho-completo">
+                                            <label for="tarjeta">Número de tarjeta</label>
+                                            <input type="text" id="tarjeta" placeholder="0123 4567 8901 2345" maxlength="16"
+                                                   required>
+                                        </div>
+                                        <div class="grupo-formulario">
+                                            <label for="exp">Vencimiento</label>
+                                            <input type="text" id="exp" placeholder="12/30" maxlength="5" required>
+                                        </div>
+                                        <div class="grupo-formulario">
+                                            <label for="cvv">CVV</label>
+                                            <input type="text" id="cvv" placeholder="123" maxlength="3" required>
+                                        </div>
+                                        <div class="acciones-compra ancho-completo">
+                                            <button type="submit" id="btn-pagar" class="boton-principal">finalizar
+                                                compra
+                                            </button>
+                                            <button type="button" id="volver-contrato" class="boton-enlace-cancelar">Volver</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div id="pago-spinner" class="hidden" style="text-align: center; padding: 3rem 0;"></div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <script src="../js/compraVenta.js" type="module"></script>
+        </main>
+
+        <footer>© 2026 BSCars · Proyecto Intermodular. Todos los derechos reservados.</footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Inicio de sesion</title>
+        <link rel="stylesheet" href="../css/login.css">
+    </head>
+    <body>
+        
+        <header id="login-header">
+            <h1>Inicio de sesión</h1>
+            <button id="btnVolver" type="button">Volver al home</button>
+        </header>
+
+        <main id="login-main">
+
+            <form id="form-login">
+                <div id="data-login">
+
+                    <label>Email: <input type="email" id="email-login" placeholder="Email del usuario"></label><br>
+                    <label>Contraseña: <input type="password" id="password-login" placeholder="Contraseña del usuario"></label><br>
+
+                    <p id="mensajeError"></p>
+
+                    <button id="btnLogin">Iniciar Sesión</button>
+                </div>
+            </form>
+
+            <a href="../html/register.html">¿Todavia no tienes una cuenta?</a>
+
+            <script src="../js/login.js"></script>
+
+        </main>
+
+        <footer id="login-footer">
+            <p>&copy; 2026 BSCars · Proyecto Intermodular. Todos los derechos reservados.</p>
+        </footer>
+
+    </body>
+</html>

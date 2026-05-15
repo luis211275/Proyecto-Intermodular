@@ -1,0 +1,413 @@
+.compra-page {
+  text-align: center;
+  margin: 0;
+  color: #111827;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 13px;
+  background:
+    radial-gradient(circle at top left, rgba(219, 156, 55, 0.14), transparent 25%),
+    linear-gradient(180deg, #f8fafc 0%, #edf2f7 52%, #e2e8f0 100%);
+}
+
+.compra-page .main-content {
+  padding: 16px 12px 28px;
+  background: transparent;
+}
+
+.compra-topbar {
+  max-width: 1040px;
+  margin: 0 auto 10px;
+  text-align: left;
+}
+
+.compra-page #ventaCoche,
+.compra-page #login {
+  display: inline-block;
+  color: #db9c37;
+}
+
+.boton-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #334155;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.contenedor-compra {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.tarjeta-compra {
+  background: linear-gradient(180deg, #111827 0%, #172033 100%);
+  color: whitesmoke;
+  border-radius: 18px;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.encabezado-compra {
+  padding: 14px 20px;
+  background-color: rgba(15, 23, 42, 0.82);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  text-align: center;
+}
+
+.etiqueta-proceso {
+  color: #db9c37;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin: 0;
+}
+
+.cuerpo-compra {
+  padding: 18px;
+}
+
+.seccion-compra {
+  display: grid;
+  gap: 12px;
+}
+
+.papel-contrato {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  padding: 14px;
+  border-radius: 16px;
+  color: #334155;
+  text-align: left;
+}
+
+.contrato-encabezado {
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.contrato-encabezado h2 {
+  margin: 0 0 6px;
+  color: #284b79;
+  font-size: clamp(0.95rem, 1.4vw, 1.25rem);
+  text-transform: uppercase;
+}
+
+.contrato-encabezado p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.bloque-contrato + .bloque-contrato {
+  margin-top: 10px;
+}
+
+.bloque-contrato h3 {
+  margin: 0 0 10px;
+  color: #284b79;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+}
+
+.contrato-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.contrato-grid-dos {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dato-contrato {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.dato-etiqueta {
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dato-contrato strong {
+  color: #1e293b;
+  font-size: 12px;
+}
+
+.dato-contrato small {
+  color: #475569;
+  font-size: 10px;
+}
+
+.enlace-terminos {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.enlace-terminos a {
+  color: #db9c37;
+  font-weight: 700;
+  text-decoration: underline;
+  font-size: 12px;
+}
+
+.area-verificacion-contrato {
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.contenedor-casilla {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.cuadricula-resumen-precios {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fila-precio {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: #e5e7eb;
+  font-size: 12px;
+}
+
+.fila-precio strong {
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.fila-precio-total {
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  font-size: 0.9rem;
+}
+
+.acciones-compra {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.boton-principal {
+  min-height: 42px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  padding: 9px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.18);
+}
+
+.boton-principal:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.boton-principal:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.boton-enlace-cancelar {
+  background: none;
+  border: none;
+  color: #f87171;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 12px;
+}
+
+.encabezado-pago {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.encabezado-pago h2 {
+  margin: 6px 0;
+  font-size: 1rem;
+}
+
+.encabezado-pago p:last-child {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 12px;
+}
+
+.caja-pago {
+  padding: 14px;
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cuadricula-formulario {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  text-align: left;
+}
+
+.grupo-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.grupo-formulario.ancho-completo {
+  grid-column: 1 / -1;
+}
+
+.grupo-formulario label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #e5e7eb;
+}
+
+.grupo-formulario input {
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  font-size: 12px;
+  background-color: #1f2937;
+  color: white;
+  box-sizing: border-box;
+}
+
+.grupo-formulario input:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
+}
+
+.compra-page footer {
+  padding: 36px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Ajustamos el modal. */
+.modal-estilo {
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 600px;
+  width: 90%;
+  background-color: white;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+@media (max-width: 900px) {
+  .cuerpo-compra {
+    padding: 14px;
+  }
+
+  .contrato-grid,
+  .contrato-grid-dos,
+  .cuadricula-formulario {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .compra-page .main-content {
+    padding: 14px 8px 20px;
+  }
+
+  .cuerpo-compra {
+    padding: 12px;
+  }
+
+  .papel-contrato,
+  .caja-pago,
+  .cuadricula-resumen-precios {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .boton-principal {
+    width: 100%;
+  }
+
+  .acciones-compra {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.modal-estilo::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.modal-contenido {
+  padding: 30px;
+  color: #111827;
+}
+
+.modal-contenido h2 {
+  margin-top: 0;
+  font-size: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.texto-terminos {
+  max-height: 400px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  padding-right: 10px;
+}
+
+.texto-terminos p {
+  margin-bottom: 15px;
+}
+
+.texto-terminos ul {
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+
+.texto-terminos li {
+  margin-bottom: 5px;
+}
