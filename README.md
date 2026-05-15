@@ -50,7 +50,7 @@ Pasos:
 4. Iniciar el proyecto con:
 
 ```bash
-mvn exec:java
+mvn clean compile exec:java
 ```
 
 5. Abrir en el navegador:
