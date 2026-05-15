@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>API Coches - Documentación</title>
+    <style>
+        :root {
+            --bg: #f7f9fc;
+            --panel: #ffffff;
+            --line: #dfe6ee;
+            --text: #1f2937;
+            --muted: #5b6575;
+            --title: #3b4151;
+            --get: #61affe;
+            --post: #49cc90;
+            --patch: #fca130;
+            --delete: #f93e3e;
+            --code-bg: #263238;
+            --code-text: #f8f8f2;
+            --tag-bg: #eef3f7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .topbar {
+            background: #1f2937;
+            color: white;
+            padding: 18px 28px;
+            border-bottom: 4px solid #89bf04;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .topbar p {
+            margin: 6px 0 0;
+            font-size: 14px;
+            color: #d1d5db;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px 20px 48px;
+        }
+
+        .summary {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 26px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .summary-item {
+            background: #fafbfd;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 14px;
+        }
+
+        .summary-item h3 {
+            margin: 0 0 8px;
+            font-size: 13px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .summary-item p {
+            margin: 0;
+            font-size: 15px;
+            color: var(--text);
+            word-break: break-word;
+        }
+
+        .toc {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 18px 20px;
+            margin-bottom: 26px;
+        }
+
+        .toc h2 {
+            margin: 0 0 14px;
+            font-size: 20px;
+            color: var(--title);
+        }
+
+        .toc ul {
+            margin: 0;
+            padding-left: 18px;
+            line-height: 1.9;
+        }
+
+        .toc a {
+            color: #1d4ed8;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        h2.section-title {
+            margin: 34px 0 14px;
+            font-size: 24px;
+            color: var(--title);
+        }
+
+        .endpoint {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+            flex-wrap: wrap;
+        }
+
+        .method {
+            min-width: 78px;
+            text-align: center;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.06em;
+            padding: 7px 10px;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+
+        .get {
+            background: var(--get);
+        }
+
+        .post {
+            background: var(--post);
+        }
+
+        .patch {
+            background: var(--patch);
+        }
+
+        .delete {
+            background: var(--delete);
+        }
+
+        .path {
+            font-family: Consolas, Monaco, monospace;
+            font-size: 16px;
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .endpoint-body {
+            padding: 16px;
+        }
+
+        .endpoint-body p {
+            margin: 0 0 14px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .tag {
+            background: var(--tag-bg);
+            border: 1px solid var(--line);
+            color: #334155;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .card h4 {
+            margin: 0;
+            padding: 12px 14px;
+            background: #f5f7fa;
+            border-bottom: 1px solid var(--line);
+            font-size: 14px;
+            color: var(--title);
+        }
+
+        .card-content {
+            padding: 14px;
+        }
+
+        pre {
+            margin: 0;
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 14px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        code {
+            font-family: Consolas, Monaco, monospace;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: top;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #334155;
+        }
+
+        .schema {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .schema h3 {
+            margin: 0;
+            padding: 14px 16px;
+            font-size: 18px;
+            color: var(--title);
+            background: #f8fafc;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .footer {
+            margin-top: 36px;
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+            .topbar {
+                padding: 16px 18px;
+            }
+
+            .container {
+                padding: 20px 14px 40px;
+            }
+
+            .path {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="topbar">
+    <h1>API Marketplace de Coches</h1>
+    <p>Documentación del módulo de coches y catálogos</p>
+</div>
+
+<div class="container">
+    <section class="summary">
+        <h2 style="margin:0; color:#3b4151;">Resumen</h2>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <h3>Formato</h3>
+                <p>JSON y multipart/form-data</p>
+            </div>
+            <div class="summary-item">
+                <h3>Estados de coche</h3>
+                <p>Disponible, Vendido, Desactivado</p>
+            </div>
+            <div class="summary-item">
+                <h3>Base de datos</h3>
+                <p>PostgreSQL</p>
+            </div>
+            <div class="summary-item">
+                <h3>Módulo documentado</h3>
+                <p>Catálogos, coches y favoritos</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="toc">
+        <h2>Contenido</h2>
+        <ul>
+            <li><a href="#schemas">Schemas</a></li>
+            <li><a href="#catalogos">Catálogos</a></li>
+            <li><a href="#coches">Coches</a></li>
+            <li><a href="#errores">Errores</a></li>
+        </ul>
+    </section>
+
+    <section id="schemas">
+        <h2 class="section-title">Schemas</h2>
+
+        <div class="schema">
+            <h3>CocheResponse</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Campo</th>
+                    <th>Tipo</th>
+                    <th>Descripción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>idCoche</td>
+                    <td>number</td>
+                    <td>Identificador del coche.</td>
+                </tr>
+                <tr>
+                    <td>anioFabricacion</td>
+                    <td>number</td>
+                    <td>Año de fabricación.</td>
+                </tr>
+                <tr>
+                    <td>kilometraje</td>
+                    <td>number</td>
+                    <td>Kilómetros del vehículo.</td>
+                </tr>
+                <tr>
+                    <td>precioVenta</td>
+                    <td>number</td>
+                    <td>Precio del anuncio.</td>
+                </tr>
+                <tr>
+                    <td>estado</td>
+                    <td>string</td>
+                    <td>Disponible, Vendido o Desactivado.</td>
+                </tr>
+                <tr>
+                    <td>urlImagen</td>
+                    <td>string</td>
+                    <td>Ruta de la imagen principal.</td>
+                </tr>
+                <tr>
+                    <td>marca</td>
+                    <td>string</td>
+                    <td>Marca del vehículo.</td>
+                </tr>
+                <tr>
+                    <td>modelo</td>
+                    <td>string</td>
+                    <td>Modelo del vehículo.</td>
+                </tr>
+                <tr>
+                    <td>version</td>
+                    <td>string</td>
+                    <td>Versión comercial.</td>
+                </tr>
+                <tr>
+                    <td>combustible</td>
+                    <td>string</td>
+                    <td>Tipo de combustible.</td>
+                </tr>
+                <tr>
+                    <td>transmision</td>
+                    <td>string</td>
+                    <td>Tipo de transmisión.</td>
+                </tr>
+                <tr>
+                    <td>ciudad</td>
+                    <td>string</td>
+                    <td>Ciudad del anuncio.</td>
+                </tr>
+                <tr>
+                    <td>color</td>
+                    <td>string</td>
+                    <td>Color del coche.</td>
+                </tr>
+                <tr>
+                    <td>etiquetaAmbiental</td>
+                    <td>string</td>
+                    <td>Etiqueta ambiental.</td>
+                </tr>
+                <tr>
+                    <td>categoria</td>
+                    <td>string</td>
+                    <td>Categoría del coche.</td>
+                </tr>
+                <tr>
+                    <td>vendedorNombre</td>
+                    <td>string</td>
+                    <td>Nombre completo del vendedor.</td>
+                </tr>
+                <tr>
+                    <td>vendedorEmail</td>
+                    <td>string</td>
+                    <td>Email de contacto.</td>
+                </tr>
+                <tr>
+                    <td>vendedorDni</td>
+                    <td>string</td>
+                    <td>DNI del vendedor (para contrato).</td>
+                </tr>
+                <tr>
+                    <td>vendedorTelefono</td>
+                    <td>string</td>
+                    <td>Teléfono de contacto.</td>
+                </tr>
+                <tr>
+                    <td>subtotal</td>
+                    <td>number</td>
+                    <td>Precio base sin impuestos ni comisiones.</td>
+                </tr>
+                <tr>
+                    <td>iva</td>
+                    <td>number</td>
+                    <td>IVA (21%) calculado.</td>
+                </tr>
+                <tr>
+                    <td>comision</td>
+                    <td>number</td>
+                    <td>Comisión de gestión (2%).</td>
+                </tr>
+                <tr>
+                    <td>total</td>
+                    <td>number</td>
+                    <td>Precio final (precioVenta).</td>
+                </tr>
+                <tr>
+                    <td>fechaPublicacion</td>
+                    <td>string</td>
+                    <td>Fecha de publicación.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="schema">
+            <h3>PublicarCocheRequest</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Campo</th>
+                    <th>Tipo</th>
+                    <th>Obligatorio</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>anio</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>km</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>precio</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>id_version</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>id_combustible</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>id_transmision</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>id_ciudad</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>id_color</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>id_etiqueta</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>id_categoria</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>id_vendedor</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>imagen</td>
+                    <td>file</td>
+                    <td>Sí</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="schema">
+            <h3>CambiarEstadoRequest</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Campo</th>
+                    <th>Tipo</th>
+                    <th>Obligatorio</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>id</td>
+                    <td>number</td>
+                    <td>Sí</td>
+                </tr>
+                <tr>
+                    <td>estado</td>
+                    <td>string</td>
+                    <td>Sí</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="catalogos">
+        <h2 class="section-title">Catálogos</h2>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/marcas</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="tag-row">
+                    <span class="tag">200 OK</span>
+                    <span class="tag">application/json</span>
+                </div>
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+              <pre><code>[
+  { "id": 1, "nombre": "Toyota" },
+  { "id": 2, "nombre": "Volkswagen" },
+  { "id": 3, "nombre": "BMW" },
+  { "id": 4, "nombre": "Audi" },
+  { "id": 5, "nombre": "Mercedes-Benz" },
+  { "id": 6, "nombre": "Ford" },
+  { "id": 7, "nombre": "Hyundai" },
+  { "id": 8, "nombre": "Renault" },
+  { "id": 9, "nombre": "Peugeot" },
+  { "id": 10, "nombre": "Kia" }
+]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/ciudades</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="tag-row">
+                    <span class="tag">200 OK</span>
+                    <span class="tag">application/json</span>
+                </div>
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+              <pre><code>[
+  { "id": 1, "nombre": "Madrid" },
+  { "id": 2, "nombre": "Barcelona" },
+  { "id": 3, "nombre": "Valencia" },
+  { "id": 4, "nombre": "Sevilla" },
+  { "id": 5, "nombre": "Zaragoza" },
+  { "id": 6, "nombre": "Málaga" },
+  { "id": 7, "nombre": "Murcia" },
+  { "id": 8, "nombre": "Palma" },
+  { "id": 9, "nombre": "Bilbao" },
+  { "id": 10, "nombre": "Alicante" }
+]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/combustibles</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="tag-row"><span class="tag">200 OK</span></div>
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+              <pre><code>[
+  { "id": 1, "nombre": "Gasolina" },
+  { "id": 2, "nombre": "Diesel" },
+  { "id": 3, "nombre": "Híbrido" }
+]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/transmisiones</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="tag-row"><span class="tag">200 OK</span></div>
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+              <pre><code>[
+  { "id": 1, "nombre": "Manual" },
+  { "id": 2, "nombre": "Automático" }
+]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/categorias</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="tag-row"><span class="tag">200 OK</span></div>
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+              <pre><code>[
+  { "id": 1, "nombre": "Turismo" },
+  { "id": 2, "nombre": "SUV" },
+  { "id": 3, "nombre": "Compacto" }
+]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/modelos?marcaId=1</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="tag-row"><span class="tag">200 OK</span></div>
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+              <pre><code>[
+  { "id": 1, "nombre": "Corolla" },
+  { "id": 2, "nombre": "Golf" }
+]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/versiones?modeloId=1</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="tag-row"><span class="tag">200 OK</span></div>
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+              <pre><code>[
+  { "id": 1, "nombre": "1.8 Hybrid" }
+]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/colores</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+                        <pre><code>[ { "idColor": 1, "nombre": "Blanco" }, ... ]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/etiquetas</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+                        <pre><code>[ { "idEtiqueta": 1, "nombre": "C" }, ... ]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section id="coches">
+        <h2 class="section-title">Coches</h2>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/coches?marcaId=X&combustibleId=Y&precioMax=Z</span>
+            </div>
+            <div class="endpoint-body">
+                <p>Lista de coches disponibles con filtros opcionales.</p>
+                <div class="tag-row">
+                    <span class="tag">200 OK</span>
+                    <span class="tag">application/json</span>
+                </div>
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+              <pre><code>[
+  {
+    "idCoche": 16,
+    "anio": 2023,
+    "km": 10,
+    "precio": 35000.00,
+    "estado": "Disponible",
+    "imagen": "/assets/img/cars/123_456.jpg",
+    "marca": "Toyota",
+    "modelo": "Corolla",
+    "version": "1.8 Hybrid Active",
+    "combustible": "Híbrido",
+    "transmision": "Automático",
+    "ciudad": "Madrid",
+    "etiquetaAmbiental": "Eco",
+    "categoria": "Sedán",
+    "vendedorNombre": "Juan Pérez",
+    "vendedorEmail": "juan@example.com",
+    "vendedorDni": "12345678Z",
+    "vendedorTelefono": "600111222",
+    "subtotal": 27650.00,
+    "iva": 5806.50,
+    "comision": 1543.50,
+    "total": 35000.00
+  }
+]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/api/favoritos</span>
+            </div>
+            <div class="endpoint-body">
+                <p>Añade un coche a la lista de favoritos de un usuario.</p>
+                <div class="card">
+                    <h4>Request Body (JSON)</h4>
+                    <div class="card-content">
+                        <pre><code>{ "usuarioId": 1, "cocheId": 16 }</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method delete">DELETE</span>
+                <span class="path">/api/favoritos?usuarioId=1&cocheId=16</span>
+            </div>
+            <div class="endpoint-body">
+                <p>Elimina un coche de la lista de favoritos.</p>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/coches/{id}</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Path parameter</h4>
+                        <div class="card-content">
+                            <pre><code>id = 16</code></pre>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>Response 200</h4>
+                        <div class="card-content">
+                <pre><code>{
+  "id": 16,
+  "anioFabricacion": 2023,
+  "kilometraje": 10,
+  "precioVenta": 35000.00,
+  "estado": "Disponible",
+  "urlImagen": "public/assets/img/cars/1776931005614_1.jpg",
+  "marca": "Toyota",
+  "modelo": "Corolla",
+  "version": "1.8 Hybrid Active",
+  "combustible": "Híbrido",
+  "transmision": "Automático",
+  "ciudad": "Madrid",
+  "color": "Blanco",
+  "etiquetaAmbiental": "Eco",
+  "categoria": "Sedán",
+  "vendedorId": 6,
+  "fechaPublicacion": "2026-04-23T10:30:00"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method post">POST</span>
+                <span class="path">/api/publicarVehiculo</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="tag-row">
+                    <span class="tag">multipart/form-data</span>
+                    <span class="tag">Estado inicial: Disponible</span>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Request</h4>
+                        <div class="card-content">
+                <pre><code>anio=2023
+km=10
+precio=35000.00
+id_version=1
+id_combustible=3
+id_transmision=2
+id_ciudad=1
+id_color=1
+id_etiqueta=2
+id_categoria=1
+id_vendedor=6
+imagen=1776931005614_1.jpg</code></pre>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>Response 201</h4>
+                        <div class="card-content">
+                <pre><code>{
+  "id": 16,
+  "anioFabricacion": 2023,
+  "kilometraje": 10,
+  "precioVenta": 35000.00,
+  "estado": "Disponible",
+  "urlImagen": "public/assets/img/cars/1776931005614_1.jpg",
+  "marca": "Toyota",
+  "modelo": "Corolla",
+  "version": "1.8 Hybrid Active",
+  "combustible": "Híbrido",
+  "transmision": "Automático",
+  "ciudad": "Madrid",
+  "color": "Blanco",
+  "etiquetaAmbiental": "Eco",
+  "categoria": "Sedán",
+  "vendedorId": 6,
+  "fechaPublicacion": "2026-04-23T10:30:00"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method patch">PATCH</span>
+                <span class="path">/api/marcarVehiculoComoVendido</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Request</h4>
+                        <div class="card-content">
+                <pre><code>{
+  "id": 16
+}</code></pre>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>Response 200</h4>
+                        <div class="card-content">
+                <pre><code>{
+  "id": 16,
+  "anioFabricacion": 2023,
+  "kilometraje": 10,
+  "precioVenta": 35000.00,
+  "estado": "Vendido",
+  "urlImagen": "public/assets/img/cars/1776931005614_1.jpg",
+  "marca": "Toyota",
+  "modelo": "Corolla",
+  "version": "1.8 Hybrid Active",
+  "combustible": "Híbrido",
+  "transmision": "Automático",
+  "ciudad": "Madrid",
+  "color": "Blanco",
+  "etiquetaAmbiental": "Eco",
+  "categoria": "Sedán",
+  "vendedorId": 6,
+  "fechaPublicacion": "2026-04-23T10:30:00"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method patch">PATCH</span>
+                <span class="path">/api/cambiarEstadoAnuncioVehiculo</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Request</h4>
+                        <div class="card-content">
+                <pre><code>{
+  "id": 17,
+  "estado": "Desactivado"
+}</code></pre>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>Response 200</h4>
+                        <div class="card-content">
+                <pre><code>{
+  "id": 17,
+  "anioFabricacion": 2022,
+  "kilometraje": 12000,
+  "precioVenta": 28000.00,
+  "estado": "Desactivado",
+  "urlImagen": "public/assets/img/cars/1776931005614_2.jpg",
+  "marca": "Volkswagen",
+  "modelo": "Golf",
+  "version": "2.0 TDI R-Line",
+  "combustible": "Gasolina",
+  "transmision": "Automático",
+  "ciudad": "Barcelona",
+  "color": "Negro",
+  "etiquetaAmbiental": "C",
+  "categoria": "Compacto",
+  "vendedorId": 7,
+  "fechaPublicacion": "2026-04-22T17:10:00"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method delete">DELETE</span>
+                <span class="path">/api/eliminarAnuncioVehiculo?id=18</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Query parameter</h4>
+                        <div class="card-content">
+                            <pre><code>id = 18</code></pre>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h4>Response 200</h4>
+                        <div class="card-content">
+                <pre><code>{
+  "id": 18,
+  "anioFabricacion": 2023,
+  "kilometraje": 50,
+  "precioVenta": 55000.00,
+  "estado": "Desactivado",
+  "urlImagen": "public/assets/img/cars/1776931005614_3.jpg",
+  "marca": "Volkswagen",
+  "modelo": "Golf",
+  "version": "Move",
+  "combustible": "Gasolina",
+  "transmision": "Automático",
+  "ciudad": "Madrid",
+  "color": "Negro",
+  "etiquetaAmbiental": "C",
+  "categoria": "Sedán",
+  "vendedorId": 8,
+  "fechaPublicacion": "2026-04-21T09:45:00"
+}</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method get">GET</span>
+                <span class="path">/api/favoritos?usuarioId=1</span>
+            </div>
+            <div class="endpoint-body">
+                <p>Lista de coches favoritos de un usuario.</p>
+                <div class="card">
+                    <h4>Response 200</h4>
+                    <div class="card-content">
+                        <pre><code>[ { "idCoche": 16, "marca": "Toyota", ... } ]</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section id="errores">
+        <h2 class="section-title">Errores</h2>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method patch">400</span>
+                <span class="path">Error de validación</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="card">
+                    <h4>Response 400</h4>
+                    <div class="card-content">
+              <pre><code>{
+  "error": "VALIDACION",
+  "message": "El precio debe ser mayor que 0"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="endpoint">
+            <div class="endpoint-header">
+                <span class="method delete">404</span>
+                <span class="path">Coche no encontrado</span>
+            </div>
+            <div class="endpoint-body">
+                <div class="card">
+                    <h4>Response 404</h4>
+                    <div class="card-content">
+              <pre><code>{
+  "error": "COCHE_NO_ENCONTRADO",
+  "message": "No existe un coche con id 999"
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <div class="footer">
+        Documentación HTML estática del módulo de coches
+    </div>
+</div>
+</body>
+</html>
